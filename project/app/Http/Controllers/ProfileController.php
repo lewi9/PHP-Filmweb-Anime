@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\HasEnsure;
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -63,5 +64,12 @@ class ProfileController extends Controller
         $request->session()->regenerateToken();
 
         return Redirect::to('/');
+    }
+    public function show(string $username): View
+    {
+        $user = User::where('username', $username)->first();
+        return view('profile.show', [
+            'user' => $user,
+        ]);
     }
 }
