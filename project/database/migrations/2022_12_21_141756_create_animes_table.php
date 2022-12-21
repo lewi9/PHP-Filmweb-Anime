@@ -16,6 +16,13 @@ return new class extends Migration
         Schema::create('animes', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->string('title');
+            $table->string('genre');
+            $table->integer('production_year');
+            $table->string('poster');
+            $table->decimal('rating');
+            $table->integer('how_much_users_watched');
+            $table->string('description');
         });
     }
 

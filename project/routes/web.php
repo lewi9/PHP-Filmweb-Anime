@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AnimeController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -32,6 +33,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/user/ratings', [ProfileController::class, 'ratings'])->name('profile.ratings');
     Route::get('/user/to-watch', [ProfileController::class, 'to_watch'])->name('profile.to-watch');
 });
+
+Route::get('/anime', [AnimeController::class, 'index'])->name('animes.index');
+Route::get('/anime/create', [AnimeController::class, 'create'])->name('animes.create');
+Route::post('/anime', [AnimeController::class, 'store'])->name('animes.store');
+Route::get('/anime/{title}-{production_year}-{id}', [AnimeController::class, 'show'])->name('animes.show');
+Route::get('/anime/{anime}/edit/', [AnimeController::class, 'edit'])->name('animes.edit');
+Route::get('/anime/{anime}/delete', [AnimeController::class, 'destroy'])->name('animes.delete');
+Route::patch('/anime/update', [AnimeController::class, 'update'])->name('animes.update');
 
 require __DIR__.'/auth.php';
 
