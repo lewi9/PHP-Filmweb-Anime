@@ -25,9 +25,9 @@ Route::get('/dashboard', function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/user/{username}', [ProfileController::class, 'show'])->name('profile.show');
-    Route::get('/user/edit', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/user/update', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/user/delete', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/user/{username}/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/user/{username}/update', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/user/{username}/delete', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/user/{username}/friends', [ProfileController::class, 'friends'])->name('profile.friends');
     Route::get('/user/{username}/favorites', [ProfileController::class, 'favorites'])->name('profile.favorites');
     Route::get('/user/{username}/ratings', [ProfileController::class, 'ratings'])->name('profile.ratings');

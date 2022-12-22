@@ -7,14 +7,9 @@
     </x-slot>
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            @foreach($anime_list as $anime)
+            @foreach($friends_list as $friend)
                 <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                    @if ($type == 'ratings')
-                        {{ __($anime[0]->title) }}
-                        {{ __($anime[1]) }}
-                    @else
-                        {{ __($anime->title) }}
-                    @endif
+                        {{ __($friend->name) }}
                 </div>
             @endforeach
         </div>

@@ -9,7 +9,9 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+                <x-nav-link :href="route('profile.ratings', $user->username)">
                     {{ __('Ratings') }}
+                </x-nav-link>
             </div>
 
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
@@ -24,11 +26,15 @@
                 </x-nav-link>
             </div>
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                {{__('Friends')}}
+                <x-nav-link :href="route('profile.friends', $user->username)">
+                    {{__('Friends')}}
+                </x-nav-link>
             </div>
             @if (Auth::user()->id == $user->id)
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+                <x-nav-link :href="route('profile.edit', $user->username)">
                     {{__('Edit profile')}}
+                </x-nav-link>
             </div>
             @endif
         </div>

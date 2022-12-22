@@ -7,6 +7,7 @@ use App\Http\Requests\ProfileUpdateRequest;
 use App\Models\Anime;
 use App\Models\AnimeUsers;
 use App\Models\User;
+use App\Models\UsersFriends;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,7 +24,8 @@ class ProfileController extends Controller
     public function edit(Request $request): View
     {
         return view('profile.edit', [
-            'user' => $request->user()
+            'user' => $request->user(),
+            'username' => $request->user()->username,
         ]);
     }
 
@@ -44,7 +46,7 @@ class ProfileController extends Controller
 
         $user->save();
 
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        return Redirect::route('profile.edit', ['username', $user->username])->with('status', 'profile-updated');
     }
 
     /**
@@ -83,11 +85,18 @@ class ProfileController extends Controller
             $anime_id = $favorite->anime_id;
             $anime_list[] = Anime::where('id', $anime_id)->first();
         }
-        return view('profile.animes', ['anime_list' => $anime_list, 'user' => $user]);
+        return view('profile.animes', ['anime_list' => $anime_list, 'user' => $user, 'type' => 'favorites']);
     }
-    public function ratings(): View
+    public function ratings(string $username): View
     {
-        return view('profile.animes');
+        $user = User::where('username', $username)->first();
+        $user_favorites = AnimeUsers::where('user_id', $user->id)->where('rating', '!=', '0')->get();
+        $anime_list = [];
+        foreach ($user_favorites as $favorite) {
+            $anime_id = $favorite->anime_id;
+            $anime_list[] = array(Anime::where('id', $anime_id)->first(), $favorite->rating);
+        }
+        return view('profile.animes', ['anime_list' => $anime_list, 'user' => $user, 'type' => 'ratings']);
     }
     public function to_watch(string $username): View
     {
@@ -98,6 +107,18 @@ class ProfileController extends Controller
             $anime_id = $favorite->anime_id;
             $anime_list[] = Anime::where('id', $anime_id)->first();
         }
-        return view('profile.animes', ['anime_list' => $anime_list, 'user' => $user]);
+        return view('profile.animes', ['anime_list' => $anime_list, 'user' => $user, 'type' => 'to_watch']);
+    }
+    public function friends(string $username): View
+    {
+        $user = User::where('username', $username)->first();
+        $user_friends = UsersFriends::where('user1_id', $user->id)->orWhere('user2_id', $user->id)->get();
+        $friends_list = [];
+        foreach ($user_friends as $friends) {
+            $friend_id = $friends->user1_id == $user->id ? $friends->user2_id : $friends->user1_id;
+            $friend = User::where('id', $friend_id)->first();
+            $friends_list[] = $friend;
+        }
+        return view('profile.friends', ['friends_list' => $friends_list, 'user' => $user]);
     }
 }
