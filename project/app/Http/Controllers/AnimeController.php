@@ -11,9 +11,32 @@ class AnimeController extends Controller
 {
     public function index(Request $request): View
     {
+        $genres = array();
+        $raw_genres = Anime::select('genre')->groupBy('genre')->get();
+        foreach ($raw_genres as $genre) {
+            $raw_genre = explode(":", $genre)[1];
+            $raw_genre = strtolower(str_replace(["\"", "}"], "", $raw_genre));
+            $raw_genre = explode(",", $raw_genre);
+            if (is_array($raw_genre)) {
+                foreach ($raw_genre as $hraw_genre) {
+                    $genres[] = trim($hraw_genre);
+                }
+            } else {
+                $genres[] = trim($raw_genre);
+            }
+        }
+        $genres = array_unique($genres);
+
         $filter = $request->filter ?? (session('filter')?? "id");
-        session(["filter" => $filter]);
-        return view('animes.index')->with('animes', Anime::orderBy($filter)->get());
+        $filter_mode = $request->filter_mode ?? (session('filter_mode') ?? "asc");
+        $filter_genre = $request->filter_genre ?? (session('filter_genre') ?? "all");
+        session(["filter" => $filter, "filter_mode" => $filter_mode, "filter_genre" => $filter_genre]);
+
+        if ($filter_genre == "all") {
+            $filter_genre = "%";
+        }
+        return view('animes.index')->with('animes', Anime::where('genre', 'like', '%'.$filter_genre.'%')
+            ->orderBy($filter, $filter_mode)->get())->with('genres', $genres);
     }
 
     public function create(): View
