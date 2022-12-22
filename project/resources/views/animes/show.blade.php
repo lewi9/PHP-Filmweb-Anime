@@ -1,5 +1,5 @@
 <h2>Viewing an anime</h2>
-
+<img src="{{URL::asset('/images/'.$anime->poster)}}" alt="Anime Pic" height="200" width="200">
 @markdown($anime->title)
 @markdown($anime->genre)
 @markdown($anime->production_year)

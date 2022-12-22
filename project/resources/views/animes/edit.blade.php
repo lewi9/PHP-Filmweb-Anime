@@ -6,7 +6,7 @@
             </a>
         </x-slot>
         <h2>Editing an anime</h2>
-        <form method="POST" action="{{ route("animes.update") }}">
+        <form method="POST" action="{{ route("animes.update") }}" enctype="multipart/form-data">
             @csrf
             @method("PATCH")
             <div>
@@ -46,7 +46,7 @@
             <!-- description -->
             <div>
                 <x-input-label for="description" :value="__('Description')" />
-                <x-text-input id="description" class="block mt-1 w-full" type="text" name="description" value="{{$anime->description}}" required/>
+                <x-text-input id="description" class="block mt-1 w-full" type="text" name="description" value="{{$anime->description}}"/>
                 <x-input-error :messages="$errors->get('description')" class="mt-2" />
             </div>
 

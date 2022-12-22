@@ -25,15 +25,23 @@ class AnimeController extends Controller
             'title' => ['required', 'string'],
             'genre' => ['required', 'string'],
             'production_year' => ['required', 'integer', 'numeric', 'digits:4'],
-            //Dodać poster
-            'description' => ['required', 'string'],
+            'description' => ['nullable'],
         ]);
+
+        if ($request->poster != null) {
+            $request->validate(['poster' => ['image','mimes:png,jpg,jpeg','max:2048']]);
+            $imageName = time().'.'.$request->poster->extension();
+            $request->poster->move(public_path('images'), $imageName);
+        } else {
+            $imageName = "sailor.jpg";
+        }
+
 
         $anime = Anime::create([
             'title' => $request->title,
             'genre' => $request->genre,
             'production_year' => $request->production_year,
-            'poster' => $request->poster?? "not_found",
+            'poster' => $imageName,
             'description' => $request->description,
             'rating' => 0.0,
             'how_much_users_watched' => 0.0,
@@ -59,8 +67,7 @@ class AnimeController extends Controller
             'title' => ['required', 'string'],
             'genre' => ['required', 'string'],
             'production_year' => ['required', 'integer', 'numeric', 'digits:4'],
-            //Dodać poster
-            'description' => ['required', 'string'],
+            'description' => ['nullable'],
         ]);
 
         Anime::where('id', $request->id)
@@ -68,7 +75,7 @@ class AnimeController extends Controller
                 'title' => $request->title,
                 'genre' => $request->genre,
                 'production_year' => $request->production_year,
-                'poster' => $request->poster?? "not_found",
+                'poster' => $request->poster,
                 'description' => $request->description,
                 'rating' => 0.0,
                 'how_much_users_watched' => 0.0,
@@ -79,6 +86,11 @@ class AnimeController extends Controller
 
     public function destroy(anime $anime): RedirectResponse
     {
+        if ($anime->poster != "sailor.jpg") {
+            $image_path = "/images/$anime->poster";
+            unlink($_SERVER['DOCUMENT_ROOT'] . $image_path);
+        }
+
         $anime->forceDelete();
         return redirect('/anime');
     }

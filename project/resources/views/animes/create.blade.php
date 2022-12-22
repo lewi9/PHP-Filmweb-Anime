@@ -6,7 +6,7 @@
             </a>
         </x-slot>
         <h2>Creating an anime</h2>
-        <form method="POST" action="{{ route('animes.store') }}">
+        <form method="POST" action="{{ route('animes.store') }}" enctype="multipart/form-data">
             @csrf
 
             <!-- Title -->
@@ -33,14 +33,14 @@
             <!-- poster -->
             <div>
                 <x-input-label for="poster" :value="__('Poster')" />
-                <x-text-input id="poster" class="block mt-1 w-full" type="text" name="poster" :value="old('poster')"/>
+                <x-text-input id="poster" class="block mt-1 w-full" type="file" name="poster" :value="old('poster')"/>
                 <x-input-error :messages="$errors->get('poster')" class="mt-2" />
             </div>
 
             <!-- description -->
             <div>
                 <x-input-label for="description" :value="__('Description')" />
-                <x-text-input id="description" class="block mt-1 w-full" type="text" name="description" :value="old('description')" required/>
+                <x-text-input id="description" class="block mt-1 w-full" type="text" name="description" :value="old('description')"/>
                 <x-input-error :messages="$errors->get('description')" class="mt-2" />
             </div>
 

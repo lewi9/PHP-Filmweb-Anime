@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('poster');
             $table->decimal('rating');
             $table->integer('how_much_users_watched');
-            $table->string('description');
+            $table->string('description')->nullable();
         });
     }
 
