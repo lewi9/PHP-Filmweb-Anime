@@ -7,8 +7,8 @@
 @markdown($anime->description)
 @php
     if( isset($anime) ) {
-            if( !$anime->how_much_users_watched ) echo "NaN";
-            else echo $anime->rating/$anime->how_much_users_watched;
+            if( !$anime->rates ) echo "NaN";
+            else echo $anime->cumulate_rating/$anime->rates;
     }
 @endphp
 @markdown($anime->how_much_users_watched)

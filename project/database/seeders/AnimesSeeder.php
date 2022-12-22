@@ -16,9 +16,11 @@ class AnimesSeeder extends Seeder
             'title' => 'Sailor moon',
             'genre' => 'Magical girl, adventure',
             'production_year' => '1992',
-            'poster' => 'sailor.jpg',
+            'poster' => 'missing.jpg',
             'rating' => 7.4,
-            'how_much_users_watched' => 20
+            'how_much_users_watched' => 20,
+            'rates' => 20,
+            'cumulate_rating' => 148,
         ]);
         DB::table('animes')->insert([
             'title' => 'Neon Genesis Evangelion',
@@ -26,7 +28,9 @@ class AnimesSeeder extends Seeder
             'production_year' => '1995',
             'poster' => 'missing.jpg',
             'rating' => 8.3,
-            'how_much_users_watched' => 10
+            'how_much_users_watched' => 10,
+            'rates' => 10,
+            'cumulate_rating' => 83,
         ]);
         DB::table('animes')->insert([
             'title' => 'One Piece',
@@ -34,7 +38,10 @@ class AnimesSeeder extends Seeder
             'production_year' => '1999',
             'poster' => 'missing.jpg',
             'rating' => 0,
-            'how_much_users_watched' => 0
+            'how_much_users_watched' => 0,
+            'rates' => 0,
+            'cumulate_rating' => 0,
+
     ]);
 
     }
