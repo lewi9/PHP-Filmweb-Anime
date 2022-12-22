@@ -9,9 +9,11 @@ use Illuminate\View\View;
 
 class AnimeController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
-        return view('animes.index')->with('animes', Anime::all());
+        $filter = $request->filter ?? (session('filter')?? "id");
+        session(["filter" => $filter]);
+        return view('animes.index')->with('animes', Anime::orderBy($filter)->get());
     }
 
     public function create(): View
@@ -30,7 +32,7 @@ class AnimeController extends Controller
 
         if ($request->poster != null) {
             $request->validate(['poster' => ['image','mimes:png,jpg,jpeg','max:2048']]);
-            $imageName = $request->title . $request->production_year. rand(0,10) . "." . $request->poster->extension();
+            $imageName = $request->title . $request->production_year. rand(0, 10) . "." . $request->poster->extension();
             $request->poster->move(public_path('images'), $imageName);
         } else {
             $imageName = "missing.jpg";

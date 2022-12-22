@@ -18,7 +18,7 @@ class AnimesSeeder extends Seeder
             'production_year' => '1992',
             'poster' => 'sailor.jpg',
             'rating' => 7.4,
-            'how_much_users_watched' => 10
+            'how_much_users_watched' => 20
         ]);
         DB::table('animes')->insert([
             'title' => 'Neon Genesis Evangelion',
