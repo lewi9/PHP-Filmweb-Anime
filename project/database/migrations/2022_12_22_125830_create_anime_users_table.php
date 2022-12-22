@@ -15,8 +15,8 @@ return new class () extends Migration {
         Schema::create('anime_users', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->foreignId('user_id')->constrained();
-            $table->foreignId('anime_id')->constrained();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('anime_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
             $table->boolean('would_like_to_watch');
             $table->boolean('favorite');
             $table->enum('rating', [0,1,2,3,4,5,6,7,8,9,10]);

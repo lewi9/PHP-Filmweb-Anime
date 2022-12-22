@@ -16,7 +16,7 @@ class AnimesSeeder extends Seeder
             'title' => 'Sailor moon',
             'genre' => 'Magical girl',
             'production_year' => '1992',
-            'poster' => '',
+            'poster' => 'sailor.jpg',
             'rating' => 7.4,
             'how_much_users_watched' => 10
         ]);
@@ -24,7 +24,7 @@ class AnimesSeeder extends Seeder
             'title' => 'Neon Genesis Evangelion',
             'genre' => 'Apocalyptic',
             'production_year' => '1995',
-            'poster' => '',
+            'poster' => 'missing.jpg',
             'rating' => 8.3,
             'how_much_users_watched' => 10
         ]);

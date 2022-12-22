@@ -30,10 +30,10 @@ class AnimeController extends Controller
 
         if ($request->poster != null) {
             $request->validate(['poster' => ['image','mimes:png,jpg,jpeg','max:2048']]);
-            $imageName = time().'.'.$request->poster->extension();
+            $imageName = $request->title . $request->production_year. rand(0,10) . "." . $request->poster->extension();
             $request->poster->move(public_path('images'), $imageName);
         } else {
-            $imageName = "sailor.jpg";
+            $imageName = "missing.jpg";
         }
 
 
@@ -70,6 +70,9 @@ class AnimeController extends Controller
             'description' => ['nullable'],
         ]);
 
+        if (!  file_exists($_SERVER['DOCUMENT_ROOT'] . "/images/" . $request->poster)) {
+            $request->poster = "missing.jpg";
+        }
         Anime::where('id', $request->id)
             ->update([
                 'title' => $request->title,
@@ -86,7 +89,7 @@ class AnimeController extends Controller
 
     public function destroy(anime $anime): RedirectResponse
     {
-        if ($anime->poster != "sailor.jpg") {
+        if ($anime->poster != "missing.jpg") {
             $image_path = "/images/$anime->poster";
             unlink($_SERVER['DOCUMENT_ROOT'] . $image_path);
         }
