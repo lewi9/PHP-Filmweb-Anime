@@ -28,10 +28,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/user/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/user/update', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/user/delete', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    Route::get('/user/friends', [ProfileController::class, 'friends'])->name('profile.friends');
-    Route::get('/user/favorites', [ProfileController::class, 'favorites'])->name('profile.favorites');
-    Route::get('/user/ratings', [ProfileController::class, 'ratings'])->name('profile.ratings');
-    Route::get('/user/to-watch', [ProfileController::class, 'to_watch'])->name('profile.to-watch');
+    Route::get('/user/{username}/friends', [ProfileController::class, 'friends'])->name('profile.friends');
+    Route::get('/user/{username}/favorites', [ProfileController::class, 'favorites'])->name('profile.favorites');
+    Route::get('/user/{username}/ratings', [ProfileController::class, 'ratings'])->name('profile.ratings');
+    Route::get('/user/{username}/to-watch', [ProfileController::class, 'to_watch'])->name('profile.to-watch');
 });
 
 Route::get('/anime', [AnimeController::class, 'index'])->name('animes.index');

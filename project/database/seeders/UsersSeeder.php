@@ -19,5 +19,12 @@ class UsersSeeder extends Seeder
             'email' => 'john.doe@gmail.com',
             'password' => bcrypt('secret'),
         ]);
+        DB::table('users')->insert([
+            'username' => 'janedoe',
+            'country' => 'US',
+            'name' => 'Jane Doe',
+            'email' => 'jd@gmail.com',
+            'password' => bcrypt('secret'),
+        ]);
     }
 }
