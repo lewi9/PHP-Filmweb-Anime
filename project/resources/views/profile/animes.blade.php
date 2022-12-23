@@ -14,10 +14,14 @@
             @foreach($anime_list as $anime)
                 <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
                     @if ($type == 'ratings')
-                        {{ __($anime[0]->title) }}
+                        <x-nav-link :href="route('animes.show', [$anime[0]->title, $anime[0]->production_year, $anime[0]->id])">
+                            {{ __($anime[0]->title) }}
+                        </x-nav-link>
                         {{ __($anime[1]) }}
                     @else
-                        {{ __($anime->title) }}
+                        <x-nav-link :href="route('animes.show', [$anime->title, $anime->production_year, $anime->id])">
+                            {{ __($anime->title) }}
+                        </x-nav-link>
                     @endif
                 </div>
             @endforeach
