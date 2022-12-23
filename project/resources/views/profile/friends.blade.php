@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __($user->name) }}
+            {{ __($user->name . '\'s friends') }}
             @if($user->profile_pic=='-1')
                 <img src="{{URL::asset('/images/missing.jpg')}}" alt="profile Pic" height="200" width="200">
             @else

@@ -107,7 +107,7 @@ class ProfileController extends Controller
             $anime_id = $favorite->anime_id;
             $anime_list[] = Anime::where('id', $anime_id)->first();
         }
-        return view('profile.animes', ['anime_list' => $anime_list, 'user' => $user, 'type' => 'to_watch']);
+        return view('profile.animes', ['anime_list' => $anime_list, 'user' => $user, 'type' => 'to watch']);
     }
     public function friends(string $username): View
     {
