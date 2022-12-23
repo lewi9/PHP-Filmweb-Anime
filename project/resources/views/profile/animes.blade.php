@@ -2,7 +2,11 @@
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __($user->name) }}
-            <img src="{{URL::asset('/images/sailor.jpg')}}" alt="profile Pic" height="200" width="200">
+            @if($user->profile_pic=='-1')
+                <img src="{{URL::asset('/images/missing.jpg')}}" alt="profile Pic" height="200" width="200">
+            @else
+                <img src="{{URL::asset('/images/' . $user->profile_pic)}}" alt="profile Pic" height="200" width="200">
+            @endif
         </h2>
     </x-slot>
     <div class="py-12">
