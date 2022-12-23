@@ -9,7 +9,9 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             @foreach($friends_list as $friend)
                 <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+                    <x-nav-link :href="route('profile.show', $friend->username)">
                         {{ __($friend->name) }}
+                    </x-nav-link>
                 </div>
             @endforeach
         </div>

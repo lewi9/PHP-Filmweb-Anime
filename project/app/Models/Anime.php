@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Anime extends Model
 {
+    use HasFactory;
     protected $fillable = [
         'title',
         'genre',
@@ -18,5 +19,4 @@ class Anime extends Model
         'rates',
         'cumulate_rating',
     ];
-    use HasFactory;
 }

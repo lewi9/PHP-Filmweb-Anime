@@ -43,6 +43,5 @@ class AnimesSeeder extends Seeder
             'cumulate_rating' => 0,
 
     ]);
-
     }
 }

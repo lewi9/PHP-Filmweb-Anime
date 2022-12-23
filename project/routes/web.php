@@ -42,6 +42,7 @@ Route::get('/anime/{anime}/edit/', [AnimeController::class, 'edit'])->name('anim
 Route::get('/anime/{anime}/delete', [AnimeController::class, 'destroy'])->name('animes.delete');
 Route::patch('/anime/update', [AnimeController::class, 'update'])->name('animes.update');
 Route::get('/anime/filter', [AnimeController::class, 'filter'])->name('animes.filter');
+
 require __DIR__.'/auth.php';
 
 Route::resource('comments', \App\Http\Controllers\CommentController::class);
