@@ -14,7 +14,9 @@ class Anime extends Model
         'poster',
         'description',
         'rating',
-        'how_much_users_watched'
+        'how_much_users_watched',
+        'rates',
+        'cumulate_rating',
     ];
     use HasFactory;
 }

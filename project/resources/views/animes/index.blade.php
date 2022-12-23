@@ -1,7 +1,7 @@
 <h2>List of Animes</h2>
-<form method = "get" action="{{route("animes.index")}}">
+<form>
     <label for="filter">Choose a filter type:</label>
-    <select name="filter" id="filter">
+    <select name="filter" id="filter" onchange="filter_select(this.value);">
         <option value="id" @if (session('filter') == "id") selected @endif>id</option>
         <option value="title" @if (session('filter') == "title") selected @endif>title</option>
         <option value="production_year" @if (session('filter') == "production_year") selected @endif>production year</option>
@@ -9,30 +9,99 @@
         <option value="how_much_users_watched" @if (session('filter') == "how_much_users_watched") selected @endif>watchs</option>
     </select>
     <label for="filter_mode">Choose a ascend or descend filter mode:</label>
-    <select name="filter_mode" id="filter_mode">
+    <select name="filter_mode" id="filter_mode" onchange="filter_mode_select(this.value);">
         <option value="asc" @if (session('filter_mode') == "asc") selected @endif>ascending</option>
         <option value="desc" @if (session('filter_mode') == "desc") selected @endif>descending</option>
     </select>
     <br>
     <label for="filter_genre">Choose a genre to filter</label>
-    <select name="filter_genre" id="filter_genre">
+    <select name="filter_genre" id="filter_genre" onchange="filter_genre_select(this.value);">
         <option value="all" @if (session('filter_genre') == "all") selected @endif>all</option>
+        @if (isset($genres))
         @foreach($genres as $genre)
             <option value="{{$genre}}" @if (session('filter_genre') == $genre ) selected @endif>{{$genre}}</option>
         @endforeach
+        @endif
     </select>
-    <input type="submit">
+    <br>
+    <label for="filter_search">Type text to search anime by title:</label>
+    <input type="text" class="form-controller" id="filter_search" name="filter_search">
 </form>
-@if (count($animes) === 0)
-    No animes in database.
-@else
-    @foreach($animes as $anime)
-        <img src="{{URL::asset('/images/'.$anime->poster)}}" alt="Anime Pic" height="200" width="200">
-        @markdown($anime->title)
-        <a href="{{ route('animes.show', [$anime->title, $anime->production_year, $anime->id]) }}">Details</a>
-        <br>
-    @endforeach
-@endif
+
+<div id="anime">
+
+    <?php
+        if (isset($animes)) {
+            echo $animes->content();
+        }
+    ?>
+</div>
+
 <br><br>
 <a href="{{route('animes.create')}}">Create new...</a>;
 
+
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+
+<script type="text/javascript">
+    $('#filter_search').on('keyup',function(){
+        let value = $(this).val();
+        $.ajax({
+            type : 'get',
+            url : '{{URL::to('/anime/filter')}}',
+            data:{'filter_search':value},
+            success:function(data){
+                $('#anime').html(data);
+            }
+        });
+    })
+</script>
+
+<script type="text/javascript">
+    function filter_select(val)
+    {
+        $.ajax({
+            type: 'get',
+            url: '{{URL::to('/anime/filter')}}',
+            data: {
+                'filter':val
+            },
+            success: function (data) {
+                $('#anime').html(data);
+            }
+        });
+    }
+</script>
+
+<script type="text/javascript">
+    function filter_mode_select(val)
+    {
+        $.ajax({
+            type: 'get',
+            url: '{{URL::to('/anime/filter')}}',
+            data: {
+                'filter_mode':val
+            },
+            success: function (data) {
+                $('#anime').html(data);
+            }
+        });
+    }
+</script>
+
+<script type="text/javascript">
+    function filter_genre_select(val)
+    {
+        $.ajax({
+            type: 'get',
+            url: '{{URL::to('/anime/filter')}}',
+            data: {
+                'filter_genre':val
+            },
+            success: function (data) {
+                $('#anime').html(data);
+            }
+        });
+    }
+</script>

@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Anime;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\URL;
 use Illuminate\View\View;
 
 class AnimeController extends Controller
 {
-    public function index(Request $request): View
+    public function index(): View
     {
         $genres = array();
         $raw_genres = Anime::select('genre')->groupBy('genre')->get();
@@ -27,17 +29,38 @@ class AnimeController extends Controller
         }
         $genres = array_unique($genres);
 
+        return view('animes.index')->with('animes', $this->filter(new Request()))->with('genres', $genres);
+    }
+
+    public function filter(Request $request): Response
+    {
+        $output = "";
         $filter = $request->filter ?? (session('filter')?? "id");
         $filter_mode = $request->filter_mode ?? (session('filter_mode') ?? "asc");
         $filter_genre = $request->filter_genre ?? (session('filter_genre') ?? "all");
-        session(["filter" => $filter, "filter_mode" => $filter_mode, "filter_genre" => $filter_genre]);
+        $filter_search = $request->filter_search ?? (session('filter_search') ?? "%");
+        session(["filter" => $filter, "filter_mode" => $filter_mode, "filter_genre" => $filter_genre, "filter_search" => $filter_search]);
 
         if ($filter_genre == "all") {
-            $filter_genre = "%";
+            $filter_genre = '%';
         }
-        return view('animes.index')->with('animes', Anime::where('genre', 'like', '%'.$filter_genre.'%')
-            ->orderBy($filter, $filter_mode)->get())->with('genres', $genres);
+
+        $animes = Anime::where('title', 'like', '%' . $filter_search . "%")
+            ->where('genre', 'like', '%'.$filter_genre.'%')
+            ->orderBy($filter, $filter_mode)
+            ->get();
+        if ($animes) {
+            foreach ($animes as $anime) {
+                $output .= '<img src="' . e(URL::asset('/images/'.$anime->poster)) . '" alt="Anime Pic" height="20" width="20">' .
+                        app('markdown.converter')->convert((string) $anime->title)->getContent() .
+                        '<a href="' . e(route('animes.show', [$anime->title, $anime->production_year, $anime->id])) . '">Details</a>
+                            <br>';
+            }
+            return Response($output);
+        }
+        return Response("There is not matching anime.");
     }
+
 
     public function create(): View
     {
@@ -50,7 +73,8 @@ class AnimeController extends Controller
             'title' => ['required', 'string'],
             'genre' => ['required', 'string'],
             'production_year' => ['required', 'integer', 'numeric', 'digits:4'],
-            'description' => ['nullable'],
+            'description' => ['nullable', 'string'],
+
         ]);
 
         if ($request->poster != null) {
@@ -70,7 +94,8 @@ class AnimeController extends Controller
             'description' => $request->description,
             'rating' => 0.0,
             'how_much_users_watched' => 0.0,
-
+            'rates' => 0,
+            "cumulate_rating" => 0
         ]);
 
         return redirect("/anime/$anime->title-$anime->production_year-$anime->id");
@@ -78,7 +103,11 @@ class AnimeController extends Controller
 
     public function show(string $title, int $production_year, int $id): View
     {
-        return view('animes.show')->with('anime', Anime::where('id', $id)->get()[0]);
+        $anime = Anime::where('id', $id)->get();
+        if (isset($anime[0])) {
+            $anime = $anime[0];
+        }
+        return view('animes.show')->with('anime', $anime);
     }
 
     public function edit(anime $anime): View
@@ -93,6 +122,7 @@ class AnimeController extends Controller
             'genre' => ['required', 'string'],
             'production_year' => ['required', 'integer', 'numeric', 'digits:4'],
             'description' => ['nullable'],
+            'poster' => ['string']
         ]);
 
         if (!  file_exists($_SERVER['DOCUMENT_ROOT'] . "/images/" . $request->poster)) {
@@ -105,8 +135,6 @@ class AnimeController extends Controller
                 'production_year' => $request->production_year,
                 'poster' => $request->poster,
                 'description' => $request->description,
-                'rating' => 0.0,
-                'how_much_users_watched' => 0.0,
             ]);
 
         return redirect("/anime/$request->title-$request->production_year-$request->id");
