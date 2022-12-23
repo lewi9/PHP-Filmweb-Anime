@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AnimeController;
+use App\Http\Controllers\ImageController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -32,6 +33,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/user/{username}/favorites', [ProfileController::class, 'favorites'])->name('profile.favorites');
     Route::get('/user/{username}/ratings', [ProfileController::class, 'ratings'])->name('profile.ratings');
     Route::get('/user/{username}/to-watch', [ProfileController::class, 'to_watch'])->name('profile.to-watch');
+    Route::post('/user/{username}/upload-image', [ProfileController::class, 'store_image'])->name('image.store');
 });
 
 Route::get('/anime', [AnimeController::class, 'index'])->name('animes.index');

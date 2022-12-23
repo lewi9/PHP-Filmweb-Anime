@@ -121,4 +121,18 @@ class ProfileController extends Controller
         }
         return view('profile.friends', ['friends_list' => $friends_list, 'user' => $user]);
     }
+    public function store_image(Request $request, string $username)
+    {
+        $user = $request->user();
+        $request->validate([
+            'image' => 'required|image|mimes:png,jpg,jpeg|max:2048'
+        ]);
+
+        $image_name = $username . '.' . $request->image->extension();
+        $request->image->move(public_path('images'), $image_name);
+        $user->profile_pic = $image_name;
+        $user->save();
+        return back()->with('success', 'Image uploaded Successfully!')
+            ->with('image', $image_name);
+    }
 }
