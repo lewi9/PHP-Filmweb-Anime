@@ -14,7 +14,12 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             @if (Auth::user()->id != $user->id)
                 <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                    <x-nav-link :href="route('profile.show', $user->username)">
+                    @if ($message = Session::get('success'))
+                        <div class="alert alert-success alert-block">
+                            <p>{{$message}}</p>
+                        </div>
+                    @endif
+                    <x-nav-link :href="route('user.invite', $user->username)">
                         {{__('Add to friends')}}
                     </x-nav-link>
                 </div>

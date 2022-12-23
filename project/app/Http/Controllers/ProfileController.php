@@ -132,7 +132,19 @@ class ProfileController extends Controller
         $request->image->move(public_path('images'), $image_name);
         $user->profile_pic = $image_name;
         $user->save();
-        return back()->with('success', 'Image uploaded Successfully!')
+        return back()->with('success', 'Image uploaded successfully!')
             ->with('image', $image_name);
+    }
+    public function add_to_friends(Request $request, string $username)
+    {
+        $inviting_user = $request->user(); //dodawacz
+        $invited_user = User::where('username', $username)->first(); //dodawany
+        $are_already_friends = UsersFriends::where('user1_id', $inviting_user->id)->where('user2_id', $invited_user->id)->get();
+        $are_already_friends1 = UsersFriends::where('user1_id', $invited_user->id)->where('user2_id', $inviting_user->id)->get();
+        if (count($are_already_friends) or count($are_already_friends1)) {
+            return back()->with('success', 'You already are friends!');
+        }
+        UsersFriends::create(['user1_id' => $inviting_user->id, 'user2_id' => $invited_user->id]);
+        return back()->with('success', 'You are now friends!');
     }
 }

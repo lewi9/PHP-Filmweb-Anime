@@ -16,6 +16,11 @@
                     <x-nav-link :href="route('profile.show', $friend->username)">
                         {{ __($friend->name) }}
                     </x-nav-link>
+                    @if($friend->profile_pic=='-1')
+                        <img src="{{URL::asset('/images/missing.jpg')}}" alt="profile Pic" height="200" width="200">
+                    @else
+                        <img src="{{URL::asset('/images/' . $friend->profile_pic)}}" alt="profile Pic" height="200" width="200">
+                    @endif
                 </div>
             @endforeach
         </div>
