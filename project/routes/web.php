@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AnimeController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -46,6 +47,9 @@ Route::get('/anime/{anime}/delete', [AnimeController::class, 'destroy'])->name('
 Route::patch('/anime/update', [AnimeController::class, 'update'])->name('animes.update');
 Route::get('/anime/filter', [AnimeController::class, 'filter'])->name('animes.filter');
 
+Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
+Route::patch('/comments', [CommentController::class, 'update'])->name("comments.update");
+Route::delete('/comments', [CommentController::class, 'destroy'])->name('comments.delete');
 require __DIR__.'/auth.php';
 
-Route::resource('comments', \App\Http\Controllers\CommentController::class);
+//Route::resource('comments', \App\Http\Controllers\CommentController::class);

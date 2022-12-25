@@ -3,17 +3,48 @@
 namespace App\Http\Controllers;
 
 use App\Models\Comment;
-use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 
 class CommentController extends Controller
 {
-    public function index(): View
+    public function store(Request $request): RedirectResponse
     {
-        return view('comments.index')->with('comments', Comment::all());
+        $request->validate([
+            'user_id' => ['exists:App\Models\User,id'],
+            'text' => ['string'],
+            'anime_id'=> ["exists:App\Models\Anime,id"]
+        ]);
+
+        Comment::create([
+            'author_id' => $request->user_id,
+            'text' => $request->text,
+            'anime_id' => $request->anime_id,
+            ]);
+
+        return redirect("/anime/$request->title-$request->production_year-$request->anime_id");
     }
 
-    public function show(Comment $comment): View
+    public function update(Request $request): RedirectResponse
     {
-        return view('comments.show')->with('comment', $comment);
+        $request->validate([
+            'text' => ["string"]
+        ]);
+
+        Comment::where('id', $request->c_id)->update([
+            'text' => $request->text
+            ]);
+
+        return redirect("/anime/$request->title-$request->production_year-$request->id");
+    }
+
+    public function destroy(Request $request): RedirectResponse
+    {
+        if ($comments = Comment::where('id', $request->c_id)->get()) {
+            foreach($comments as $comment) {
+                $comment->forceDelete();
+            }
+        }
+        return redirect("/anime/$request->title-$request->production_year-$request->id");
     }
 }

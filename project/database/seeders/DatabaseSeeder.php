@@ -15,5 +15,6 @@ class DatabaseSeeder extends Seeder
         $this->call(AnimesSeeder::class);
         $this->call(AnimeUsersSeeder::class);
         $this->call(UsersFriendsSeeder::class);
+        $this->call(CommentsSeeder::class);
     }
 }

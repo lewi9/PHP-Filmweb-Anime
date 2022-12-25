@@ -1,5 +1,6 @@
 <h2>List of Animes</h2>
 <form>
+    @csrf
     <label for="filter">Choose a filter type:</label>
     <select name="filter" id="filter" onchange="filter_select(this.value);">
         <option value="id" @if (session('filter') == "id") selected @endif>id</option>
@@ -27,7 +28,7 @@
     <label for="filter_search">Type text to search anime by title:</label>
     <input type="text" class="form-controller" id="filter_search" name="filter_search">
 </form>
-
+<button onclick="reset();">Clear filters</button>
 <div id="anime">
 
     <?php
@@ -98,6 +99,26 @@
             url: '{{URL::to('/anime/filter')}}',
             data: {
                 'filter_genre':val
+            },
+            success: function (data) {
+                $('#anime').html(data);
+            }
+        });
+    }
+</script>
+
+<script type="text/javascript">
+    function reset()
+    {
+        $.ajax({
+            type: 'get',
+            url: '{{URL::to('/anime/filter')}}',
+            data: {
+                'filter' : 'id',
+                'filter_mode' : 'asc',
+                'filter_genre': 'all',
+                'filter_search':'%',
+
             },
             success: function (data) {
                 $('#anime').html(data);

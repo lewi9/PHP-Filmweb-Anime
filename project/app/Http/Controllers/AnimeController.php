@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Anime;
+use App\Models\Comment;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 use Illuminate\View\View;
 
@@ -107,7 +110,29 @@ class AnimeController extends Controller
         if (isset($anime[0])) {
             $anime = $anime[0];
         }
-        return view('animes.show')->with('anime', $anime);
+        if (Auth::user()) {
+            $comments = DB::table('users')->join('comments', 'comments.author_id', '=', 'users.id')
+                ->where('author_id', Auth::user()->id)
+                ->where('anime_id', $id);
+
+
+            if ($comments->count() < 5) {
+                $subcomments = DB::table('users')->join('comments', 'comments.author_id', '=', 'users.id')
+                    ->where('anime_id', $id)->whereNot(function ($query) {
+                        $query->where('author_id', Auth::user()->id);
+                    })->limit(5 - $comments->count());
+                $comments = $comments->get()->concat($subcomments->get()->toArray());
+            } else {
+                $comments = $comments->get();
+            }
+        } else {
+            $comments = DB::table('comments')->join('users', 'comments.author_id', '=', 'users.id')
+                ->where('anime_id', $id)
+                ->limit(5)->get();
+        }
+
+
+        return view('animes.show')->with('anime', $anime)->with('comments', $comments);
     }
 
     public function edit(anime $anime): View
