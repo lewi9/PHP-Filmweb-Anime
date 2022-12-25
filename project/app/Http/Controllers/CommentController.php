@@ -2,15 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Anime;
 use App\Models\Comment;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\View\View;
 
 class CommentController extends Controller
 {
+    public function show(Anime $anime): View
+    {
+        return View('animes.comments.show')->with('comments', DB::table('comments')
+                ->join('users', 'comments.author_id', '=', 'users.id')
+                ->where('anime_id', $anime->id)
+                ->get())->with('anime', $anime);
+    }
     public function store(Request $request): RedirectResponse
     {
         $request->validate([

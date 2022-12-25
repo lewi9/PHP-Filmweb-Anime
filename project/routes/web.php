@@ -47,10 +47,10 @@ Route::get('/anime/{anime}/delete', [AnimeController::class, 'destroy'])->name('
 Route::patch('/anime/update', [AnimeController::class, 'update'])->name('animes.update');
 Route::get('/anime/filter', [AnimeController::class, 'filter'])->name('animes.filter');
 
+Route::get('/anime/{anime}/comments', [CommentController::class, 'show'])->name('comments.show');
 Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
 Route::get('/commentsupdate', [CommentController::class, 'update'])->name("comments.update");
 Route::get('/commentsdelete', [CommentController::class, 'destroy'])->name('comments.delete');
-//Route::get('/commentslike', [CommentController::class, 'like'])->name('comments.like');
 Route::get('/commentsdislike', [CommentController::class, 'dislike'])->name('comments.dislike');
 Route::get('/commentslike', [CommentController::class, 'like'])->name('comments.like');
 
