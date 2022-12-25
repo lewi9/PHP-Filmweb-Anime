@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Anime;
+use App\Models\AnimeUsers;
 use App\Models\Comment;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -38,11 +39,11 @@ class AnimeController extends Controller
     public function filter(Request $request): Response
     {
         $output = "";
-        $filter = $request->filter ?? (session('filter')?? "id");
-        $filter_mode = $request->filter_mode ?? (session('filter_mode') ?? "asc");
-        $filter_genre = $request->filter_genre ?? (session('filter_genre') ?? "all");
-        $filter_search = $request->filter_search ?? (session('filter_search') ?? "%");
-        session(["filter" => $filter, "filter_mode" => $filter_mode, "filter_genre" => $filter_genre, "filter_search" => $filter_search]);
+        $filter = $request->filter ?? (session('anime_filter')?? "id");
+        $filter_mode = $request->filter_mode ?? (session('anime_filter_mode') ?? "asc");
+        $filter_genre = $request->filter_genre ?? (session('anime_filter_genre') ?? "all");
+        $filter_search = $request->filter_search ?? (session('anime_filter_search') ?? "%");
+        session(["anime_filter" => $filter, "anime_filter_mode" => $filter_mode, "anime_filter_genre" => $filter_genre, "anime_filter_search" => $filter_search]);
 
         if ($filter_genre == "all") {
             $filter_genre = '%';
@@ -110,17 +111,23 @@ class AnimeController extends Controller
         if (isset($anime[0])) {
             $anime = $anime[0];
         }
+
+        $anime_user = "";
+
         if (Auth::user()) {
+            $anime_user = AnimeUsers::where('user_id', Auth::user()->id)->where('anime_id', $id)->first();
             $comments = DB::table('users')->join('comments', 'comments.author_id', '=', 'users.id')
                 ->where('author_id', Auth::user()->id)
-                ->where('anime_id', $id);
+                ->where('anime_id', $id)
+                ->orderBy('comments.id', 'desc');
 
 
             if ($comments->count() < 5) {
                 $subcomments = DB::table('users')->join('comments', 'comments.author_id', '=', 'users.id')
                     ->where('anime_id', $id)->whereNot(function ($query) {
                         $query->where('author_id', Auth::user()->id);
-                    })->limit(5 - $comments->count());
+                    })->orderBy('comments.id', 'desc')
+                    ->limit(5 - $comments->count());
                 $comments = $comments->get()->concat($subcomments->get()->toArray());
             } else {
                 $comments = $comments->get();
@@ -128,11 +135,12 @@ class AnimeController extends Controller
         } else {
             $comments = DB::table('comments')->join('users', 'comments.author_id', '=', 'users.id')
                 ->where('anime_id', $id)
+                ->orderBy('comments.id', 'desc')
                 ->limit(5)->get();
         }
 
 
-        return view('animes.show')->with('anime', $anime)->with('comments', $comments);
+        return view('animes.show')->with('anime', $anime)->with('comments', $comments)->with('anime_user', $anime_user);
     }
 
     public function edit(anime $anime): View
@@ -175,4 +183,6 @@ class AnimeController extends Controller
         $anime->forceDelete();
         return redirect('/anime');
     }
+
+
 }

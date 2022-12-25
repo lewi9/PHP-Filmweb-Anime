@@ -18,6 +18,7 @@ class CommentController extends Controller
         return View('animes.comments.show')->with('comments', DB::table('comments')
                 ->join('users', 'comments.author_id', '=', 'users.id')
                 ->where('anime_id', $anime->id)
+                ->orderBy('comments.id', 'desc')
                 ->get())->with('anime', $anime);
     }
     public function store(Request $request): RedirectResponse

@@ -3,24 +3,24 @@
     @csrf
     <label for="filter">Choose a filter type:</label>
     <select name="filter" id="filter" onchange="filter_select(this.value);">
-        <option value="id" @if (session('filter') == "id") selected @endif>id</option>
-        <option value="title" @if (session('filter') == "title") selected @endif>title</option>
-        <option value="production_year" @if (session('filter') == "production_year") selected @endif>production year</option>
-        <option value="rating" @if (session('filter') == "rating") selected @endif>rating</option>
-        <option value="how_much_users_watched" @if (session('filter') == "how_much_users_watched") selected @endif>watchs</option>
+        <option value="id" @if (session('anime_filter') == "id") selected @endif>id</option>
+        <option value="title" @if (session('anime_filter') == "title") selected @endif>title</option>
+        <option value="production_year" @if (session('anime_filter') == "production_year") selected @endif>production year</option>
+        <option value="rating" @if (session('anime_filter') == "rating") selected @endif>rating</option>
+        <option value="how_much_users_watched" @if (session('anime_filter') == "how_much_users_watched") selected @endif>watchs</option>
     </select>
     <label for="filter_mode">Choose a ascend or descend filter mode:</label>
     <select name="filter_mode" id="filter_mode" onchange="filter_mode_select(this.value);">
-        <option value="asc" @if (session('filter_mode') == "asc") selected @endif>ascending</option>
-        <option value="desc" @if (session('filter_mode') == "desc") selected @endif>descending</option>
+        <option value="asc" @if (session('anime_filter_mode') == "asc") selected @endif>ascending</option>
+        <option value="desc" @if (session('anime_filter_mode') == "desc") selected @endif>descending</option>
     </select>
     <br>
     <label for="filter_genre">Choose a genre to filter</label>
     <select name="filter_genre" id="filter_genre" onchange="filter_genre_select(this.value);">
-        <option value="all" @if (session('filter_genre') == "all") selected @endif>all</option>
+        <option value="all" @if (session('anime_filter_genre') == "all") selected @endif>all</option>
         @if (isset($genres))
         @foreach($genres as $genre)
-            <option value="{{$genre}}" @if (session('filter_genre') == $genre ) selected @endif>{{$genre}}</option>
+            <option value="{{$genre}}" @if (session('anime_filter_genre') == $genre ) selected @endif>{{$genre}}</option>
         @endforeach
         @endif
     </select>

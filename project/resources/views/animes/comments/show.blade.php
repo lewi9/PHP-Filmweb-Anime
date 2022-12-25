@@ -2,7 +2,6 @@
     <a id="back_anime" href="{{ route('animes.show', [$anime->title, $anime->production_year, $anime->id]) }}">Back to anime</a>
 </h1>
 
-
 @if(count($comments)==0)
     There is no comments
 @else
@@ -117,5 +116,3 @@
         });
     }
 </script>
-
-
