@@ -6,6 +6,7 @@ use App\Models\Comment;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class CommentController extends Controller
@@ -35,8 +36,17 @@ class CommentController extends Controller
             'text' => ["string"]
         ]);
         Comment::where('id', $request->id)->update([
-            'text' => $request->text
+            'text' => $request->text,
+            'likes' => 0,
+            'dislikes' => 0,
             ]);
+
+        if (Auth::user()) {
+            $like = DB::table('likes_comments')
+                ->where('user_id', Auth::user()->id)
+                ->where('comment_id', $request->id)
+                ->delete();
+        }
     }
 
     public function destroy(Request $request)
@@ -59,10 +69,10 @@ class CommentController extends Controller
         if (!$like) {
             DB::table('likes_comments')
                 ->insert([
-                'user_id' => $request->user_id,
-                'comment_id' => $request->id,
-                'rate' => 'like',
-            ]);
+                    'user_id' => $request->user_id,
+                    'comment_id' => $request->id,
+                    'rate' => 'like',
+                ]);
             $comment->likes++;
             $comment->save();
         } else {
@@ -70,11 +80,12 @@ class CommentController extends Controller
                 $comment->dislikes--;
                 $comment->likes++;
                 $comment->save();
-                $like->rate = 'like';
-                $like->save();
+                DB::table('likes_comments')
+                    ->where('user_id', $request->user_id)
+                    ->where('comment_id', $request->id)
+                    ->update(['rate' => 'like']);
             }
         }
-
         return Response($comment->likes . ',' . $comment->dislikes);
     }
 
@@ -100,8 +111,10 @@ class CommentController extends Controller
                 $comment->dislikes++;
                 $comment->likes--;
                 $comment->save();
-                $like->rate = 'dislike';
-                $like->save();
+                DB::table('likes_comments')
+                    ->where('user_id', $request->user_id)
+                    ->where('comment_id', $request->id)
+                    ->update(['rate' => 'dislike']);
             }
         }
         return Response($comment->likes . ',' . $comment->dislikes);

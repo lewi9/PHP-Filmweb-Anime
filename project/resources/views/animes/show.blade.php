@@ -45,8 +45,8 @@
         <textarea style="display:block" id="{{$comment->id . "_"}}" name="text" rows="4" cols="50" disabled>
         {{$comment->text}}
         </textarea><br>
-        Likes: <text id="{{$comment->id}} . 'likes">{{$comment->likes}}</text>
-        Dislikes: <text id="{{$comment->id}} . 'likes'">{{$comment->dislikes}}</text>
+        Likes: <mark id="{{$comment->id . 'likes'}}">{{$comment->likes}}</mark>
+        Dislikes: <mark id="{{$comment->id . 'dislikes'}}">{{$comment->dislikes}}</mark>
         <button id="{{$comment->id . "__"}}" style="visibility: hidden" onclick="updater(this.id);">Update!</button>
         @if(Auth::user())
             <br>
@@ -105,6 +105,8 @@
             success: function () {
                 document.getElementById(id.replace('__','_')).disabled = true;
                 document.getElementById(id).style.visibility = 'hidden';
+                $("#"+id.replace('__', '')+"likes").text('0')
+                $("#"+id.replace('__', '')+"dislikes").text('0')
             }
         });
     }
@@ -117,10 +119,13 @@
             url: "{{route('comments.like')}}",
             data: {
                 'id':id,
+                @if(Auth::user())
                 'user_id':{{Auth::user()->id}},
+                @endif
             },
             success: function (data) {
-                alert('like');
+                $("#"+id+"likes").text(data.split(',')[0])
+                $("#"+id+"dislikes").text(data.split(',')[1])
             }
         });
     }
@@ -133,10 +138,13 @@
             url: "{{route('comments.dislike')}}",
             data: {
                 'id':id,
+                @if(Auth::user())
                 'user_id':{{Auth::user()->id}},
+                @endif
             },
             success: function (data) {
-                alert(data);
+                $("#"+id+"likes").text(data.split(',')[0])
+                $("#"+id+"dislikes").text(data.split(',')[1])
             }
         });
     }

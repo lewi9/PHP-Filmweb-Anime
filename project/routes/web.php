@@ -50,8 +50,9 @@ Route::get('/anime/filter', [AnimeController::class, 'filter'])->name('animes.fi
 Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
 Route::get('/commentsupdate', [CommentController::class, 'update'])->name("comments.update");
 Route::get('/commentsdelete', [CommentController::class, 'destroy'])->name('comments.delete');
-Route::get('/commentslike', [CommentController::class, 'like'])->name('comments.like');
+//Route::get('/commentslike', [CommentController::class, 'like'])->name('comments.like');
 Route::get('/commentsdislike', [CommentController::class, 'dislike'])->name('comments.dislike');
+Route::get('/commentslike', [CommentController::class, 'like'])->name('comments.like');
 
 require __DIR__.'/auth.php';
 
