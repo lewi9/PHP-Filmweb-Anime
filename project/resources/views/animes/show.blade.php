@@ -40,46 +40,107 @@
 @else
     @foreach($comments as $comment)
 
-        <br>
-        <label for="{{$comment->id . "_"}}">{{$comment->name}}</label>
-        <form method="POST" action="{{route('comments.update')}}">
-            @csrf
-            @method("PATCH")
-            <input type="hidden" name="c_id" value="{{$comment->id}}">
-            <input id="title" name="title" type="hidden" value="{{$anime->title}}">
-            <input id="production_year" name="production_year" type="hidden" value="{{$anime->production_year}}">
-            <input id="id" name="id" type="hidden" value="{{$anime->id}}">
-            <textarea id="{{$comment->id . "_"}}" name="text" rows="4" cols="50" disabled>
-            {{$comment->text}}
-            </textarea><br>
-            <button id="{{$comment->id . "__"}}" type="submit" style="visibility: hidden">Update!</button>
-        </form>
+        <div id="{{$comment->id . 'div'}}">
+        <label style="display:block" for="{{$comment->id . "_"}}">{{$comment->name}}</label>
+        <textarea style="display:block" id="{{$comment->id . "_"}}" name="text" rows="4" cols="50" disabled>
+        {{$comment->text}}
+        </textarea><br>
+        Likes: <text id="{{$comment->id}} . 'likes">{{$comment->likes}}</text>
+        Dislikes: <text id="{{$comment->id}} . 'likes'">{{$comment->dislikes}}</text>
+        <button id="{{$comment->id . "__"}}" style="visibility: hidden" onclick="updater(this.id);">Update!</button>
         @if(Auth::user())
+            <br>
+                <button id="{{$comment->id}}" onclick="liker(this.id);">Like</button>
+                <button id="{{$comment->id}}" onclick="disliker(this.id);">Dislike</button>
+            <br>
             @if(Auth::user()->id == $comment->author_id)
-                <button id="{{$comment->id}}" onclick="action(this.id);">Edit Comment</button>
-                <form method="post" action="{{route('comments.delete')}}">
-                    <input name="c_id" id="c_id" type="hidden" value="{{$comment->id}}">
-                    <input id="title" name="title" type="hidden" value="{{$anime->title}}">
-                    <input id="production_year" name="production_year" type="hidden" value="{{$anime->production_year}}">
-                    <input id="id" name="id" type="hidden" value="{{$anime->id}}">
-                    @method('DELETE')
-                    @csrf
-                    <button type="submit">Delete Comment</button>
-                </form>
+
+                <button id="{{$comment->id}}" onclick="edit(this.id);">Edit Comment</button>
+                <button id="{{$comment->id}}" onclick="deleter(this.id);">Delete Comment</button>
             @endif
         @endif
-
+        </div>
     @endforeach
 @endif
 
 <script>
-    function action(id)
+    function edit(id)
     {
         document.getElementById(id + "_").disabled = false;
         document.getElementById(id + "__").style.visibility = 'visible';
     }
 </script>
 
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+
+<meta name="csrf-token" content="">
+
+<script>
+    function deleter(id)
+    {
+        $.ajaxSetup({ headers: { 'csrftoken' : '{{ csrf_token() }}' } });
+            $.ajax({
+                type: 'get',
+                url: "{{route('comments.delete')}}",
+                data: {
+                    'id':id
+                },
+                success: function () {
+                    $("#"+id+"div").remove();
+                }
+            });
+    }
+
+    function updater(id)
+    {
+        $.ajaxSetup({ headers: { 'csrftoken' : '{{ csrf_token() }}' } });
+        $.ajax({
+            type: 'get',
+            url: "{{route('comments.update')}}",
+            data: {
+                'id':id.replace('__', ''),
+                'text':$('#'+id.replace('__','_')).val(),
+            },
+            success: function () {
+                document.getElementById(id.replace('__','_')).disabled = true;
+                document.getElementById(id).style.visibility = 'hidden';
+            }
+        });
+    }
+
+    function liker(id)
+    {
+        $.ajaxSetup({ headers: { 'csrftoken' : '{{ csrf_token() }}' } });
+        $.ajax({
+            type: 'get',
+            url: "{{route('comments.like')}}",
+            data: {
+                'id':id,
+                'user_id':{{Auth::user()->id}},
+            },
+            success: function (data) {
+                alert('like');
+            }
+        });
+    }
+
+    function disliker(id)
+    {
+        $.ajaxSetup({ headers: { 'csrftoken' : '{{ csrf_token() }}' } });
+        $.ajax({
+            type: 'get',
+            url: "{{route('comments.dislike')}}",
+            data: {
+                'id':id,
+                'user_id':{{Auth::user()->id}},
+            },
+            success: function (data) {
+                alert(data);
+            }
+        });
+    }
+</script>
 
 
 

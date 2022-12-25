@@ -48,8 +48,11 @@ Route::patch('/anime/update', [AnimeController::class, 'update'])->name('animes.
 Route::get('/anime/filter', [AnimeController::class, 'filter'])->name('animes.filter');
 
 Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
-Route::patch('/comments', [CommentController::class, 'update'])->name("comments.update");
-Route::delete('/comments', [CommentController::class, 'destroy'])->name('comments.delete');
+Route::get('/commentsupdate', [CommentController::class, 'update'])->name("comments.update");
+Route::get('/commentsdelete', [CommentController::class, 'destroy'])->name('comments.delete');
+Route::get('/commentslike', [CommentController::class, 'like'])->name('comments.like');
+Route::get('/commentsdislike', [CommentController::class, 'dislike'])->name('comments.dislike');
+
 require __DIR__.'/auth.php';
 
 //Route::resource('comments', \App\Http\Controllers\CommentController::class);

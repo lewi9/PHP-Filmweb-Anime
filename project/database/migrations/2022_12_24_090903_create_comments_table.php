@@ -17,6 +17,8 @@ return new class () extends Migration {
             $table->foreignId("author_id")->constrained("users")->onDelete("cascade");
             $table->foreignId("anime_id")->constrained("animes")->onDelete("cascade");
             $table->text('text');
+            $table->integer('likes');
+            $table->integer('dislikes');
             $table->timestamps();
         });
     }

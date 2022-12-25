@@ -11,6 +11,8 @@ class Comment extends Model
     protected $fillable = [
         'text',
         'author_id',
-        'anime_id'
+        'anime_id',
+        'likes',
+        'dislikes',
     ];
 }
