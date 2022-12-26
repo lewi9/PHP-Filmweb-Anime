@@ -46,8 +46,10 @@ Route::get('/anime/{anime}/edit/', [AnimeController::class, 'edit'])->middleware
 Route::get('/anime/{anime}/delete', [AnimeController::class, 'destroy'])->middleware(['auth', 'verified'])->name('animes.delete');
 Route::patch('/anime/update', [AnimeController::class, 'update'])->middleware(['auth', 'verified'])->name('animes.update');
 Route::get('/anime/filter', [AnimeController::class, 'filter'])->name('animes.filter');
+
 Route::get('/anime/favorites', [AnimeUsersController::class, 'favorite'])->middleware(['auth', 'verified'])->name('animes_users.favorite');
 Route::get('/anime/to_watch', [AnimeUsersController::class, 'to_watch'])->middleware(['auth', 'verified'])->name('animes_users.to_watch');
+Route::get('/anime/rate', [AnimeUsersController::class, 'rate'])->middleware(['auth', 'verified'])->name('animes_users.rate');
 
 Route::get('/anime/{anime}/comments', [CommentController::class, 'show'])->name('comments.show');
 Route::post('/comments', [CommentController::class, 'store'])->middleware(['auth', 'verified'])->name('comments.store');

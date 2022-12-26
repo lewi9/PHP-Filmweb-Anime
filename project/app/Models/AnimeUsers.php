@@ -14,5 +14,6 @@ class AnimeUsers extends Model
         'would_like_to_watch',
         'favorite',
         'rating',
+        'watched',
     ];
 }
