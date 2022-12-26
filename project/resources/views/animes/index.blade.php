@@ -26,7 +26,8 @@
     </select>
     <br>
     <label for="filter_search">Type text to search anime by title:</label>
-    <input type="text" class="form-controller" id="filter_search" name="filter_search">
+    <input type="text" class="form-controller" id="filter_search" name="filter_search"
+           value="{{  (session('anime_filter_search') ?? "") == '%' ? '' :  (session('anime_filter_search') ?? "") }}">
 </form>
 <button onclick="reset();">Clear filters</button>
 <div id="anime">
@@ -48,6 +49,9 @@
 <script type="text/javascript">
     $('#filter_search').on('keyup',function(){
         let value = $(this).val();
+        if(value === ""){
+            value = "%";
+        }
         $.ajax({
             type : 'get',
             url : '{{URL::to('/anime/filter')}}',

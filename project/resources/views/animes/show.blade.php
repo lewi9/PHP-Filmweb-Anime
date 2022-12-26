@@ -66,12 +66,11 @@ CRating: <p id="anime_crating">{{$anime->cumulate_rating}}</p>
 <br>
 <a href="{{route('comments.show', $anime)}}">All Comments</a>
 
-@if(Auth::user())
-@if(Auth::user()->id)
+@if(Auth::id())
     <form method="post" action={{route("comments.store")}}>
         @csrf
         @method('POST')
-        <input id="user_id" name="user_id" type="hidden" value="{{Auth::user()->id}}">
+        <input id="user_id" name="user_id" type="hidden" value="{{Auth::id()}}">
         <input id="anime_id" name="anime_id" type="hidden" value="{{$anime->id}}">
         <input id="title" name="title" type="hidden" value="{{$anime->title}}">
         <input id="production_year" name="production_year" type="hidden" value="{{$anime->production_year}}">
@@ -81,7 +80,6 @@ CRating: <p id="anime_crating">{{$anime->cumulate_rating}}</p>
         <br>
         <input type="submit" value="Add comment">
     </form>
-@endif
 @endif
 
 @include('animes.comments.show')
@@ -99,7 +97,7 @@ CRating: <p id="anime_crating">{{$anime->cumulate_rating}}</p>
             url: "{{route('animes_users.rate')}}",
             data: {
                 'anime_id':{{$anime->id}},
-                'user_id': @if(Auth::user()) {{Auth::user()->id }}@else 0 @endif,
+                'user_id': @if(Auth::id()) {{Auth::id() }}@else 0 @endif,
                 'rating': value,
             },
             success: function (data) {
@@ -119,7 +117,7 @@ CRating: <p id="anime_crating">{{$anime->cumulate_rating}}</p>
             url: "{{route('animes_users.favorite')}}",
             data: {
                 'anime_id':{{$anime->id}},
-                'user_id': @if(Auth::user()) {{Auth::user()->id }},@else 0 @endif
+                'user_id': @if(Auth::id()) {{Auth::id() }},@else 0 @endif
             },
             success: function (data) {
                 if(data === "added"){
@@ -140,7 +138,7 @@ CRating: <p id="anime_crating">{{$anime->cumulate_rating}}</p>
             url: "{{route('animes_users.to_watch')}}",
             data: {
                 'anime_id': {{ $anime->id }},
-                'user_id': @if( Auth::user() ) {{ Auth::user()->id }}, @else 0 @endif
+                'user_id': @if( Auth::id() ) {{ Auth::id() }}, @else 0 @endif
             },
             success: function (data) {
                 if(data === "added"){

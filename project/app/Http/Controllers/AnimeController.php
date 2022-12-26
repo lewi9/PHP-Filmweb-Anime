@@ -23,12 +23,8 @@ class AnimeController extends Controller
             $raw_genre = explode(":", $genre)[1];
             $raw_genre = strtolower(str_replace(["\"", "}"], "", $raw_genre));
             $raw_genre = explode(",", $raw_genre);
-            if (is_array($raw_genre)) {
-                foreach ($raw_genre as $hraw_genre) {
-                    $genres[] = trim($hraw_genre);
-                }
-            } else {
-                $genres[] = trim($raw_genre);
+            foreach ($raw_genre as $hraw_genre) {
+                $genres[] = trim($hraw_genre);
             }
         }
         $genres = array_unique($genres);
@@ -43,6 +39,7 @@ class AnimeController extends Controller
         $filter_mode = $request->filter_mode ?? (session('anime_filter_mode') ?? "asc");
         $filter_genre = $request->filter_genre ?? (session('anime_filter_genre') ?? "all");
         $filter_search = $request->filter_search ?? (session('anime_filter_search') ?? "%");
+
         session(["anime_filter" => $filter, "anime_filter_mode" => $filter_mode, "anime_filter_genre" => $filter_genre, "anime_filter_search" => $filter_search]);
 
         if ($filter_genre == "all") {
@@ -51,9 +48,9 @@ class AnimeController extends Controller
 
         $animes = Anime::where('title', 'like', '%' . $filter_search . "%")
             ->where('genre', 'like', '%'.$filter_genre.'%')
-            ->orderBy($filter, $filter_mode)
+            ->orderBy(strval($filter), strval($filter_mode))
             ->get();
-        if ($animes) {
+        if (count($animes) != 0) {
             foreach ($animes as $anime) {
                 $output .= '<img src="' . e(URL::asset('/images/'.$anime->poster)) . '" alt="Anime Pic" height="20" width="20">' .
                         app('markdown.converter')->convert((string) $anime->title)->getContent() .
@@ -62,7 +59,7 @@ class AnimeController extends Controller
             }
             return Response($output);
         }
-        return Response("There is not matching anime.");
+        return Response("<h2> There is not matching anime. </h2>");
     }
 
 
@@ -78,13 +75,13 @@ class AnimeController extends Controller
             'genre' => ['required', 'string'],
             'production_year' => ['required', 'integer', 'numeric', 'digits:4'],
             'description' => ['nullable', 'string'],
-
         ]);
 
         if ($request->poster != null) {
             $request->validate(['poster' => ['image','mimes:png,jpg,jpeg','max:2048']]);
-            $imageName = $request->title . $request->production_year. rand(0, 10) . "." . $request->poster->extension();
-            $request->poster->move(public_path('images'), $imageName);
+            $file = $request->poster;
+            $imageName = $request->title . $request->production_year. rand(0, 10) . "." . $file->extension();
+            $file->move(public_path('images'), $imageName);
         } else {
             $imageName = "missing.jpg";
         }
@@ -114,10 +111,10 @@ class AnimeController extends Controller
 
         $anime_user = "";
 
-        if (Auth::user()) {
-            $anime_user = AnimeUsers::where('user_id', Auth::user()->id)->where('anime_id', $id)->first();
+        if (Auth::id()) {
+            $anime_user = AnimeUsers::where('user_id', Auth::id())->where('anime_id', $id)->first();
             $comments = DB::table('users')->join('comments', 'comments.author_id', '=', 'users.id')
-                ->where('author_id', Auth::user()->id)
+                ->where('author_id', Auth::id())
                 ->where('anime_id', $id)
                 ->orderBy('comments.id', 'desc');
 
@@ -125,7 +122,7 @@ class AnimeController extends Controller
             if ($comments->count() < 5) {
                 $subcomments = DB::table('users')->join('comments', 'comments.author_id', '=', 'users.id')
                     ->where('anime_id', $id)->whereNot(function ($query) {
-                        $query->where('author_id', Auth::user()->id);
+                        $query->where('author_id', Auth::id());
                     })->orderBy('comments.id', 'desc')
                     ->limit(5 - $comments->count());
                 $comments = $comments->get()->concat($subcomments->get()->toArray());
@@ -151,6 +148,7 @@ class AnimeController extends Controller
     public function update(Request $request): RedirectResponse
     {
         $request->validate([
+            'id' => ['exists:animes'],
             'title' => ['required', 'string'],
             'genre' => ['required', 'string'],
             'production_year' => ['required', 'integer', 'numeric', 'digits:4'],
@@ -170,7 +168,7 @@ class AnimeController extends Controller
                 'description' => $request->description,
             ]);
 
-        return redirect("/anime/$request->title-$request->production_year-$request->id");
+        return redirect("/anime/" . strval($request->title) ."-" . strval($request->production_year) . "-" . strval($request->id));
     }
 
     public function destroy(anime $anime): RedirectResponse

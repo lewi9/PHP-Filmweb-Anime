@@ -8,4 +8,4 @@ parameters:
         - vendor
         - storage
         - config
-        - tests_codeception/Support/_generated
+        - tests_codeception
