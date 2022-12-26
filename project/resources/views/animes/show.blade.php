@@ -39,20 +39,20 @@ CRating: <p id="anime_crating">{{$anime->cumulate_rating}}</p>
     @if(isset($anime_user->id))
 
         @if($anime_user->favorite)
-            <a id="favorite" href="#" onclick="favorite();">Remove from favorite</a>
+            <button id="favorite" onclick="favorite();">Remove from favorite</button>
 
         @else
-        <a id="favorite" href="#" onclick="favorite();">Add to fav animes</a>
+        <button id="favorite" onclick="favorite();">Add to fav animes</button>
         @endif
         @if($anime_user->would_like_to_watch)
-            <a id="to_watch" href="#" onclick="to_watch();">Remove from to watch list</a>
+            <button id="to_watch" onclick="to_watch();">Remove from to watch list</button>
         @else
-            <a id="to_watch" href="#" onclick="to_watch();">Add to to watch list</a>
+            <button id="to_watch" onclick="to_watch();">Add to to watch list</button>
         @endif
 
     @else
-        <a id="favorite" href="#" onclick="favorite();">Add to fav animes</a>
-        <a id="to_watch" href="#" onclick="to_watch();">Add to to watch list</a>
+        <button id="favorite" onclick="favorite();">Add to fav animes</button>
+        <button id="to_watch" onclick="to_watch();">Add to to watch list</button>
     @endif
 
 @endif
@@ -112,10 +112,13 @@ CRating: <p id="anime_crating">{{$anime->cumulate_rating}}</p>
         $.ajaxSetup({ headers: { 'csrftoken' : '{{ csrf_token() }}' } });
         $.ajax({
             type: 'get',
-            url: "{{route('animes_users.favorite')}}",
+            url: "{{route('animes_users.manage_list')}}",
             data: {
                 'anime_id':{{$anime->id}},
-                'user_id': @if(Auth::id()) {{Auth::id() }},@else 0 @endif
+                @if(Auth::id())
+                'user_id': {{Auth::id() }},
+                @endif
+                'list': 'favorite',
             },
             success: function (data) {
                 if(data === "added"){
@@ -133,10 +136,13 @@ CRating: <p id="anime_crating">{{$anime->cumulate_rating}}</p>
         $.ajaxSetup({ headers: { 'csrftoken' : '{{ csrf_token() }}' } });
         $.ajax({
             type: 'get',
-            url: "{{route('animes_users.to_watch')}}",
+            url: "{{route('animes_users.manage_list')}}",
             data: {
                 'anime_id': {{ $anime->id }},
-                'user_id': @if( Auth::id() ) {{ Auth::id() }}, @else 0 @endif
+                @if(Auth::id())
+                'user_id': {{Auth::id() }},
+                @endif
+                'list' : 'to_watch',
             },
             success: function (data) {
                 if(data === "added"){

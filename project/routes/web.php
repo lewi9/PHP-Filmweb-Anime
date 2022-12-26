@@ -47,15 +47,13 @@ Route::get('/anime/{anime}/delete', [AnimeController::class, 'destroy'])->middle
 Route::patch('/anime/update', [AnimeController::class, 'update'])->middleware(['auth', 'verified'])->name('animes.update');
 Route::get('/anime/filter', [AnimeController::class, 'filter'])->name('animes.filter');
 
-Route::get('/anime/favorites', [AnimeUsersController::class, 'favorite'])->middleware(['auth', 'verified'])->name('animes_users.favorite');
-Route::get('/anime/to_watch', [AnimeUsersController::class, 'to_watch'])->middleware(['auth', 'verified'])->name('animes_users.to_watch');
+Route::get('/anime/manage_list', [AnimeUsersController::class, 'manage_list'])->middleware(['auth', 'verified'])->name('animes_users.manage_list');
 Route::get('/anime/rate', [AnimeUsersController::class, 'rate'])->middleware(['auth', 'verified'])->name('animes_users.rate');
 
 Route::get('/anime/{anime}/comments', [CommentController::class, 'show'])->name('comments.show');
 Route::post('/comments', [CommentController::class, 'store'])->middleware(['auth', 'verified'])->name('comments.store');
 Route::get('/commentsupdate', [CommentController::class, 'update'])->middleware(['auth', 'verified'])->name("comments.update");
 Route::get('/commentsdelete', [CommentController::class, 'destroy'])->middleware(['auth', 'verified'])->name('comments.delete');
-Route::get('/commentsdislike', [CommentController::class, 'dislike'])->middleware(['auth', 'verified'])->name('comments.dislike');
 Route::get('/commentslike', [CommentController::class, 'like'])->middleware(['auth', 'verified'])->name('comments.like');
 
 require __DIR__.'/auth.php';

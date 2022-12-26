@@ -69,6 +69,15 @@ class CommentController extends Controller
 
     public function like(Request $request): Response
     {
+        $request->validate([
+            'id' => ['required', 'exists:App\Models\Comment,id'],
+            'user_id'=> ['required', "exists:App\Models\User,id"],
+            'status' => ['required'],
+        ]);
+
+        if ($request->status != "like" and $request->status != "dislike") {
+            abort(404);
+        }
         $like = DB::table('likes_comments')
             ->where('user_id', $request->user_id)
             ->where('comment_id', $request->id)
@@ -78,58 +87,36 @@ class CommentController extends Controller
         if (!$comment) {
             abort(404);
         }
+
         if (!$like) {
             DB::table('likes_comments')
                 ->insert([
                     'user_id' => $request->user_id,
                     'comment_id' => $request->id,
-                    'rate' => 'like',
+                    'rate' => $request->status,
                 ]);
-            $comment->likes++;
-            $comment->save();
-        } else {
-            if (isset($like->rate) and $like->rate == "dislike") {
-                $comment->dislikes--;
+            if ($request->status == "like") {
                 $comment->likes++;
-                $comment->save();
-                DB::table('likes_comments')
-                    ->where('user_id', $request->user_id)
-                    ->where('comment_id', $request->id)
-                    ->update(['rate' => 'like']);
+            } else {
+                $comment->dislikes++;
             }
-        }
-        return Response($comment->likes . ',' . $comment->dislikes);
-    }
 
-    public function dislike(Request $request): Response
-    {
-        $like = DB::table('likes_comments')
-            ->where('user_id', $request->user_id)
-            ->where('comment_id', $request->id)
-            ->first();
-
-        $comment = Comment::where('id', $request->id)->first();
-        if (!$comment) {
-            abort(404);
-        }
-        if (!$like) {
-            DB::table('likes_comments')
-                ->insert([
-                    'user_id' => $request->user_id,
-                    'comment_id' => $request->id,
-                    'rate' => 'dislike',
-                ]);
-            $comment->dislikes++;
             $comment->save();
         } else {
-            if (isset($like->rate) and $like->rate == "like") {
-                $comment->dislikes++;
-                $comment->likes--;
+            if (isset($like->rate) and $like->rate != $request->status) {
+                if ($request->status == "like") {
+                    $comment->dislikes--;
+                    $comment->likes++;
+                } else {
+                    $comment->dislikes++;
+                    $comment->likes--;
+                }
+
                 $comment->save();
                 DB::table('likes_comments')
                     ->where('user_id', $request->user_id)
                     ->where('comment_id', $request->id)
-                    ->update(['rate' => 'dislike']);
+                    ->update(['rate' => $request->status]);
             }
         }
         return Response($comment->likes . ',' . $comment->dislikes);

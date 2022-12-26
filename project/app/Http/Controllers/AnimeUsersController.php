@@ -9,61 +9,69 @@ use Illuminate\Http\Response;
 
 class AnimeUsersController extends Controller
 {
-    public function favorite(Request $request): Response
+    public function manage_list(Request $request): Response
     {
         $request->validate([
             "anime_id" => ['required', 'exists:animes,id'],
             'user_id' => ['required', 'exists:users,id'],
+            'list' => ["required"],
         ]);
 
-        $anime_user = AnimeUsers::where('anime_id', $request->anime_id)->where('user_id', $request->user_id)->first();
-        if ($anime_user) {
-            if ($anime_user->favorite) {
-                $anime_user->favorite = false;
-                $anime_user->save();
-                return Response("removed");
-            }
-            $anime_user->favorite = true;
-            $anime_user->save();
-            return Response("added");
+        if ($request->list == "favorite") {
+            $favorite = true;
+            $to_watch = false;
+        } elseif ($request->list == "to_watch") {
+            $favorite = false;
+            $to_watch = true;
+        } else {
+            abort(404);
         }
+
+        $anime_user = AnimeUsers::where('anime_id', $request->anime_id)->where('user_id', $request->user_id)->first();
+
+        if ($favorite and $anime_user) {
+            return $this->favorite($anime_user, $request);
+        }
+
+        if ($to_watch and $anime_user) {
+            return $this->to_watch($anime_user, $request);
+        }
+
         AnimeUsers::create([
             'user_id' => $request->user_id,
             'anime_id' => $request->anime_id,
             'would_like_to_watch' => false,
-            'favorite' => true,
+            'favorite' => $favorite,
             'rating' => '0',
-            'watched' => false,
+            'watched' => $to_watch,
         ]);
+
         return Response("added");
     }
 
-    public function to_watch(Request $request): Response
-    {
-        $request->validate([
-            "anime_id" => ['required', 'exists:animes,id'],
-            'user_id' => ['required', 'exists:users,id'],
-        ]);
+    //To deal with copy detector
 
-        $anime_user = AnimeUsers::where('anime_id', $request->anime_id)->where('user_id', $request->user_id)->first();
-        if ($anime_user) {
-            if ($anime_user->would_like_to_watch) {
-                $anime_user->would_like_to_watch = false;
-                $anime_user->save();
-                return Response("removed");
-            }
-            $anime_user->would_like_to_watch = true;
+    private function favorite(AnimeUsers $anime_user, Request $request): Response
+    {
+        if ($anime_user->favorite) {
+            $anime_user->favorite = false;
             $anime_user->save();
-            return Response("added");
+            return Response("removed");
         }
-        AnimeUsers::create([
-            'user_id' => $request->user_id,
-            'anime_id' => $request->anime_id,
-            'would_like_to_watch' => true,
-            'favorite' => false,
-            'rating' => '0',
-            'watched' => false,
-        ]);
+        $anime_user->favorite = true;
+        $anime_user->save();
+        return Response("added");
+    }
+
+    private function to_watch(AnimeUsers $anime_user, Request $request): Response
+    {
+        if ($anime_user->would_like_to_watch) {
+            $anime_user->would_like_to_watch = false;
+            $anime_user->save();
+            return Response("removed");
+        }
+        $anime_user->would_like_to_watch = true;
+        $anime_user->save();
         return Response("added");
     }
 

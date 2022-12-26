@@ -89,6 +89,7 @@
                 @if(Auth::user())
                 'user_id':{{Auth::user()->id}},
                 @endif
+                'status' : 'like',
             },
             success: function (data) {
                 $("#"+id+"likes").text(data.split(',')[0])
@@ -102,12 +103,13 @@
         $.ajaxSetup({ headers: { 'csrftoken' : '{{ csrf_token() }}' } });
         $.ajax({
             type: 'get',
-            url: "{{route('comments.dislike')}}",
+            url: "{{route('comments.like')}}",
             data: {
                 'id':id,
                 @if(Auth::user())
                 'user_id':{{Auth::user()->id}},
                 @endif
+                'status' : 'dislike'
             },
             success: function (data) {
                 $("#"+id+"likes").text(data.split(',')[0])
