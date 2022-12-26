@@ -17,4 +17,17 @@ class AnimeUsers extends Model
         'watched',
         'watched_episodes',
     ];
+
+    /**
+     * The model's default values for attributes.
+     *
+     * @var array
+     */
+    protected $attributes = [
+        'would_like_to_watch' => false,
+        'favorite' => false,
+        'rating' => '0',
+        'watched' => false,
+        'watched_episodes' => 0,
+    ];
 }

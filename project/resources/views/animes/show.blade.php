@@ -154,6 +154,9 @@
                     document.getElementById("anime_hmuc").textContent = data.split(',')[1];
                     document.getElementById("anime_rates").textContent = data.split(',')[2];
                     document.getElementById("anime_crating").textContent = data.split(',')[3];
+                    @if(!isset($anime_user->id) )
+                        document.getElementById("watched_episodes").value = {{$anime->episodes}}
+                    @endif
             }
         });
     }

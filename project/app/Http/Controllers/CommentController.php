@@ -33,8 +33,6 @@ class CommentController extends Controller
             'author_id' => $request->user_id,
             'text' => $request->text,
             'anime_id' => $request->anime_id,
-            'likes' => 0,
-            'dislikes' => 0
             ]);
 
         return back();

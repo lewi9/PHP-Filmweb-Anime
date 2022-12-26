@@ -20,4 +20,16 @@ class Anime extends Model
         'cumulate_rating',
         'episodes',
     ];
+
+    /**
+     * The model's default values for attributes.
+     *
+     * @var array
+     */
+    protected $attributes = [
+        'rating' => 0,
+        'how_much_users_watched' => 0,
+        'rates' => 0,
+        'cumulate_rating' => 0,
+    ];
 }

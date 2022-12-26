@@ -42,9 +42,6 @@ class AnimeUsersController extends Controller
             'anime_id' => $request->anime_id,
             'would_like_to_watch' => $to_watch,
             'favorite' => $favorite,
-            'rating' => '0',
-            'watched' => false,
-            'watched_episodes' => 0,
         ]);
 
         return Response("added");
@@ -116,11 +113,9 @@ class AnimeUsersController extends Controller
         AnimeUsers::create([
             'user_id' => $request->user_id,
             'anime_id' => $request->anime_id,
-            'would_like_to_watch' => false,
-            'favorite' => false,
             'rating' => $request->rating,
             'watched' => true,
-            "watched_episodes" => 0,
+            "watched_episodes" => $anime->episodes,
         ]);
         return Response("$anime->rating, $anime->how_much_users_watched, $anime->rates, $anime->cumulate_rating");
     }
@@ -132,17 +127,15 @@ class AnimeUsersController extends Controller
             'user_id' => ['required', 'exists:users,id'],
         ]);
 
-        $anime_user = AnimeUsers::where('anime_id', $request->anime_id)->where('user_id', $request->user_id)->first();
-
         $anime = Anime::where('id', $request->anime_id)->first();
         if (!$anime) {
             abort(404);
         }
-
         $request->validate([
             "episodes" => ["integer", "min:0", 'required']
         ]);
 
+        $anime_user = AnimeUsers::where('anime_id', $request->anime_id)->where('user_id', $request->user_id)->first();
         $flag = false;
         if ($request->episodes >= $anime->episodes) {
             $request->episodes = $anime->episodes;
@@ -150,21 +143,18 @@ class AnimeUsersController extends Controller
         }
 
         if ($anime_user) {
-            $anime_user->watched_episodes = $request->episodes;
+            $anime_user->watched_episodes = intval($request->episodes);
             $anime_user->save();
-            return Response($request->episodes);
+            return Response('$request->episodes');
         }
 
         AnimeUsers::create([
             'user_id' => $request->user_id,
             'anime_id' => $request->anime_id,
-            'would_like_to_watch' => false,
-            'favorite' => false,
-            'rating' => '0',
             'watched' => $flag,
             'watched_episodes' => intval($request->episodes),
         ]);
 
-        return Response($request->episodes);
+        return Response('$request->episodes');
     }
 }
