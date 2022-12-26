@@ -64,13 +64,13 @@ class AnimeUsersController extends Controller
         $anime->cumulate_rating += intval($request->rating);
         if ($anime_user) {
             $anime->cumulate_rating -= intval($anime_user->rating);
-            if(intval($anime_user->rating) == 0 and intval($request->rating) != 0) {
+            if (intval($anime_user->rating) == 0 and intval($request->rating) != 0) {
                 $anime->rates++;
             }
             if (intval($request->rating) == 0 and intval($anime_user->rating) != 0) {
                 $anime->rates--;
             }
-            if($anime->rates!=0) {
+            if ($anime->rates!=0) {
                 $anime->rating = $anime->cumulate_rating/$anime->rates;
             } else {
                 $anime->rating = 0;

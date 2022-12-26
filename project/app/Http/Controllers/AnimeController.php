@@ -183,6 +183,4 @@ class AnimeController extends Controller
         $anime->forceDelete();
         return redirect('/anime');
     }
-
-
 }
