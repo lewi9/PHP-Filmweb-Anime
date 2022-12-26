@@ -21,7 +21,7 @@ class AnimeUsers extends Model
     /**
      * The model's default values for attributes.
      *
-     * @var array
+     * @var array<mixed>
      */
     protected $attributes = [
         'would_like_to_watch' => false,
