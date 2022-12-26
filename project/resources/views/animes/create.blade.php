@@ -37,6 +37,13 @@
                 <x-input-error :messages="$errors->get('poster')" class="mt-2" />
             </div>
 
+            <!-- episodes -->
+            <div>
+                <x-input-label for="episodes" :value="__('Episodes')" />
+                <x-text-input id="episodes" class="block mt-1 w-full" type="number" name="episodes" :value="old('episodes')" required/>
+                <x-input-error :messages="$errors->get('episodes')" class="mt-2" />
+            </div>
+
             <!-- description -->
             <div>
                 <x-input-label for="description" :value="__('Description')" />

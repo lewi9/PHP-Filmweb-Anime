@@ -18,5 +18,6 @@ class Anime extends Model
         'how_much_users_watched',
         'rates',
         'cumulate_rating',
+        'episodes',
     ];
 }

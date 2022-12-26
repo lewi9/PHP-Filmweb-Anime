@@ -75,6 +75,7 @@ class AnimeController extends Controller
             'genre' => ['required', 'string'],
             'production_year' => ['required', 'integer', 'numeric', 'digits:4'],
             'description' => ['nullable', 'string'],
+            'episodes' => ['required', 'integer', 'min:1'],
         ]);
 
         if ($request->poster != null) {
@@ -95,6 +96,7 @@ class AnimeController extends Controller
             'genre' => $request->genre,
             'production_year' => $request->production_year,
             'poster' => $imageName,
+            'episodes' => $request->episodes,
             'description' => $request->description,
             'rating' => 0.0,
             'how_much_users_watched' => 0.0,
@@ -156,7 +158,8 @@ class AnimeController extends Controller
             'genre' => ['required', 'string'],
             'production_year' => ['required', 'integer', 'numeric', 'digits:4'],
             'description' => ['nullable'],
-            'poster' => ['string']
+            'poster' => ['string'],
+            'episodes' => ['required', 'integer', 'min:1'],
         ]);
 
         if (!  file_exists($_SERVER['DOCUMENT_ROOT'] . "/images/" . $request->poster)) {
@@ -168,6 +171,7 @@ class AnimeController extends Controller
                 'genre' => $request->genre,
                 'production_year' => $request->production_year,
                 'poster' => $request->poster,
+                'episodes' => $request->episodes,
                 'description' => $request->description,
             ]);
 

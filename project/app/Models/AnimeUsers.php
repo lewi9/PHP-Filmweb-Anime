@@ -15,5 +15,6 @@ class AnimeUsers extends Model
         'favorite',
         'rating',
         'watched',
+        'watched_episodes',
     ];
 }

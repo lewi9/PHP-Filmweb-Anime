@@ -25,6 +25,7 @@ return new class () extends Migration {
             $table->string('description')->nullable();
             $table->integer("rates");
             $table->integer("cumulate_rating");
+            $table->integer("episodes");
         });
     }
 

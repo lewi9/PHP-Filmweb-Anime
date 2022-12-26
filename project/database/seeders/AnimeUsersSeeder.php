@@ -19,6 +19,7 @@ class AnimeUsersSeeder extends Seeder
             'favorite' => true,
             'rating' => '10',
             'watched' => true,
+            'watched_episodes' => 200,
         ]);
         DB::table('anime_users')->insert([
             'user_id' => 1,
@@ -27,6 +28,7 @@ class AnimeUsersSeeder extends Seeder
             'favorite' => false,
             'rating' => '0',
             'watched' => false,
+            'watched_episodes' => 2
         ]);
     }
 }

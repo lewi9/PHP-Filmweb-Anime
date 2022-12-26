@@ -21,6 +21,7 @@ class AnimesSeeder extends Seeder
             'how_much_users_watched' => 20,
             'rates' => 20,
             'cumulate_rating' => 148,
+            'episodes' => 200,
         ]);
         DB::table('animes')->insert([
             'title' => 'Neon Genesis Evangelion',
@@ -31,6 +32,7 @@ class AnimesSeeder extends Seeder
             'how_much_users_watched' => 10,
             'rates' => 10,
             'cumulate_rating' => 83,
+            'episodes' => 26,
         ]);
         DB::table('animes')->insert([
             'title' => 'One Piece',
@@ -41,7 +43,7 @@ class AnimesSeeder extends Seeder
             'how_much_users_watched' => 0,
             'rates' => 0,
             'cumulate_rating' => 0,
-
+            'episodes' => 1045,
     ]);
     }
 }

@@ -1,15 +1,19 @@
 <h2>Viewing an anime</h2>
-<img src="{{URL::asset('/images/'.$anime->poster)}}" alt="Anime Pic" height="200" width="200">
-<br>
-Title: <p id="anime_title">{{$anime->title}}</p>
-Genre:  <p id="anime_genre">{{$anime->genre}}</p>
-Production year:  <p id="anime_year">{{$anime->production_year}}</p>
-Poster path:  <p id="anime_poster">{{$anime->poster}}</p>
-Description: <p id="anime_description"> @markdown($anime->description)</p>
-Rating:  <p id="anime_rating">{{$anime->rating}}</p>
-HMUC:  <p id="anime_hmuc">{{$anime->how_much_users_watched}}</p>
-Rates:  <p id="anime_rates">{{$anime->rates}}</p>
-CRating: <p id="anime_crating">{{$anime->cumulate_rating}}</p>
+
+<div>
+    <img src="{{URL::asset('/images/'.$anime->poster)}}" alt="Anime Pic" height="200" width="200">
+    <br>
+    Title: <p id="anime_title">{{$anime->title}}</p>
+    Genre:  <p id="anime_genre">{{$anime->genre}}</p>
+    Production year:  <p id="anime_year">{{$anime->production_year}}</p>
+    Poster path:  <p id="anime_poster">{{$anime->poster}}</p>
+    Episodes: <p id="anime_episodes">{{$anime->episodes}}</p>
+    Description: <p id="anime_description"> @markdown($anime->description)</p>
+    Rating:  <p id="anime_rating">{{$anime->rating}}</p>
+    HMUC:  <p id="anime_hmuc">{{$anime->how_much_users_watched}}</p>
+    Rates:  <p id="anime_rates">{{$anime->rates}}</p>
+    CRating: <p id="anime_crating">{{$anime->cumulate_rating}}</p>
+</div>
 
 @if(Auth::user())
     <div>
@@ -36,35 +40,49 @@ CRating: <p id="anime_crating">{{$anime->cumulate_rating}}</p>
         <input onclick="rate(this.value);" type="radio" id="rate10" name="rate" value="10" @if(isset($anime_user->id)) @if(intval($anime_user->rating) == 10) checked @endif @endif/>
         <label for="rate10">10</label>
     </div>
+    <div>
+        <label for="watched_episodes">Watched episodes:</label>
+        <button id="watched_episodes_save" onclick="episodes(document.getElementById('watched_episodes').value);">save</button>
+        <input onclick="edit_episodes();" type="number" class="form-controller" id="watched_episodes" name="watched_episodes"
+               value="{{$anime_user->watched_episodes ?? 0}}" readonly style="width:80px"> / {{$anime->episodes}}
+        <button id="watched_episodes_+" onclick="episodes(parseInt(document.getElementById('watched_episodes').value)+1);">+</button>
+    </div>
     @if(isset($anime_user->id))
+        <div>
+            @if($anime_user->favorite)
+                <button id="favorite" onclick="favorite();">Remove from favorite</button>
 
-        @if($anime_user->favorite)
-            <button id="favorite" onclick="favorite();">Remove from favorite</button>
-
-        @else
-        <button id="favorite" onclick="favorite();">Add to fav animes</button>
-        @endif
-        @if($anime_user->would_like_to_watch)
-            <button id="to_watch" onclick="to_watch();">Remove from to watch list</button>
-        @else
-            <button id="to_watch" onclick="to_watch();">Add to to watch list</button>
-        @endif
-
+            @else
+            <button id="favorite" onclick="favorite();">Add to fav animes</button>
+            @endif
+            @if($anime_user->would_like_to_watch)
+                <button id="to_watch" onclick="to_watch();">Remove from to watch list</button>
+            @else
+                <button id="to_watch" onclick="to_watch();">Add to to watch list</button>
+            @endif
+        </div>
     @else
-        <button id="favorite" onclick="favorite();">Add to fav animes</button>
-        <button id="to_watch" onclick="to_watch();">Add to to watch list</button>
+        <div>
+            <button id="favorite" onclick="favorite();">Add to fav animes</button>
+            <button id="to_watch" onclick="to_watch();">Add to to watch list</button>
+        </div>
+
     @endif
 
+
 @endif
-<br>
-<a href="{{ route('animes.edit', $anime)}}">Edit</a>
-<a href="{{ route('animes.delete', $anime)}}">Delete</a>
+<div>
+    <a href="{{ route('animes.edit', $anime)}}">Edit</a>
+    <a href="{{ route('animes.delete', $anime)}}">Delete</a>
+</div>
 
-<br>
-<a href="{{ route('animes.index') }}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline mt-8">All animes</a>
+<div>
+    <a href="{{ route('animes.index') }}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline mt-8">All animes</a>
+</div>
 
-<br>
-<a href="{{route('comments.show', $anime)}}">All Comments</a>
+<div>
+    <a href="{{route('comments.show', $anime)}}">All Comments</a>
+</div>
 
 @if(Auth::id())
     <form method="post" action={{route("comments.store")}}>
@@ -87,6 +105,36 @@ CRating: <p id="anime_crating">{{$anime->cumulate_rating}}</p>
 </script>
 
 <script>
+    function edit_episodes()
+    {
+        document.getElementById("watched_episodes").readOnly = false;
+    }
+    function episodes(value)
+    {
+        $.ajaxSetup({ headers: { 'csrftoken' : '{{ csrf_token() }}' } });
+        $.ajax({
+            type: 'get',
+            url: "{{route('animes_users.episodes')}}",
+            data: {
+                'anime_id':{{$anime->id}},
+                @if(Auth::id())
+                'user_id': {{Auth::id() }},
+                @endif
+                'episodes': value,
+            },
+            success: function (data) {
+                document.getElementById("watched_episodes").value = data;
+                document.getElementById("watched_episodes").readOnly = true;
+                @if(!isset($anime_user->id) )
+                    if (data === "{{$anime->episodes}}") {
+                    document.getElementById("rate0").checked = true;
+                }
+
+                @endif
+            }
+        });
+    }
+
     function rate(value)
     {
         $.ajaxSetup({ headers: { 'csrftoken' : '{{ csrf_token() }}' } });
@@ -95,7 +143,9 @@ CRating: <p id="anime_crating">{{$anime->cumulate_rating}}</p>
             url: "{{route('animes_users.rate')}}",
             data: {
                 'anime_id':{{$anime->id}},
-                'user_id': @if(Auth::id()) {{Auth::id() }}@else 0 @endif,
+                @if(Auth::id())
+                'user_id': {{Auth::id() }},
+                @endif
                 'rating': value,
             },
             success: function (data) {
