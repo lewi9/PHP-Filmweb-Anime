@@ -37,7 +37,7 @@ class CommentController extends Controller
             'dislikes' => 0
             ]);
 
-        return redirect("/anime/" . strval($request->title) ."-" . strval($request->production_year) . "-" . strval($request->id));
+        return back();
     }
 
     public function update(Request $request): void

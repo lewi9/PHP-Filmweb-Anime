@@ -72,8 +72,6 @@ CRating: <p id="anime_crating">{{$anime->cumulate_rating}}</p>
         @method('POST')
         <input id="user_id" name="user_id" type="hidden" value="{{Auth::id()}}">
         <input id="anime_id" name="anime_id" type="hidden" value="{{$anime->id}}">
-        <input id="title" name="title" type="hidden" value="{{$anime->title}}">
-        <input id="production_year" name="production_year" type="hidden" value="{{$anime->production_year}}">
         <p><label for="text">Add comment:</label></p>
         <textarea id="text" name="text" rows="4" cols="50">
         </textarea>

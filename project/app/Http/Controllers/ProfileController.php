@@ -23,9 +23,11 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
+        $user = $this->ensureIsNotNullUser($request->user());
+
         return view('profile.edit', [
-            'user' => $request->user(),
-            'username' => $request->user()->username,
+            'user' => $user,
+            'username' => $user->username,
         ]);
     }
 
@@ -79,6 +81,9 @@ class ProfileController extends Controller
     public function favorites(string $username): View
     {
         $user = User::where('username', $username)->first();
+        if (!$user) {
+            abort(404);
+        }
         $user_favorites = AnimeUsers::where('user_id', $user->id)->where('favorite', true)->get();
         $anime_list = [];
         foreach ($user_favorites as $favorite) {
@@ -90,6 +95,9 @@ class ProfileController extends Controller
     public function ratings(string $username): View
     {
         $user = User::where('username', $username)->first();
+        if (!$user) {
+            abort(404);
+        }
         $user_favorites = AnimeUsers::where('user_id', $user->id)->where('rating', '!=', '0')->get();
         $anime_list = [];
         foreach ($user_favorites as $favorite) {
@@ -101,6 +109,9 @@ class ProfileController extends Controller
     public function to_watch(string $username): View
     {
         $user = User::where('username', $username)->first();
+        if (!$user) {
+            abort(404);
+        }
         $user_favorites = AnimeUsers::where('user_id', $user->id)->where('would_like_to_watch', true)->get();
         $anime_list = [];
         foreach ($user_favorites as $favorite) {
@@ -112,6 +123,9 @@ class ProfileController extends Controller
     public function friends(string $username): View
     {
         $user = User::where('username', $username)->first();
+        if (!$user) {
+            abort(404);
+        }
         $user_friends = UsersFriends::where('user1_id', $user->id)->orWhere('user2_id', $user->id)->get();
         $friends_list = [];
         foreach ($user_friends as $friends) {
@@ -121,24 +135,30 @@ class ProfileController extends Controller
         }
         return view('profile.friends', ['friends_list' => $friends_list, 'user' => $user]);
     }
-    public function store_image(Request $request, string $username)
+    public function store_image(Request $request, string $username): RedirectResponse
     {
-        $user = $request->user();
+        $user = $this->ensureIsNotNullUser($request->user());
         $request->validate([
             'image' => 'required|image|mimes:png,jpg,jpeg|max:2048'
         ]);
 
-        $image_name = $username . '.' . $request->image->extension();
-        $request->image->move(public_path('images'), $image_name);
+        /** @var \Illuminate\Http\UploadedFile $file */
+        $file = $request->image;
+
+        $image_name = $username . '.' . $file->extension();
+        $file->move(public_path('images'), $image_name);
         $user->profile_pic = $image_name;
         $user->save();
         return back()->with('success', 'Image uploaded successfully!')
             ->with('image', $image_name);
     }
-    public function add_to_friends(Request $request, string $username)
+    public function add_to_friends(Request $request, string $username): RedirectResponse
     {
-        $inviting_user = $request->user(); //dodawacz
+        $inviting_user = $this->ensureIsNotNullUser($request->user()); //dodawacz
         $invited_user = User::where('username', $username)->first(); //dodawany
+        if (!$invited_user) {
+            abort(404);
+        }
         $are_already_friends = UsersFriends::where('user1_id', $inviting_user->id)->where('user2_id', $invited_user->id)->get();
         $are_already_friends1 = UsersFriends::where('user1_id', $invited_user->id)->where('user2_id', $inviting_user->id)->get();
         if (count($are_already_friends) or count($are_already_friends1)) {
