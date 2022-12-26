@@ -11,6 +11,11 @@ class AnimeUsersController extends Controller
 {
     public function favorite(Request $request): Response
     {
+        $request->validate([
+            "anime_id" => ['required', 'exists:animes,id'],
+            'user_id' => ['required', 'exists:users,id'],
+        ]);
+
         $anime_user = AnimeUsers::where('anime_id', $request->anime_id)->where('user_id', $request->user_id)->first();
         if ($anime_user) {
             if ($anime_user->favorite) {
@@ -35,6 +40,11 @@ class AnimeUsersController extends Controller
 
     public function to_watch(Request $request): Response
     {
+        $request->validate([
+            "anime_id" => ['required', 'exists:animes,id'],
+            'user_id' => ['required', 'exists:users,id'],
+        ]);
+
         $anime_user = AnimeUsers::where('anime_id', $request->anime_id)->where('user_id', $request->user_id)->first();
         if ($anime_user) {
             if ($anime_user->would_like_to_watch) {
@@ -59,8 +69,16 @@ class AnimeUsersController extends Controller
 
     public function rate(Request $request): Response
     {
+        $request->validate([
+            "anime_id" => ['required', 'exists:animes,id'],
+            'user_id' => ['required', 'exists:users,id'],
+            'rating' => ['required', 'integer', 'min:0', 'max:10']
+        ]);
         $anime_user = AnimeUsers::where('anime_id', $request->anime_id)->where('user_id', $request->user_id)->first();
-        $anime = Anime::find($request->anime_id);
+        $anime = Anime::where('id', $request->anime_id)->get()[0];
+        if (!$anime) {
+            abort(404);
+        }
         $anime->cumulate_rating += intval($request->rating);
         if ($anime_user) {
             $anime->cumulate_rating -= intval($anime_user->rating);
@@ -75,10 +93,9 @@ class AnimeUsersController extends Controller
             } else {
                 $anime->rating = 0;
             }
-
-            $anime->save();
-            $anime_user->rating = $request->rating;
+            $anime_user->rating = strval($request->rating);
             $anime_user->save();
+            $anime->save();
             return Response("$anime->rating, $anime->how_much_users_watched, $anime->rates, $anime->cumulate_rating");
         }
         if (intval($request->rating) != 0) {

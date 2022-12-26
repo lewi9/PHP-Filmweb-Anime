@@ -79,7 +79,10 @@ class AnimeController extends Controller
 
         if ($request->poster != null) {
             $request->validate(['poster' => ['image','mimes:png,jpg,jpeg','max:2048']]);
+
+            /** @var \Illuminate\Http\UploadedFile $file */
             $file = $request->poster;
+
             $imageName = $request->title . $request->production_year. rand(0, 10) . "." . $file->extension();
             $file->move(public_path('images'), $imageName);
         } else {
