@@ -24,9 +24,9 @@ class CommentController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'user_id' => ['exists:App\Models\User,id'],
-            'text' => ['string'],
-            'anime_id'=> ["exists:App\Models\Anime,id"]
+            'user_id' => ['required', 'exists:App\Models\User,id'],
+            'text' => ['required', 'string'],
+            'anime_id'=> ['required', "exists:App\Models\Anime,id"]
         ]);
 
         Comment::create([
@@ -37,13 +37,13 @@ class CommentController extends Controller
             'dislikes' => 0
             ]);
 
-        return redirect("/anime/$request->title-$request->production_year-$request->anime_id");
+        return redirect("/anime/" . strval($request->title) ."-" . strval($request->production_year) . "-" . strval($request->id));
     }
 
-    public function update(Request $request)
+    public function update(Request $request): void
     {
         $request->validate([
-            'text' => ["string"]
+            'text' => ['required', "string"]
         ]);
         Comment::where('id', $request->id)->update([
             'text' => $request->text,
@@ -59,12 +59,11 @@ class CommentController extends Controller
         }
     }
 
-    public function destroy(Request $request)
+    public function destroy(Request $request): void
     {
-        if ($comments = Comment::where('id', $request->id)->get()) {
-            foreach ($comments as $comment) {
-                $comment->forceDelete();
-            }
+        $comments = Comment::where('id', $request->id)->get();
+        foreach ($comments as $comment) {
+            $comment->forceDelete();
         }
     }
 
@@ -75,7 +74,10 @@ class CommentController extends Controller
             ->where('comment_id', $request->id)
             ->first();
 
-        $comment = Comment::find($request->id);
+        $comment = Comment::where('id', $request->id)->first();
+        if (!$comment) {
+            abort(404);
+        }
         if (!$like) {
             DB::table('likes_comments')
                 ->insert([
@@ -86,7 +88,7 @@ class CommentController extends Controller
             $comment->likes++;
             $comment->save();
         } else {
-            if ($like->rate == "dislike") {
+            if (isset($like->rate) and $like->rate == "dislike") {
                 $comment->dislikes--;
                 $comment->likes++;
                 $comment->save();
@@ -106,7 +108,10 @@ class CommentController extends Controller
             ->where('comment_id', $request->id)
             ->first();
 
-        $comment = Comment::find($request->id);
+        $comment = Comment::where('id', $request->id)->first();
+        if (!$comment) {
+            abort(404);
+        }
         if (!$like) {
             DB::table('likes_comments')
                 ->insert([
@@ -117,7 +122,7 @@ class CommentController extends Controller
             $comment->dislikes++;
             $comment->save();
         } else {
-            if ($like->rate == "like") {
+            if (isset($like->rate) and $like->rate == "like") {
                 $comment->dislikes++;
                 $comment->likes--;
                 $comment->save();

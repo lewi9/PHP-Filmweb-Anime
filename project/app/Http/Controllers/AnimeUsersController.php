@@ -75,7 +75,7 @@ class AnimeUsersController extends Controller
             'rating' => ['required', 'integer', 'min:0', 'max:10']
         ]);
         $anime_user = AnimeUsers::where('anime_id', $request->anime_id)->where('user_id', $request->user_id)->first();
-        $anime = Anime::where('id', $request->anime_id)->get()[0];
+        $anime = Anime::where('id', $request->anime_id)->first();
         if (!$anime) {
             abort(404);
         }

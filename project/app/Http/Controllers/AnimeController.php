@@ -151,7 +151,7 @@ class AnimeController extends Controller
     public function update(Request $request): RedirectResponse
     {
         $request->validate([
-            'id' => ['exists:animes'],
+            'id' => ['exists:animes', 'required'],
             'title' => ['required', 'string'],
             'genre' => ['required', 'string'],
             'production_year' => ['required', 'integer', 'numeric', 'digits:4'],
