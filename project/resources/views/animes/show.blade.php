@@ -85,8 +85,11 @@
 </div>
 
 <div>
+
     <h4>Reviews</h4>
-    @include('animes.reviews.show')
+    @include('animes.reviews.index')
+    <a href="{{route('reviews.index', [$anime->title, $anime->production_year, $anime->id])}}">All reviews</a>
+
 </div>
 
 @if(Auth::id())

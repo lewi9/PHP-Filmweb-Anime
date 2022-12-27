@@ -53,10 +53,10 @@ class AnimeController extends Controller
             ->get();
         if (count($animes) != 0) {
             foreach ($animes as $anime) {
-                $output .= '<img src="' . e(URL::asset('/images/'.$anime->poster)) . '" alt="Anime Pic" height="20" width="20">' .
+                $output .= '<div><img src="' . e(URL::asset('/images/'.$anime->poster)) . '" alt="Anime Pic" height="20" width="20">' .
                         app('markdown.converter')->convert((string) $anime->title)->getContent() .
                         '<a href="' . e(route('animes.show', [$anime->title, $anime->production_year, $anime->id])) . '">Details</a>
-                            <br>';
+                            </div>';
             }
             return Response($output);
         }

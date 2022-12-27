@@ -4,6 +4,7 @@ use App\Http\Controllers\AnimeController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\AnimeUsersController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReviewController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -47,6 +48,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/commentsupdate', [CommentController::class, 'update'])->name("comments.update");
     Route::get('/commentsdelete', [CommentController::class, 'destroy'])->name('comments.delete');
     Route::get('/commentslike', [CommentController::class, 'like'])->name('comments.like');
+
+    Route::get('/anime/{title}-{production_year}-{id}/reviews/create', [ReviewController::class, 'create' ])->name('reviews.create');
+    Route::post('/reviews', [ReviewController::class, 'store'])->name('reviews.store');
+    Route::get('/anime/{title}-{production_year}-{id}/reviews/{review_id}/edit', [ReviewController::class, 'edit' ])->name('reviews.edit');
+    Route::patch('/reviews', [ReviewController::class, 'update'])->name('reviews.update');
+    Route::delete('/reviews/{review_id}', [ReviewController::class, 'destroy'])->name('reviews.delete');
 });
 
 Route::get('/anime', [AnimeController::class, 'index'])->name('animes.index');
@@ -55,15 +62,16 @@ Route::get('/anime/filter', [AnimeController::class, 'filter'])->name('animes.fi
 
 Route::get('/anime/{anime}/comments', [CommentController::class, 'show'])->name('comments.show');
 
+Route::get('/anime/{title}-{production_year}-{id}/reviews', [ReviewController::class, 'index' ])->name('reviews.index');
+Route::get('/anime/{title}-{production_year}-{id}/reviews/{review_id}', [ReviewController::class, 'show' ])->name('reviews.show');
+
+
 //admin
 Route::get('/anime/create', [AnimeController::class, 'create'])->middleware(['auth', 'verified'])->name('animes.create');
 Route::post('/anime', [AnimeController::class, 'store'])->middleware(['auth', 'verified'])->name('animes.store');
 Route::get('/anime/{anime}/edit/', [AnimeController::class, 'edit'])->middleware(['auth', 'verified'])->name('animes.edit');
 Route::get('/anime/{anime}/delete', [AnimeController::class, 'destroy'])->middleware(['auth', 'verified'])->name('animes.delete');
 Route::patch('/anime/update', [AnimeController::class, 'update'])->middleware(['auth', 'verified'])->name('animes.update');
-
-
-
 
 
 require __DIR__.'/auth.php';

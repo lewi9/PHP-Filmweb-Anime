@@ -32,9 +32,15 @@ class CommentController extends Controller
         return $likes;
     }
 
-    public function show(Anime $anime): View
+    public function show(string $title, int $production_year, int $id): View
     {
         $likes = array();
+
+        $anime = Anime::where('id', $id)->first();
+
+        if (!$anime) {
+            abort(404);
+        }
 
         $comments = DB::table('users')
             ->join('comments', 'comments.author_id', '=', 'users.id')
