@@ -57,32 +57,40 @@ class CommentController extends Controller
             'anime_id'=> ['required', "exists:App\Models\Anime,id"]
         ]);
 
+        /** @var string $text */
+        $text = $request->text;
+
         Comment::create([
             'author_id' => $request->user_id,
-            'text' => $request->text,
+            'text' =>  preg_replace('!\s+!', ' ', trim($text)),
             'anime_id' => $request->anime_id,
             ]);
 
         return back();
     }
 
-    public function update(Request $request): void
+    public function update(Request $request): Response
     {
         $request->validate([
+            'id' => ['exists:comments', 'required'],
             'text' => ['required', "string"]
         ]);
+
+        /** @var string $text */
+        $text = $request->text;
+
+        $text = preg_replace('!\s+!', ' ', trim($text));
+
         Comment::where('id', $request->id)->update([
-            'text' => $request->text,
+            'text' => $text,
             'likes' => 0,
             'dislikes' => 0,
             ]);
 
-        if (Auth::user()) {
-            $like = DB::table('likes_comments')
-                ->where('user_id', Auth::id())
-                ->where('comment_id', $request->id)
-                ->delete();
-        }
+        $like = DB::table('likes_comments')
+            ->where('comment_id', $request->id)
+            ->delete();
+        return Response(strval($text));
     }
 
     public function destroy(Request $request): void

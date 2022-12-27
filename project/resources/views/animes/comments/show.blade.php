@@ -9,9 +9,8 @@
 
         <div id="{{$comment->id . 'div'}}">
             <label style="display:block" for="{{$comment->id . "_"}}">{{$comment->name}}</label>
-            <textarea style="display:block" id="{{$comment->id . "_"}}" name="text" rows="4" cols="50" disabled>
-        {{$comment->text}}
-        </textarea><br>
+            <textarea style="display:block" id="{{$comment->id . "_"}}" name="text" rows="4" cols="50" disabled>{{$comment->text}}</textarea>
+            <br>
             Likes: <mark id="{{$comment->id . 'likes'}}">{{$comment->likes}}</mark>
             Dislikes: <mark id="{{$comment->id . 'dislikes'}}">{{$comment->dislikes}}</mark>
             <button id="{{$comment->id . "__"}}" style="visibility: hidden" onclick="updater(this.id);">Update!</button>

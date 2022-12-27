@@ -62,8 +62,9 @@
                 'id':id.replace('__', ''),
                 'text':$('#'+id.replace('__','_')).val(),
             },
-            success: function () {
+            success: function (data) {
                 document.getElementById(id.replace('__','_')).disabled = true;
+                document.getElementById(id.replace('__','_')).value = data;
                 document.getElementById(id).style.visibility = 'hidden';
                 $("#"+id.replace('__', '')+"likes").text('0');
                 $("#"+id.replace('__', '')+"dislikes").text('0');
