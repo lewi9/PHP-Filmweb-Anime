@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 use Illuminate\View\View;
+use stdClass;
 
 class AnimeController extends Controller
 {
@@ -116,6 +117,8 @@ class AnimeController extends Controller
 
         $anime_user = "";
 
+        $likes = array();
+
         if (Auth::id()) {
             $anime_user = AnimeUsers::where('user_id', Auth::id())->where('anime_id', $id)->first();
             $comments = DB::table('users')->join('comments', 'comments.author_id', '=', 'users.id')
@@ -134,15 +137,18 @@ class AnimeController extends Controller
             } else {
                 $comments = $comments->get();
             }
+
+            $likes = CommentController::likes_helper($comments);
         } else {
-            $comments = DB::table('comments')->join('users', 'comments.author_id', '=', 'users.id')
+            $comments = DB::table('users')->join('comments', 'comments.author_id', '=', 'users.id')
                 ->where('anime_id', $id)
                 ->orderBy('comments.id', 'desc')
                 ->limit(5)->get();
         }
 
 
-        return view('animes.show')->with('anime', $anime)->with('comments', $comments)->with('anime_user', $anime_user);
+        return view('animes.show')->with('anime', $anime)->with('comments', $comments)
+            ->with('anime_user', $anime_user)->with('comment_like', $likes);
     }
 
     public function edit(anime $anime): View

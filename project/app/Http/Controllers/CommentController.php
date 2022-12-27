@@ -7,20 +7,48 @@ use App\Models\Comment;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
+use stdClass;
 
 class CommentController extends Controller
 {
+    /**
+     * @param Collection $comments
+     * @return array<int, object|null>
+     */
+    public static function likes_helper(Collection $comments): array
+    {
+        $likes = array();
+        foreach ($comments as $comment) {
+            if ($comment instanceof stdClass) {
+                $likes[] = DB::table('likes_comments')
+                    ->where('comment_id', $comment->id)
+                    ->where('user_id', Auth::id())->first();
+            }
+        }
+        return $likes;
+    }
+
     public function show(Anime $anime): View
     {
-        return View('animes.comments.show')->with('comments', DB::table('comments')
-                ->join('users', 'comments.author_id', '=', 'users.id')
-                ->where('anime_id', $anime->id)
-                ->orderBy('comments.id', 'desc')
-                ->get())->with('anime', $anime);
+        $likes = array();
+
+        $comments = DB::table('users')
+            ->join('comments', 'comments.author_id', '=', 'users.id')
+            ->where('anime_id', $anime->id)
+            ->orderBy('comments.id', 'desc')
+            ->get();
+
+        if (Auth::id()) {
+            $likes = self::likes_helper($comments);
+        }
+        return View('animes.comments.show')->with('comments', $comments)->with('anime', $anime)->with('comment_like', $likes);
     }
+
+
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
@@ -51,7 +79,7 @@ class CommentController extends Controller
 
         if (Auth::user()) {
             $like = DB::table('likes_comments')
-                ->where('user_id', Auth::user()->id)
+                ->where('user_id', Auth::id())
                 ->where('comment_id', $request->id)
                 ->delete();
         }
@@ -98,8 +126,6 @@ class CommentController extends Controller
             } else {
                 $comment->dislikes++;
             }
-
-            $comment->save();
         } else {
             if (isset($like->rate) and $like->rate != $request->status) {
                 if ($request->status == "like") {
@@ -110,13 +136,13 @@ class CommentController extends Controller
                     $comment->likes--;
                 }
 
-                $comment->save();
                 DB::table('likes_comments')
                     ->where('user_id', $request->user_id)
                     ->where('comment_id', $request->id)
                     ->update(['rate' => $request->status]);
             }
         }
+        $comment->save();
         return Response($comment->likes . ',' . $comment->dislikes);
     }
 }

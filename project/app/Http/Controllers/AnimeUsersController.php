@@ -145,7 +145,7 @@ class AnimeUsersController extends Controller
         if ($anime_user) {
             $anime_user->watched_episodes = intval($request->episodes);
             $anime_user->save();
-            return Response('$request->episodes');
+            return Response(strval($request->episodes));
         }
 
         AnimeUsers::create([
@@ -155,6 +155,6 @@ class AnimeUsersController extends Controller
             'watched_episodes' => intval($request->episodes),
         ]);
 
-        return Response('$request->episodes');
+        return Response(strval($request->episodes));
     }
 }
