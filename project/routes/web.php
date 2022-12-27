@@ -53,7 +53,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/reviews', [ReviewController::class, 'store'])->name('reviews.store');
     Route::get('/anime/{title}-{production_year}-{id}/reviews/{review_id}/edit', [ReviewController::class, 'edit' ])->name('reviews.edit');
     Route::patch('/reviews', [ReviewController::class, 'update'])->name('reviews.update');
-    Route::delete('/reviews/{review_id}', [ReviewController::class, 'destroy'])->name('reviews.delete');
+    Route::delete('/anime/{title}-{production_year}-{id}/reviews/{review_id}', [ReviewController::class, 'destroy'])->name('reviews.delete');
 });
 
 Route::get('/anime', [AnimeController::class, 'index'])->name('animes.index');

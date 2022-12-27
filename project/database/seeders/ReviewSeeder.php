@@ -18,23 +18,31 @@ class ReviewSeeder extends Seeder
     public function run()
     {
         $faker = Factory::create();
-        DB::table('reviews')->insert([
-            'user_id' => '1',
-            'anime_id' => '1',
-            'text' => $faker->realTextBetween(256, 400),
-            'title' => implode(' ', $faker->words(3)),
-            'cumulate_rating' => 0,
-            'rates' => 0,
-            'rating' => 0,
-        ]);
-        DB::table('reviews')->insert([
-            'user_id' => '2',
-            'anime_id' => '1',
-            'text' => $faker->realTextBetween(256, 400),
-            'title' => implode(' ', $faker->words(3)),
-            'cumulate_rating' => 20,
-            'rates' => 6,
-            'rating' => 5,
-        ]);
+
+        $words = $faker->words(3);
+        if (is_array($words)) {
+            DB::table('reviews')->insert([
+                'user_id' => '1',
+                'anime_id' => '1',
+                'text' => $faker->realTextBetween(256, 400),
+                'title' => implode(' ', $words),
+                'cumulate_rating' => 0,
+                'rates' => 0,
+                'rating' => 0,
+            ]);
+        }
+
+        $words = $faker->words(3);
+        if (is_array($words)) {
+            DB::table('reviews')->insert([
+                'user_id' => '2',
+                'anime_id' => '1',
+                'text' => $faker->realTextBetween(256, 400),
+                'title' => implode(' ', $words),
+                'cumulate_rating' => 20,
+                'rates' => 6,
+                'rating' => 5,
+            ]);
+        }
     }
 }
