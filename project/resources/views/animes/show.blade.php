@@ -84,6 +84,11 @@
     <a href="{{route('comments.show', $anime)}}">All Comments</a>
 </div>
 
+<div>
+    <h4>Reviews</h4>
+    @include('animes.reviews.show')
+</div>
+
 @if(Auth::id())
     <form method="post" action={{route("comments.store")}}>
         @csrf

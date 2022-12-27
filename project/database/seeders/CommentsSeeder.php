@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-
+use Faker\Factory;
 class CommentsSeeder extends Seeder
 {
     /**
@@ -15,33 +15,34 @@ class CommentsSeeder extends Seeder
      */
     public function run()
     {
+        $faker = Factory::create();
         DB::table('comments')->insert([
             'author_id' => '1',
             'anime_id' => '1',
-            'text' => 'I was the sailor, I miss that time',
-            'likes' => 2,
-            'dislikes' => 0
+            'text' => $faker->text(),
+            'likes' => $faker->randomDigit(),
+            'dislikes' => $faker->randomDigit()
         ]);
         DB::table('comments')->insert([
             'author_id' => '2',
             'anime_id' => '1',
-            'text' => 'I love the moon!',
-            'likes' => 1,
-            'dislikes' => 2,
+            'text' => $faker->text(),
+            'likes' => $faker->randomDigit(),
+            'dislikes' => $faker->randomDigit(),
         ]);
         DB::table('comments')->insert([
             'author_id' => '2',
             'anime_id' => '2',
-            'text' => 'Mecha Gurenge!',
-            'likes' => 2,
-            'dislikes' => 1
+            'text' => $faker->text(),
+            'likes' => $faker->randomDigit(),
+            'dislikes' => $faker->randomDigit()
         ]);
         DB::table('comments')->insert([
             'author_id' => '1',
             'anime_id' => '1',
-            'text' => 'Very pretty girls',
-            'likes' => 50,
-            'dislikes' => 0
+            'text' => $faker->text(),
+            'likes' => $faker->randomDigit()*$faker->randomDigit(),
+            'dislikes' => $faker->randomDigit()
         ]);
     }
 }

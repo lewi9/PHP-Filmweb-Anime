@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Anime;
 use App\Models\AnimeUsers;
 use App\Models\Comment;
+use App\Models\Review;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -12,7 +13,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 use Illuminate\View\View;
-use stdClass;
 
 class AnimeController extends Controller
 {
@@ -125,17 +125,32 @@ class AnimeController extends Controller
                 ->where('author_id', Auth::id())
                 ->where('anime_id', $id)
                 ->orderBy('comments.id', 'desc');
+            $reviews = DB::table('users')->join('reviews', 'reviews.user_id', '=', 'users.id')
+                ->where('user_id', Auth::id())
+                ->where('anime_id', $id)
+                ->orderBy('reviews.id', 'desc');
 
 
             if ($comments->count() < 5) {
                 $subcomments = DB::table('users')->join('comments', 'comments.author_id', '=', 'users.id')
-                    ->where('anime_id', $id)->whereNot(function ($query) {
-                        $query->where('author_id', Auth::id());
-                    })->orderBy('comments.id', 'desc')
-                    ->limit(5 - $comments->count());
+                                ->where('anime_id', $id)->whereNot(function ($query) {
+                                    $query->where('author_id', Auth::id());
+                                })->orderBy('comments.id', 'desc')
+                                ->limit(5 - $comments->count());
                 $comments = $comments->get()->concat($subcomments->get()->toArray());
             } else {
                 $comments = $comments->get();
+            }
+
+            if ($reviews->count() < 3) {
+                $subreviews = DB::table('users')->join('reviews', 'reviews.user_id', '=', 'users.id')
+                                ->where('anime_id', $id)->whereNot(function ($query) {
+                                    $query->where('user_id', Auth::id());
+                                })->orderBy('rating', 'desc')
+                                ->limit(3-$reviews->count());
+                $reviews = $reviews->get()->concat($subreviews->get()->toArray());
+            } else {
+                $reviews= $reviews->get();
             }
 
             $likes = CommentController::likes_helper($comments);
@@ -143,12 +158,18 @@ class AnimeController extends Controller
             $comments = DB::table('users')->join('comments', 'comments.author_id', '=', 'users.id')
                 ->where('anime_id', $id)
                 ->orderBy('comments.id', 'desc')
-                ->limit(5)->get();
+                ->limit(5)
+                ->get();
+            $reviews = DB::table('users')->join('reviews', 'reviews.user_id', '=', 'users.id')
+                ->where('anime_id', $id)
+                ->orderBy('rating', 'desc')
+                ->limit(3)
+                ->get();
         }
 
 
         return view('animes.show')->with('anime', $anime)->with('comments', $comments)
-            ->with('anime_user', $anime_user)->with('comment_like', $likes);
+            ->with('anime_user', $anime_user)->with('comment_like', $likes)->with('reviews', $reviews);
     }
 
     public function edit(anime $anime): View
