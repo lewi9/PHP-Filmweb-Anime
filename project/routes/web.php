@@ -60,7 +60,7 @@ Route::get('/anime', [AnimeController::class, 'index'])->name('animes.index');
 Route::get('/anime/{title}-{production_year}-{id}', [AnimeController::class, 'show'])->name('animes.show');
 Route::get('/anime/filter', [AnimeController::class, 'filter'])->name('animes.filter');
 
-Route::get('/anime/{anime}/comments', [CommentController::class, 'show'])->name('comments.show');
+Route::get('/anime/{title}-{production_year}-{id}/comments', [CommentController::class, 'show'])->name('comments.show');
 
 Route::get('/anime/{title}-{production_year}-{id}/reviews', [ReviewController::class, 'index' ])->name('reviews.index');
 Route::get('/anime/{title}-{production_year}-{id}/reviews/{review_id}', [ReviewController::class, 'show' ])->name('reviews.show');

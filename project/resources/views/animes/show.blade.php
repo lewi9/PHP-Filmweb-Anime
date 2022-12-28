@@ -81,7 +81,7 @@
 </div>
 
 <div>
-    <a href="{{route('comments.show', $anime)}}">All Comments</a>
+    <a href="{{route('comments.show', [$anime->title, $anime->production_year, $anime->id])}}">All Comments</a>
 </div>
 
 <div>
