@@ -81,10 +81,8 @@ class AnimeUsersController extends Controller
             'rating' => ['required', 'integer', 'min:0', 'max:10']
         ]);
         $anime_user = AnimeUsers::where('anime_id', $request->anime_id)->where('user_id', $request->user_id)->first();
-        $anime = Anime::where('id', $request->anime_id)->first();
-        if (!$anime) {
-            abort(404);
-        }
+        $anime = AnimeController::anime_helper(intval($request->anime_id));
+
         $anime->cumulate_rating += intval($request->rating);
         if ($anime_user) {
             $anime->cumulate_rating -= intval($anime_user->rating);
@@ -99,7 +97,7 @@ class AnimeUsersController extends Controller
             } else {
                 $anime->rating = 0;
             }
-            $anime_user->rating = strval($request->rating);
+            $anime_user->rating = intval($request->rating);
             $anime_user->save();
             $anime->save();
             return Response("$anime->rating, $anime->how_much_users_watched, $anime->rates, $anime->cumulate_rating");

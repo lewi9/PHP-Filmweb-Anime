@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Anime;
 use App\Models\Review;
+use App\Models\ReviewUsers;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -37,11 +38,12 @@ class ReviewController extends Controller
 
     public function show(string $title, int $production_year, int $id, int $review_id): View
     {
+        $review_user = ReviewUsers::where('user_id', Auth::id())->where('review_id', $review_id)->first();
         $anime = AnimeController::anime_helper($id);
 
         $review = self::review_helper($review_id);
 
-        return view('animes.reviews.show')->with('review', $review)->with('anime', $anime);
+        return view('animes.reviews.show')->with('review', $review)->with('anime', $anime)->with('review_user', $review_user);
     }
 
     public function create(string $title, int $production_year, int $id): View
@@ -87,7 +89,7 @@ class ReviewController extends Controller
     {
         $request->validate([
             'title' => ['required', 'string'],
-            'text' => ['required', 'min:256'],
+            'text' => ['required', 'min:500'],
             'review_id' => ['required', 'exists:reviews,id', 'integer']
         ]);
 

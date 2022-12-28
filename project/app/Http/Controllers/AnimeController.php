@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Anime;
 use App\Models\AnimeUsers;
-use App\Models\Comment;
-use App\Models\Review;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -64,7 +62,7 @@ class AnimeController extends Controller
             ->get();
         if (count($animes) != 0) {
             foreach ($animes as $anime) {
-                $output .= '<div><img src="' . e(URL::asset('/images/'.$anime->poster)) . '" alt="Anime Pic" height="200" width="20git 0">' .
+                $output .= '<div><img src="' . e(URL::asset('/images/'.$anime->poster)) . '" alt="Anime Pic" height="200" width="200">' .
                         app('markdown.converter')->convert((string) $anime->title)->getContent() .
                         '<a href="' . e(route('animes.show', [$anime->title, $anime->production_year, $anime->id])) . '">Details</a>
                             </div>';

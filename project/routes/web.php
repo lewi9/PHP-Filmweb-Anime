@@ -5,6 +5,7 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\AnimeUsersController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\ReviewUsersController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -40,31 +41,38 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
+    //animes users
     Route::get('/anime/manage_list', [AnimeUsersController::class, 'manage_list'])->name('animes_users.manage_list');
     Route::get('/anime/rate', [AnimeUsersController::class, 'rate'])->name('animes_users.rate');
     Route::get('/anime/watched_episodes', [AnimeUsersController::class, 'watched_episodes'])->name('animes_users.episodes');
 
+    //comments
     Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
     Route::get('/commentsupdate', [CommentController::class, 'update'])->name("comments.update");
     Route::get('/commentsdelete', [CommentController::class, 'destroy'])->name('comments.delete');
     Route::get('/commentslike', [CommentController::class, 'like'])->name('comments.like');
 
+    //reviews
     Route::get('/anime/{title}-{production_year}-{id}/reviews/create', [ReviewController::class, 'create' ])->name('reviews.create');
     Route::post('/reviews', [ReviewController::class, 'store'])->name('reviews.store');
     Route::get('/anime/{title}-{production_year}-{id}/reviews/{review_id}/edit', [ReviewController::class, 'edit' ])->name('reviews.edit');
     Route::patch('/reviews', [ReviewController::class, 'update'])->name('reviews.update');
     Route::delete('/anime/{title}-{production_year}-{id}/reviews/{review_id}', [ReviewController::class, 'destroy'])->name('reviews.delete');
-});
 
+    //reviews users
+    Route::get('/reviews/rate', [ReviewUsersController::class, 'rate'])->name('reviews_users.rate');
+});
+//animes
 Route::get('/anime', [AnimeController::class, 'index'])->name('animes.index');
 Route::get('/anime/{title}-{production_year}-{id}', [AnimeController::class, 'show'])->name('animes.show');
 Route::get('/anime/filter', [AnimeController::class, 'filter'])->name('animes.filter');
 
+//comments
 Route::get('/anime/{title}-{production_year}-{id}/comments', [CommentController::class, 'show'])->name('comments.show');
 
+//reviews
 Route::get('/anime/{title}-{production_year}-{id}/reviews', [ReviewController::class, 'index' ])->name('reviews.index');
 Route::get('/anime/{title}-{production_year}-{id}/reviews/{review_id}', [ReviewController::class, 'show' ])->name('reviews.show');
-
 
 //admin
 Route::get('/anime/create', [AnimeController::class, 'create'])->middleware(['auth', 'verified'])->name('animes.create');
@@ -72,7 +80,6 @@ Route::post('/anime', [AnimeController::class, 'store'])->middleware(['auth', 'v
 Route::get('/anime/{anime}/edit/', [AnimeController::class, 'edit'])->middleware(['auth', 'verified'])->name('animes.edit');
 Route::get('/anime/{anime}/delete', [AnimeController::class, 'destroy'])->middleware(['auth', 'verified'])->name('animes.delete');
 Route::patch('/anime/update', [AnimeController::class, 'update'])->middleware(['auth', 'verified'])->name('animes.update');
-
 
 require __DIR__.'/auth.php';
 

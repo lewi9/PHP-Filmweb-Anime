@@ -24,7 +24,7 @@ class ReviewSeeder extends Seeder
             DB::table('reviews')->insert([
                 'user_id' => '1',
                 'anime_id' => '1',
-                'text' => $faker->realTextBetween(256, 400),
+                'text' => $faker->realTextBetween(500, 5000),
                 'title' => implode(' ', $words),
                 'cumulate_rating' => 0,
                 'rates' => 0,
@@ -37,9 +37,9 @@ class ReviewSeeder extends Seeder
             DB::table('reviews')->insert([
                 'user_id' => '2',
                 'anime_id' => '1',
-                'text' => $faker->realTextBetween(256, 400),
+                'text' => $faker->realTextBetween(500, 4000),
                 'title' => implode(' ', $words),
-                'cumulate_rating' => 20,
+                'cumulate_rating' => 30,
                 'rates' => 6,
                 'rating' => 5,
             ]);

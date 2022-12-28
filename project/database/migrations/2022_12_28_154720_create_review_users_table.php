@@ -12,16 +12,12 @@ return new class () extends Migration {
      */
     public function up()
     {
-        Schema::create('anime_users', function (Blueprint $table) {
+        Schema::create('review_users', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
-            $table->foreignId('anime_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
-            $table->boolean('would_like_to_watch');
-            $table->boolean('favorite');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('review_id')->constrained('reviews')->onDelete('cascade');
             $table->integer('rating');
-            $table->boolean('watched');
-            $table->integer('watched_episodes');
         });
     }
 
@@ -32,6 +28,6 @@ return new class () extends Migration {
      */
     public function down()
     {
-        Schema::dropIfExists('anime_users');
+        Schema::dropIfExists('review_users');
     }
 };
