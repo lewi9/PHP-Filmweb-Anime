@@ -2,12 +2,21 @@
     <a id="back_anime_2" href="{{ route('animes.show', [$anime->title, $anime->production_year, $anime->id]) }}">Back to anime</a>
 </h1>
 
+
 <div id="{{$review->id . 'div'}}">
     <p><strong>{{$review->name}}</strong></p>
     <p>{{$review->title}}</p>
     <p>{{$review->text}}</p>
     Review rating: <p id="review_rating">{{$review->rating}}</p>
     Review rates: <p id="review_rates">{{$review->rates}}</p>
+    @if(Auth::id() == $review->user_id)
+        <a href="{{route('reviews.edit', [$anime->title, $anime->production_year, $anime->id, $review->id])}}">Edit review</a>
+        <form id="delete_review" action="{{route('reviews.delete',[$anime->title, $anime->production_year, $anime->id, $review->id])}}" method="post">
+            @csrf
+            @method('DELETE')
+            <a href="javascript:{}" onclick="document.getElementById('delete_review').submit(); return false;">Delete review</a>
+        </form>
+    @endif
     @if(Auth::user())
         <div>
             <input onclick="rate(this.value);" type="radio" id="rate0" name="rate" value="0" @if(isset($review_user->id)) @if(intval($review_user->rating) == 0) checked @endif @endif
@@ -34,14 +43,6 @@
             <input onclick="rate(this.value);" type="radio" id="rate10" name="rate" value="10" @if(isset($review_user->id)) @if(intval($review_user->rating) == 10) checked @endif @endif/>
             <label for="rate10">10</label>
         </div>
-    @endif
-    @if(Auth::id() == $review->user_id)
-        <a href="{{route('reviews.edit', [$anime->title, $anime->production_year, $anime->id, $review->id])}}">Edit review</a>
-        <form id="delete_review" action="{{route('reviews.delete',[$anime->title, $anime->production_year, $anime->id, $review->id])}}" method="post">
-            @csrf
-            @method('DELETE')
-            <a href="javascript:{}" onclick="document.getElementById('delete_review').submit(); return false;">Delete review</a>
-        </form>
     @endif
     <br>
 </div>

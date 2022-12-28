@@ -11,6 +11,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
+use stdClass;
 
 class ReviewController extends Controller
 {
@@ -29,10 +30,7 @@ class ReviewController extends Controller
     {
         $anime = AnimeController::anime_helper($id);
 
-        $reviews = DB::table('users')->join('reviews', 'reviews.user_id', '=', 'users.id')
-            ->where('anime_id', $anime->id)
-            ->orderBy('rating', 'desc')
-            ->get();
+        $reviews = $this->filter(new Request(['anime_id' => $anime->id]));
 
         return view('animes.reviews.index')->with('reviews', $reviews)->with('anime', $anime);
     }
@@ -133,31 +131,25 @@ class ReviewController extends Controller
 
         $reviews = DB::table('users')->join('reviews', 'reviews.user_id', '=', 'users.id')
             ->where('anime_id', $anime->id)
-            ->orderBy('reviews'.strval($filter), strval($filter_mode))
+            ->orderBy('reviews.'.strval($filter), strval($filter_mode))
             ->get();
 
         if (count($reviews) > 0) {
             foreach ($reviews as $review) {
                 /** @var stdClass $review */
-                $output .= '<div id="' . e($comment->id . 'div') . '">
-                    <label style="display:block" for="' . e($comment->id . "_") . '">' . e($comment->name) . '</label>
-                    <textarea style="display:block" id="' . e($comment->id . "_") . '" name="text" rows="4" cols="50" disabled>' . e($comment->text) . '.</textarea>
-                    <br>
-                    Likes: <mark id="' . e($comment->id . 'likes') . '">' . e($comment->likes) . '</mark>
-                    Dislikes: <mark id="' . e($comment->id . 'dislikes') . '">' . e($comment->dislikes) . '</mark>
-                    <button id="' . e($comment->id . "__") . '" style="visibility: hidden" onclick="updater(this.id);">Update!</button>';
-                if (Auth::user()) {
-                    $output .= '<br>
-                        <button style="background-color: lightgrey" id="' . e($comment->id) . '" name="liker-' . e($comment->id) . '" onclick="liker(this.id);">Like</button>
-                        <button style="background-color: lightgrey" id="' . e($comment->id) . '" name="disliker-' . e($comment->id) . '" onclick="disliker(this.id);">Dislike</button>
-                        <br>';
-
-                    if (Auth::id() == $comment->author_id) {
-                        $output .= '<button id = "' . e($comment->id) . '" onclick = "edit(this.id);" > Edit Comment </button >
-                            <button id = "' . e($comment->id) . '" onclick = "deleter(this.id);" > Delete Comment </button >';
-                    }
+                $output .= '<div id="' . e($review->id . 'div') . '">
+                    <p><strong>' . e($review->name) . '</strong></p>
+                    <p>' . e($review->title) . '</p>
+                    <p>Review rating:' . e($review->rating) . '</p>
+                    <a href="' . e(route('reviews.show', [$anime->title, $anime->production_year, $anime->id, $review->id])) . '">Read review</a>';
+                if (Auth::id() == $review->user_id) {
+                    $output .= '<a href="' . e(route('reviews.edit', [$anime->title, $anime->production_year, $anime->id, $review->id])) . '">Edit review</a>
+                        <form id="delete_review" action="' . e(route('reviews.delete', [$anime->title, $anime->production_year, $anime->id, $review->id])) .
+                               '" method="post">' . csrf_field() . method_field('DELETE') .
+                                   '<a href="javascript:{}" onclick="document.getElementById(\'delete_review\').submit(); return false;">Delete review</a>
+                        </form>';
                 }
-                $output .= '</div>';
+                $output .= '<br> </div>';
             }
             return Response($output);
         }
