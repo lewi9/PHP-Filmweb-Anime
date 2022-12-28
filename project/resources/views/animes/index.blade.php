@@ -14,6 +14,7 @@
         <option value="asc" @if (session('anime_filter_mode') == "asc") selected @endif>ascending</option>
         <option value="desc" @if (session('anime_filter_mode') == "desc") selected @endif>descending</option>
     </select>
+</form>
     <br>
     <label for="filter_genre">Choose a genre to filter</label>
     <select name="filter_genre" id="filter_genre" onchange="filter_genre_select(this.value);">

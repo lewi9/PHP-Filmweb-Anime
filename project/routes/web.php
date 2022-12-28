@@ -69,10 +69,12 @@ Route::get('/anime/filter', [AnimeController::class, 'filter'])->name('animes.fi
 
 //comments
 Route::get('/anime/{title}-{production_year}-{id}/comments', [CommentController::class, 'show'])->name('comments.show');
+Route::get('/commentsfilter', [CommentController::class, 'filter'])->name('comments.filter');
 
 //reviews
 Route::get('/anime/{title}-{production_year}-{id}/reviews', [ReviewController::class, 'index' ])->name('reviews.index');
 Route::get('/anime/{title}-{production_year}-{id}/reviews/{review_id}', [ReviewController::class, 'show' ])->name('reviews.show');
+Route::get('/reviewsfilter', [ReviewController::class, 'filter'])->name('reviews.filter');
 
 //admin
 Route::get('/anime/create', [AnimeController::class, 'create'])->middleware(['auth', 'verified'])->name('animes.create');

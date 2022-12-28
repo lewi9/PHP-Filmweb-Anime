@@ -77,10 +77,13 @@
                 'filter_mode' : 'asc',
                 'filter_genre': 'all',
                 'filter_search':'%',
-
             },
             success: function (data) {
                 $('#anime').html(data);
+                document.getElementById('filter').value ='id';
+                document.getElementById('filter_mode').value ='asc';
+                document.getElementById('filter_genre').value ='all';
+                document.getElementById('filter_search').value ='';
             }
         });
     }

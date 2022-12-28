@@ -36,22 +36,18 @@ class CommentController extends Controller
     {
         $likes = array();
 
-        $anime = Anime::where('id', $id)->first();
-
-        if (!$anime) {
-            abort(404);
-        }
+        $anime = AnimeController::anime_helper($id);
 
         $comments = DB::table('users')
             ->join('comments', 'comments.author_id', '=', 'users.id')
             ->where('anime_id', $anime->id)
-            ->orderBy('comments.id', 'desc')
             ->get();
 
         if (Auth::id()) {
             $likes = self::likes_helper($comments);
         }
-        return View('animes.comments.show')->with('comments', $comments)->with('anime', $anime)->with('comment_like', $likes);
+
+        return View('animes.comments.show')->with('comments', $this->filter(new Request(['anime_id' => $anime->id])))->with('anime', $anime)->with('comment_like', $likes);
     }
 
 
@@ -158,5 +154,53 @@ class CommentController extends Controller
         }
         $comment->save();
         return Response($comment->likes . ',' . $comment->dislikes);
+    }
+
+    public function filter(Request $request): Response
+    {
+        $request->validate([
+            'anime_id' => ['exists:animes,id', 'required']
+        ]);
+
+        $anime = AnimeController::anime_helper(intval($request->anime_id));
+
+        $output = "";
+        $filter = $request->filter ?? (session('comments_filter')?? "id");
+        $filter_mode = $request->filter_mode ?? (session('comments_filter_mode') ?? "asc");
+
+        session(["comments_filter" => $filter, "comments_filter_mode" => $filter_mode]);
+
+        $comments = DB::table('users')
+            ->join('comments', 'comments.author_id', '=', 'users.id')
+            ->where('anime_id', $anime->id)
+            ->orderBy("comments.". strval($filter), strval($filter_mode))
+            ->get();
+
+        if (count($comments) > 0) {
+            foreach ($comments as $comment) {
+                /** @var stdClass $comment */
+                $output .= '<div id="' . e($comment->id . 'div') . '">
+                    <label style="display:block" for="' . e($comment->id . "_") . '">' . e($comment->name) . '</label>
+                    <textarea style="display:block" id="' . e($comment->id . "_") . '" name="text" rows="4" cols="50" disabled>' . e($comment->text) . '.</textarea>
+                    <br>
+                    Likes: <mark id="' . e($comment->id . 'likes') . '">' . e($comment->likes) . '</mark>
+                    Dislikes: <mark id="' . e($comment->id . 'dislikes') . '">' . e($comment->dislikes) . '</mark>
+                    <button id="' . e($comment->id . "__") . '" style="visibility: hidden" onclick="updater(this.id);">Update!</button>';
+                if (Auth::user()) {
+                    $output .= '<br>
+                        <button style="background-color: lightgrey" id="' . e($comment->id) . '" name="liker-' . e($comment->id) . '" onclick="liker(this.id);">Like</button>
+                        <button style="background-color: lightgrey" id="' . e($comment->id) . '" name="disliker-' . e($comment->id) . '" onclick="disliker(this.id);">Dislike</button>
+                        <br>';
+
+                    if (Auth::id() == $comment->author_id) {
+                        $output .= '<button id = "' . e($comment->id) . '" onclick = "edit(this.id);" > Edit Comment </button >
+                            <button id = "' . e($comment->id) . '" onclick = "deleter(this.id);" > Delete Comment </button >';
+                    }
+                }
+                $output .= '</div>';
+            }
+            return Response($output);
+        }
+        return Response("<h2> There is no matching comments. </h2>");
     }
 }

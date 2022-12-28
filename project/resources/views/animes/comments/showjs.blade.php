@@ -119,3 +119,59 @@
     }
 </script>
 
+<script type="text/javascript">
+    function filter_select(val)
+    {
+        $.ajax({
+            type: 'get',
+            url: '{{route('comments.filter')}}',
+            data: {
+                'filter':val,
+                'anime_id': {{$anime->id}},
+            },
+            success: function (data) {
+                $('#comments').html(data);
+                colors_likers();
+            }
+        });
+    }
+</script>
+
+<script type="text/javascript">
+    function filter_mode_select(val)
+    {
+        $.ajax({
+            type: 'get',
+            url: '{{route('comments.filter')}}',
+            data: {
+                'filter_mode':val,
+                'anime_id': {{$anime->id}}
+            },
+            success: function (data) {
+                $('#comments').html(data);
+                colors_likers();
+            }
+        });
+    }
+</script>
+
+<script type="text/javascript">
+    function reset()
+    {
+        $.ajax({
+            type: 'get',
+            url: '{{route('comments.filter')}}',
+            data: {
+                'filter' : 'id',
+                'filter_mode' : 'asc',
+                'anime_id': {{$anime->id}}
+            },
+            success: function (data) {
+                $('#comments').html(data);
+                colors_likers();
+                document.getElementById('filter').value = 'id';
+                document.getElementById('filter_mode').value ='asc';
+            }
+        });
+    }
+</script>
