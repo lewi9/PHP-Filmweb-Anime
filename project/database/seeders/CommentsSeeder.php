@@ -17,33 +17,15 @@ class CommentsSeeder extends Seeder
     public function run()
     {
         $faker = Factory::create();
-        DB::table('comments')->insert([
-            'author_id' => '1',
-            'anime_id' => '1',
-            'text' => $faker->text(),
-            'likes' => $faker->randomDigit(),
-            'dislikes' => $faker->randomDigit()
-        ]);
-        DB::table('comments')->insert([
-            'author_id' => '2',
-            'anime_id' => '1',
-            'text' => $faker->text(),
-            'likes' => $faker->randomDigit(),
-            'dislikes' => $faker->randomDigit(),
-        ]);
-        DB::table('comments')->insert([
-            'author_id' => '2',
-            'anime_id' => '2',
-            'text' => $faker->text(),
-            'likes' => $faker->randomDigit(),
-            'dislikes' => $faker->randomDigit()
-        ]);
-        DB::table('comments')->insert([
-            'author_id' => '1',
-            'anime_id' => '1',
-            'text' => $faker->text(),
-            'likes' => $faker->randomDigit()*$faker->randomDigit(),
-            'dislikes' => $faker->randomDigit()
-        ]);
+
+        for ($i =0; $i<5; $i++) {
+            DB::table('comments')->insert([
+                'author_id' => $faker->numberBetween(1, 2),
+                'anime_id' => $faker->numberBetween(1, 2),
+                'text' => $faker->text(),
+                'likes' => $faker->randomDigit(),
+                'dislikes' => $faker->randomDigit()
+            ]);
+        }
     }
 }

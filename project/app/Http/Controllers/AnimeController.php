@@ -16,6 +16,17 @@ use Illuminate\View\View;
 
 class AnimeController extends Controller
 {
+    public static function anime_helper(int $anime_id): Anime
+    {
+        $anime = Anime::where('id', $anime_id)->first();
+
+        if (!$anime) {
+            abort(404);
+        }
+
+        return $anime;
+    }
+
     public function index(): View
     {
         $genres = array();
@@ -53,7 +64,7 @@ class AnimeController extends Controller
             ->get();
         if (count($animes) != 0) {
             foreach ($animes as $anime) {
-                $output .= '<div><img src="' . e(URL::asset('/images/'.$anime->poster)) . '" alt="Anime Pic" height="20" width="20">' .
+                $output .= '<div><img src="' . e(URL::asset('/images/'.$anime->poster)) . '" alt="Anime Pic" height="200" width="20git 0">' .
                         app('markdown.converter')->convert((string) $anime->title)->getContent() .
                         '<a href="' . e(route('animes.show', [$anime->title, $anime->production_year, $anime->id])) . '">Details</a>
                             </div>';

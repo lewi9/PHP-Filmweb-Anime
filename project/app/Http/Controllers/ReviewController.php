@@ -12,13 +12,20 @@ use Illuminate\View\View;
 
 class ReviewController extends Controller
 {
-    public function index(string $title, int $production_year, int $id): View
+    public static function review_helper(int $review_id): Review
     {
-        $anime = Anime::where('id', $id)->first();
+        $review = Review::where('id', $review_id)->first();
 
-        if (!$anime) {
+        if (!$review) {
             abort(404);
         }
+
+        return $review;
+    }
+
+    public function index(string $title, int $production_year, int $id): View
+    {
+        $anime = AnimeController::anime_helper($id);
 
         $reviews = DB::table('users')->join('reviews', 'reviews.user_id', '=', 'users.id')
             ->where('anime_id', $anime->id)
@@ -30,23 +37,16 @@ class ReviewController extends Controller
 
     public function show(string $title, int $production_year, int $id, int $review_id): View
     {
-        $anime = Anime::where('id', $id)->first();
-        $review = Review::where('id', $review_id)->first();
+        $anime = AnimeController::anime_helper($id);
 
-        if (!$anime or !$review) {
-            abort(404);
-        }
+        $review = self::review_helper($review_id);
 
         return view('animes.reviews.show')->with('review', $review)->with('anime', $anime);
     }
 
     public function create(string $title, int $production_year, int $id): View
     {
-        $anime = Anime::where('id', $id)->first();
-
-        if (!$anime) {
-            abort(404);
-        }
+        $anime = AnimeController::anime_helper($id);
 
         return view('animes.reviews.create')->with('anime', $anime);
     }
@@ -67,26 +67,18 @@ class ReviewController extends Controller
             'text' => $request->text,
         ]);
 
-        $title = $request->anime_title;
-        $production_year = $request->production_year;
-        $id = $request->anime_id;
-
-        return redirect("/anime/" . strval($title) ."-" . strval($production_year) . "-" . strval($id).'/reviews/' . $review->id);
+        return redirect("/anime/" . strval($request->anime_title) ."-" . strval($request->production_year) . "-" . strval($request->anime_id).'/reviews/' . $review->id);
     }
 
     public function edit(string $title, int $production_year, int $id, int $review_id): View|RedirectResponse
     {
-        $anime = Anime::where('id', $id)->first();
-        $review = Review::where('id', $review_id)->first();
+        $anime = AnimeController::anime_helper($id);
 
-        if (!$anime or !$review) {
-            abort(404);
-        }
+        $review = self::review_helper($review_id);
 
         if (Auth::id() != $review->user_id) {
             return back();
         }
-
 
         return view('animes.reviews.edit')->with('anime', $anime)->with("review", $review);
     }
@@ -96,14 +88,12 @@ class ReviewController extends Controller
         $request->validate([
             'title' => ['required', 'string'],
             'text' => ['required', 'min:256'],
-            'review_id' => ['required', 'exists:reviews,id']
+            'review_id' => ['required', 'exists:reviews,id', 'integer']
         ]);
 
-        $review_id = strval($request->review_id);
-        $review = Review::where('id', $review_id)->first();
-        if (!$review) {
-            abort(404);
-        }
+        $review_id = intval($request->review_id);
+
+        $review = self::review_helper($review_id);
 
         if (Auth::id() != $review->user_id) {
             return back();
@@ -113,24 +103,12 @@ class ReviewController extends Controller
         $review->text = strval($request->text);
         $review->save();
 
-        $title = $request->anime_title;
-        $production_year = $request->production_year;
-        $id = $request->anime_id;
-
-        return redirect("/anime/" . strval($title) ."-" . strval($production_year) . "-" . strval($id).'/reviews/' . $review->id);
+        return redirect("/anime/" . strval($request->anime_title) ."-" . strval($request->production_year) . "-" . strval($request->anime_id).'/reviews/' . strval($review->id));
     }
 
     public function destroy(string $title, int $production_year, int $id, int $review_id): RedirectResponse
     {
-        $review = Review::where('id', $review_id)->first();
-
-        if (!$review) {
-            abort(404);
-        }
-
-        if (Auth::id() != $review->user_id) {
-            return back();
-        }
+        $review = self::review_helper($review_id);
 
         $review->forceDelete();
         return redirect("/anime/" . $title ."-" . strval($production_year) . "-" . strval($id));
