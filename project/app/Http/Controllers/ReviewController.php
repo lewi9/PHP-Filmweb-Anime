@@ -7,6 +7,7 @@ use App\Models\Review;
 use App\Models\ReviewUsers;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
@@ -114,5 +115,52 @@ class ReviewController extends Controller
 
         $review->forceDelete();
         return redirect("/anime/" . $title ."-" . strval($production_year) . "-" . strval($id));
+    }
+
+    public function filter(Request $request): Response
+    {
+        $request->validate([
+            'anime_id' => ['exists:animes,id', 'required']
+        ]);
+
+        $anime = AnimeController::anime_helper(intval($request->anime_id));
+
+        $output = "";
+        $filter = $request->filter ?? (session('reviews_filter')?? "id");
+        $filter_mode = $request->filter_mode ?? (session('reviews_filter_mode') ?? "asc");
+
+        session(["reviews_filter" => $filter, "reviews_filter_mode" => $filter_mode]);
+
+        $reviews = DB::table('users')->join('reviews', 'reviews.user_id', '=', 'users.id')
+            ->where('anime_id', $anime->id)
+            ->orderBy('reviews'.strval($filter), strval($filter_mode))
+            ->get();
+
+        if (count($reviews) > 0) {
+            foreach ($reviews as $review) {
+                /** @var stdClass $review */
+                $output .= '<div id="' . e($comment->id . 'div') . '">
+                    <label style="display:block" for="' . e($comment->id . "_") . '">' . e($comment->name) . '</label>
+                    <textarea style="display:block" id="' . e($comment->id . "_") . '" name="text" rows="4" cols="50" disabled>' . e($comment->text) . '.</textarea>
+                    <br>
+                    Likes: <mark id="' . e($comment->id . 'likes') . '">' . e($comment->likes) . '</mark>
+                    Dislikes: <mark id="' . e($comment->id . 'dislikes') . '">' . e($comment->dislikes) . '</mark>
+                    <button id="' . e($comment->id . "__") . '" style="visibility: hidden" onclick="updater(this.id);">Update!</button>';
+                if (Auth::user()) {
+                    $output .= '<br>
+                        <button style="background-color: lightgrey" id="' . e($comment->id) . '" name="liker-' . e($comment->id) . '" onclick="liker(this.id);">Like</button>
+                        <button style="background-color: lightgrey" id="' . e($comment->id) . '" name="disliker-' . e($comment->id) . '" onclick="disliker(this.id);">Dislike</button>
+                        <br>';
+
+                    if (Auth::id() == $comment->author_id) {
+                        $output .= '<button id = "' . e($comment->id) . '" onclick = "edit(this.id);" > Edit Comment </button >
+                            <button id = "' . e($comment->id) . '" onclick = "deleter(this.id);" > Delete Comment </button >';
+                    }
+                }
+                $output .= '</div>';
+            }
+            return Response($output);
+        }
+        return Response("<h2> There is no matching Review. </h2>");
     }
 }
