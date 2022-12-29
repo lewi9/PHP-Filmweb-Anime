@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\getOrFail;
 use App\Helpers\toHTML;
 use App\Models\Anime;
 use App\Models\Comment;
@@ -16,6 +17,7 @@ use stdClass;
 
 class CommentController extends Controller
 {
+    use getOrFail;
     use toHTML;
     /**
      * @param Collection $comments
@@ -38,7 +40,7 @@ class CommentController extends Controller
     {
         $likes = array();
 
-        $anime = AnimeController::anime_helper($id);
+        $anime = $this->getOrFailAnime($id);
 
         $comments = DB::table('users')
             ->join('comments', 'comments.author_id', '=', 'users.id')
@@ -164,7 +166,7 @@ class CommentController extends Controller
             'anime_id' => ['exists:animes,id', 'required']
         ]);
 
-        $anime = AnimeController::anime_helper(intval($request->anime_id));
+        $anime = $this->getOrFailAnime($request->anime_id);
 
         $output = "";
         $filter = $request->filter ?? (session('comments_filter')?? "id");

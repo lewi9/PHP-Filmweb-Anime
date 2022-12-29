@@ -3,7 +3,6 @@
 namespace App\Helpers;
 
 use App\Models\Anime;
-use App\Models\Review;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\URL;
 

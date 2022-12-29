@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\getOrFail;
 use App\Helpers\toHTML;
-use App\Models\Anime;
 use App\Models\Review;
 use App\Models\ReviewUsers;
 use Illuminate\Http\RedirectResponse;
@@ -16,22 +16,14 @@ use stdClass;
 
 class ReviewController extends Controller
 {
+    use getOrFail;
     use toHTML;
 
-    public static function review_helper(int $review_id): Review
-    {
-        $review = Review::where('id', $review_id)->first();
 
-        if (!$review) {
-            abort(404);
-        }
-
-        return $review;
-    }
 
     public function index(string $title, int $production_year, int $id): View
     {
-        $anime = AnimeController::anime_helper($id);
+        $anime = $this->getOrFailAnime($id);
 
         $reviews = $this->filter(new Request(['anime_id' => $anime->id]));
 
@@ -41,16 +33,16 @@ class ReviewController extends Controller
     public function show(string $title, int $production_year, int $id, int $review_id): View
     {
         $review_user = ReviewUsers::where('user_id', Auth::id())->where('review_id', $review_id)->first();
-        $anime = AnimeController::anime_helper($id);
+        $anime = $this->getOrFailAnime($id);
 
-        $review = self::review_helper($review_id);
+        $review = $this->getOrFailReview(strval($review_id));
 
         return view('animes.reviews.show')->with('review', $review)->with('anime', $anime)->with('review_user', $review_user);
     }
 
     public function create(string $title, int $production_year, int $id): View
     {
-        $anime = AnimeController::anime_helper($id);
+        $anime = $this->getOrFailAnime($id);
 
         return view('animes.reviews.create')->with('anime', $anime);
     }
@@ -76,9 +68,9 @@ class ReviewController extends Controller
 
     public function edit(string $title, int $production_year, int $id, int $review_id): View|RedirectResponse
     {
-        $anime = AnimeController::anime_helper($id);
+        $anime = $this->getOrFailAnime($id);
 
-        $review = self::review_helper($review_id);
+        $review = $this->getOrFailReview($review_id);
 
         if (Auth::id() != $review->user_id) {
             return back();
@@ -95,9 +87,9 @@ class ReviewController extends Controller
             'review_id' => ['required', 'exists:reviews,id', 'integer']
         ]);
 
-        $review_id = intval($request->review_id);
+        $review_id = $request->review_id;
 
-        $review = self::review_helper($review_id);
+        $review = $this->getOrFailReview($review_id);
 
         if (Auth::id() != $review->user_id) {
             return back();
@@ -112,7 +104,7 @@ class ReviewController extends Controller
 
     public function destroy(string $title, int $production_year, int $id, int $review_id): RedirectResponse
     {
-        $review = self::review_helper($review_id);
+        $review = $this->getOrFailReview($review_id);
 
         $review->forceDelete();
         return redirect("/anime/" . $title ."-" . strval($production_year) . "-" . strval($id));
@@ -124,7 +116,7 @@ class ReviewController extends Controller
             'anime_id' => ['exists:animes,id', 'required']
         ]);
 
-        $anime = AnimeController::anime_helper(intval($request->anime_id));
+        $anime = $this->getOrFailAnime($request->anime_id);
 
         $output = "";
         $filter = $request->filter ?? (session('reviews_filter')?? "id");

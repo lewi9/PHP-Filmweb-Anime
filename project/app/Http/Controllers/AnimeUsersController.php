@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\getOrFail;
 use App\Models\Anime;
 use App\Models\AnimeUsers;
 use Illuminate\Http\Request;
@@ -9,6 +10,7 @@ use Illuminate\Http\Response;
 
 class AnimeUsersController extends Controller
 {
+    use getOrFail;
     public function manage_list(Request $request): Response
     {
         $request->validate([
@@ -81,7 +83,7 @@ class AnimeUsersController extends Controller
             'rating' => ['required', 'integer', 'min:0', 'max:10']
         ]);
         $anime_user = AnimeUsers::where('anime_id', $request->anime_id)->where('user_id', $request->user_id)->first();
-        $anime = AnimeController::anime_helper(intval($request->anime_id));
+        $anime = $this->getOrFailAnime($request->anime_id);
 
         $anime->cumulate_rating += intval($request->rating);
         if ($anime_user) {

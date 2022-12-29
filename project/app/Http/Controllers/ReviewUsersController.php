@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\getOrFail;
 use App\Models\ReviewUsers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class ReviewUsersController extends Controller
 {
+    use getOrFail;
+
     public function rate(Request $request): Response
     {
         $request->validate([
@@ -17,7 +20,7 @@ class ReviewUsersController extends Controller
         ]);
 
         $review_user = ReviewUsers::where('review_id', $request->review_id)->where('user_id', $request->user_id)->first();
-        $review = ReviewController::review_helper(intval($request->review_id));
+        $review = $this->getOrFailReview($request->review_id);
 
         $review->cumulate_rating += intval($request->rating);
 

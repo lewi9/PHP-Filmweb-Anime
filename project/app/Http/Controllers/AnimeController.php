@@ -17,17 +17,6 @@ class AnimeController extends Controller
 {
     use toHTML;
 
-    public static function anime_helper(int $anime_id): Anime
-    {
-        $anime = Anime::where('id', $anime_id)->first();
-
-        if (!$anime) {
-            abort(404);
-        }
-
-        return $anime;
-    }
-
     public function index(): View
     {
         $genres = array();
