@@ -16,8 +16,8 @@ class AnimeUsersController extends Controller
     public function manage_list(Request $request): Response
     {
         $request->validate([
-            "anime_id" => ['required', 'exists:animes,id'],
-            'user_id' => ['required', 'exists:users,id'],
+            "anime_id" => ['required', 'exists:animes,id', 'regex:/^[a-z0-9 ]+$/i'],
+            'user_id' => ['required', 'exists:users,id', 'regex:/^[a-z0-9 ]+$/i'],
             'list' => ["required"],
         ]);
 
@@ -80,8 +80,8 @@ class AnimeUsersController extends Controller
     public function rate(Request $request): Response
     {
         $request->validate([
-            "anime_id" => ['required', 'exists:animes,id'],
-            'user_id' => ['required', 'exists:users,id'],
+            "anime_id" => ['required', 'exists:animes,id', 'regex:/^[a-z0-9 ]+$/i'],
+            'user_id' => ['required', 'exists:users,id', 'regex:/^[a-z0-9 ]+$/i'],
             'rating' => ['required', 'integer', 'min:0', 'max:10']
         ]);
         $anime_user = AnimeUsers::where('anime_id', $request->anime_id)->where('user_id', $request->user_id)->first();
@@ -93,8 +93,8 @@ class AnimeUsersController extends Controller
     public function watched_episodes(Request $request): Response
     {
         $request->validate([
-            "anime_id" => ['required', 'exists:animes,id'],
-            'user_id' => ['required', 'exists:users,id'],
+            "anime_id" => ['required', 'exists:animes,id', 'regex:/^[a-z0-9 ]+$/i'],
+            'user_id' => ['required', 'exists:users,id', 'regex:/^[a-z0-9 ]+$/i'],
         ]);
 
         $anime = Anime::where('id', $request->anime_id)->first();

@@ -4,39 +4,24 @@ namespace App\Http\Controllers;
 
 use App\Helpers\filterHelper;
 use App\Helpers\getOrFail;
+use App\Helpers\likesHelper;
 use App\Helpers\toHTML;
 use App\Models\Comment;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
-use stdClass;
 
 class CommentController extends Controller
 {
     use getOrFail;
     use toHTML;
     use filterHelper;
+    use likesHelper;
 
-    /**
-     * @param Collection $comments
-     * @return array<int, object|null>
-     */
-    public static function likes_helper(Collection $comments): array
-    {
-        $likes = array();
-        foreach ($comments as $comment) {
-            if ($comment instanceof stdClass) {
-                $likes[] = DB::table('likes_comments')
-                    ->where('comment_id', $comment->id)
-                    ->where('user_id', Auth::id())->first();
-            }
-        }
-        return $likes;
-    }
+
 
     public function show(string $title, int $production_year, int $id): View
     {
@@ -50,7 +35,7 @@ class CommentController extends Controller
             ->get();
 
         if (Auth::id()) {
-            $likes = self::likes_helper($comments);
+            $likes = $this->likesHelper($comments);
         }
 
         return View('animes.comments.show')->with('comments', $this->filter(new Request(['anime_id' => $anime->id])))->with('anime', $anime)->with('comment_like', $likes);

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\filterHelper;
 use App\Helpers\getOrFail;
+use App\Helpers\likesHelper;
 use App\Helpers\toHTML;
 use App\Models\Anime;
 use App\Models\AnimeUsers;
@@ -19,6 +20,7 @@ class AnimeController extends Controller
     use getOrFail;
     use toHTML;
     use filterHelper;
+    use likesHelper;
 
     public function index(): View
     {
@@ -39,6 +41,13 @@ class AnimeController extends Controller
 
     public function filter(Request $request): Response
     {
+        $request->validate([
+            'filter' => ['string'],
+            'filter_mode' => ['string'],
+            'filter_genre' => ['string'],
+            'filter_search' => ['string'],
+        ]);
+
         $type = 'anime';
         return $this->filterProcedure($request, $type);
     }
@@ -133,7 +142,7 @@ class AnimeController extends Controller
                 $reviews= $reviews->get();
             }
 
-            $likes = CommentController::likes_helper($comments);
+            $likes = $this->likesHelper($comments);
         } else {
             $comments = DB::table('users')->join('comments', 'comments.user_id', '=', 'users.id')
                 ->where('anime_id', $id)
@@ -160,11 +169,11 @@ class AnimeController extends Controller
     public function update(Request $request): RedirectResponse
     {
         $request->validate([
-            'id' => ['exists:animes', 'required'],
+            'id' => ['exists:animes', 'required', 'regex:/^[a-z0-9 ]+$/i'],
             'title' => ['required', 'string'],
             'genre' => ['required', 'string'],
             'production_year' => ['required', 'integer', 'numeric', 'digits:4'],
-            'description' => ['nullable'],
+            'description' => ['nullable', 'string'],
             'poster' => ['string'],
             'episodes' => ['required', 'integer', 'min:1'],
         ]);
