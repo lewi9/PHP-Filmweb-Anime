@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\toHTML;
 use App\Models\Anime;
 use App\Models\Comment;
 use Illuminate\Http\RedirectResponse;
@@ -15,6 +16,7 @@ use stdClass;
 
 class CommentController extends Controller
 {
+    use toHTML;
     /**
      * @param Collection $comments
      * @return array<int, object|null>
@@ -179,25 +181,7 @@ class CommentController extends Controller
         if (count($comments) > 0) {
             foreach ($comments as $comment) {
                 /** @var stdClass $comment */
-                $output .= '<div id="' . e($comment->id . 'div') . '">
-                    <label style="display:block" for="' . e($comment->id . "_") . '">' . e($comment->name) . '</label>
-                    <textarea style="display:block" id="' . e($comment->id . "_") . '" name="text" rows="4" cols="50" disabled>' . e($comment->text) . '.</textarea>
-                    <br>
-                    Likes: <mark id="' . e($comment->id . 'likes') . '">' . e($comment->likes) . '</mark>
-                    Dislikes: <mark id="' . e($comment->id . 'dislikes') . '">' . e($comment->dislikes) . '</mark>
-                    <button id="' . e($comment->id . "__") . '" style="visibility: hidden" onclick="updater(this.id);">Update!</button>';
-                if (Auth::user()) {
-                    $output .= '<br>
-                        <button style="background-color: lightgrey" id="' . e($comment->id) . '" name="liker-' . e($comment->id) . '" onclick="liker(this.id);">Like</button>
-                        <button style="background-color: lightgrey" id="' . e($comment->id) . '" name="disliker-' . e($comment->id) . '" onclick="disliker(this.id);">Dislike</button>
-                        <br>';
-
-                    if (Auth::id() == $comment->author_id) {
-                        $output .= '<button id = "' . e($comment->id) . '" onclick = "edit(this.id);" > Edit Comment </button >
-                            <button id = "' . e($comment->id) . '" onclick = "deleter(this.id);" > Delete Comment </button >';
-                    }
-                }
-                $output .= '</div>';
+                $output .= $this->commentToHTML($comment);
             }
             return Response($output);
         }

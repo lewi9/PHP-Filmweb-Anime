@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\toHTML;
 use App\Models\Anime;
 use App\Models\AnimeUsers;
 use Illuminate\Http\RedirectResponse;
@@ -14,6 +15,8 @@ use Illuminate\View\View;
 
 class AnimeController extends Controller
 {
+    use toHTML;
+
     public static function anime_helper(int $anime_id): Anime
     {
         $anime = Anime::where('id', $anime_id)->first();
@@ -62,10 +65,7 @@ class AnimeController extends Controller
             ->get();
         if (count($animes) != 0) {
             foreach ($animes as $anime) {
-                $output .= '<div><img src="' . e(URL::asset('/images/'.$anime->poster)) . '" alt="Anime Pic" height="200" width="200">' .
-                        app('markdown.converter')->convert((string) $anime->title)->getContent() .
-                        '<a href="' . e(route('animes.show', [$anime->title, $anime->production_year, $anime->id])) . '">Details</a>
-                            </div>';
+                $output .= $this->animeToHTML($anime);
             }
             return Response($output);
         }

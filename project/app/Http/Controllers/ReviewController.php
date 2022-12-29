@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\toHTML;
 use App\Models\Anime;
 use App\Models\Review;
 use App\Models\ReviewUsers;
@@ -15,6 +16,8 @@ use stdClass;
 
 class ReviewController extends Controller
 {
+    use toHTML;
+
     public static function review_helper(int $review_id): Review
     {
         $review = Review::where('id', $review_id)->first();
@@ -137,19 +140,7 @@ class ReviewController extends Controller
         if (count($reviews) > 0) {
             foreach ($reviews as $review) {
                 /** @var stdClass $review */
-                $output .= '<div id="' . e($review->id . 'div') . '">
-                    <p><strong>' . e($review->name) . '</strong></p>
-                    <p>' . e($review->title) . '</p>
-                    <p>Review rating:' . e($review->rating) . '</p>
-                    <a href="' . e(route('reviews.show', [$anime->title, $anime->production_year, $anime->id, $review->id])) . '">Read review</a>';
-                if (Auth::id() == $review->user_id) {
-                    $output .= '<a href="' . e(route('reviews.edit', [$anime->title, $anime->production_year, $anime->id, $review->id])) . '">Edit review</a>
-                        <form id="delete_review" action="' . e(route('reviews.delete', [$anime->title, $anime->production_year, $anime->id, $review->id])) .
-                               '" method="post">' . csrf_field() . method_field('DELETE') .
-                                   '<a href="javascript:{}" onclick="document.getElementById(\'delete_review\').submit(); return false;">Delete review</a>
-                        </form>';
-                }
-                $output .= '<br> </div>';
+                $output .= $this->reviewToHTML($review, $anime);
             }
             return Response($output);
         }
