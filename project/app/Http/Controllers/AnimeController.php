@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\filterHelper;
+use App\Helpers\getOrFail;
 use App\Helpers\toHTML;
 use App\Models\Anime;
 use App\Models\AnimeUsers;
@@ -10,12 +12,13 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\URL;
 use Illuminate\View\View;
 
 class AnimeController extends Controller
 {
+    use getOrFail;
     use toHTML;
+    use filterHelper;
 
     public function index(): View
     {
@@ -36,29 +39,8 @@ class AnimeController extends Controller
 
     public function filter(Request $request): Response
     {
-        $output = "";
-        $filter = $request->filter ?? (session('anime_filter')?? "id");
-        $filter_mode = $request->filter_mode ?? (session('anime_filter_mode') ?? "asc");
-        $filter_genre = $request->filter_genre ?? (session('anime_filter_genre') ?? "all");
-        $filter_search = $request->filter_search ?? (session('anime_filter_search') ?? "%");
-
-        session(["anime_filter" => $filter, "anime_filter_mode" => $filter_mode, "anime_filter_genre" => $filter_genre, "anime_filter_search" => $filter_search]);
-
-        if ($filter_genre == "all") {
-            $filter_genre = '%';
-        }
-
-        $animes = Anime::where('title', 'like', '%' . $filter_search . "%")
-            ->where('genre', 'like', '%'.$filter_genre.'%')
-            ->orderBy(strval($filter), strval($filter_mode))
-            ->get();
-        if (count($animes) != 0) {
-            foreach ($animes as $anime) {
-                $output .= $this->animeToHTML($anime);
-            }
-            return Response($output);
-        }
-        return Response("<h2> There is not matching anime. </h2>");
+        $type = 'anime';
+        return $this->filterProcedure($request, $type);
     }
 
 

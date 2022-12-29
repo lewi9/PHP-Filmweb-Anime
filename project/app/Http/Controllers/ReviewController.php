@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\filterHelper;
 use App\Helpers\getOrFail;
 use App\Helpers\toHTML;
 use App\Models\Review;
@@ -10,7 +11,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 use stdClass;
 
@@ -18,7 +18,7 @@ class ReviewController extends Controller
 {
     use getOrFail;
     use toHTML;
-
+    use filterHelper;
 
 
     public function index(string $title, int $production_year, int $id): View
@@ -116,26 +116,7 @@ class ReviewController extends Controller
             'anime_id' => ['exists:animes,id', 'required']
         ]);
 
-        $anime = $this->getOrFailAnime($request->anime_id);
-
-        $output = "";
-        $filter = $request->filter ?? (session('reviews_filter')?? "id");
-        $filter_mode = $request->filter_mode ?? (session('reviews_filter_mode') ?? "asc");
-
-        session(["reviews_filter" => $filter, "reviews_filter_mode" => $filter_mode]);
-
-        $reviews = DB::table('users')->join('reviews', 'reviews.user_id', '=', 'users.id')
-            ->where('anime_id', $anime->id)
-            ->orderBy('reviews.'.strval($filter), strval($filter_mode))
-            ->get();
-
-        if (count($reviews) > 0) {
-            foreach ($reviews as $review) {
-                /** @var stdClass $review */
-                $output .= $this->reviewToHTML($review, $anime);
-            }
-            return Response($output);
-        }
-        return Response("<h2> There is no matching Review. </h2>");
+        $type = 'reviews';
+        return $this->filterProcedure($request, $type);
     }
 }

@@ -3,8 +3,10 @@
 namespace App\Helpers;
 
 use App\Models\Anime;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\URL;
+use stdClass;
 
 trait toHTML
 {
@@ -66,5 +68,44 @@ trait toHTML
         }
         $output .= '<br> </div>';
         return $output;
+    }
+
+    public function animeCollectionToHTML(Collection $animes): string
+    {
+        $output = '';
+        if (count($animes) > 0) {
+            foreach ($animes as $anime) {
+                /** @var Anime $anime */
+                $output .= $this->animeToHTML($anime);
+            }
+            return $output;
+        }
+        return "<h2> There is no matching anime. </h2>";
+    }
+
+    public function reviewsCollectionToHTML(Collection $reviews, Anime $anime): string
+    {
+        $output = '';
+        if (count($reviews) > 0) {
+            foreach ($reviews as $review) {
+                /** @var stdClass $review */
+                $output .= $this->reviewToHTML($review, $anime);
+            }
+            return $output;
+        }
+        return "<h2> There are no Reviews. </h2>";
+    }
+
+    public function commentsCollectionToHTML(Collection $comments, Anime $anime): string
+    {
+        $output = '';
+        if (count($comments) > 0) {
+            foreach ($comments as $comment) {
+                /** @var stdClass $comment */
+                $output .= $this->commentToHTML($comment);
+            }
+            return $output;
+        }
+        return "<h2> There are no comments. </h2>";
     }
 }

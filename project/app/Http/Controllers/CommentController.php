@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\filterHelper;
 use App\Helpers\getOrFail;
 use App\Helpers\toHTML;
-use App\Models\Anime;
 use App\Models\Comment;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -19,6 +19,8 @@ class CommentController extends Controller
 {
     use getOrFail;
     use toHTML;
+    use filterHelper;
+
     /**
      * @param Collection $comments
      * @return array<int, object|null>
@@ -166,27 +168,8 @@ class CommentController extends Controller
             'anime_id' => ['exists:animes,id', 'required']
         ]);
 
-        $anime = $this->getOrFailAnime($request->anime_id);
+        $type = 'comments';
 
-        $output = "";
-        $filter = $request->filter ?? (session('comments_filter')?? "id");
-        $filter_mode = $request->filter_mode ?? (session('comments_filter_mode') ?? "asc");
-
-        session(["comments_filter" => $filter, "comments_filter_mode" => $filter_mode]);
-
-        $comments = DB::table('users')
-            ->join('comments', 'comments.author_id', '=', 'users.id')
-            ->where('anime_id', $anime->id)
-            ->orderBy("comments.". strval($filter), strval($filter_mode))
-            ->get();
-
-        if (count($comments) > 0) {
-            foreach ($comments as $comment) {
-                /** @var stdClass $comment */
-                $output .= $this->commentToHTML($comment);
-            }
-            return Response($output);
-        }
-        return Response("<h2> There is no matching comments. </h2>");
+        return $this->filterProcedure($request, $type);
     }
 }
