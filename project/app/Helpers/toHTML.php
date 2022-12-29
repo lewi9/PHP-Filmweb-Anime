@@ -42,7 +42,7 @@ trait toHTML
                 <button style="background-color: lightgrey" id="' . $comment->id . '" name="disliker-' . $comment->id . '" onclick="disliker(this.id);">Dislike</button>
                 <br>';
 
-            if (Auth::id() == $comment->author_id) {
+            if (Auth::id() == $comment->user_id) {
                 $output .= '<button id = "' . $comment->id . '" onclick = "edit(this.id);" > Edit Comment </button >
                     <button id = "' . $comment->id . '" onclick = "deleter(this.id);" > Delete Comment </button >';
             }

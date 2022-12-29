@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\getOrFail;
+use App\Helpers\rateHelper;
 use App\Models\Anime;
 use App\Models\AnimeUsers;
 use Illuminate\Http\Request;
@@ -11,6 +12,7 @@ use Illuminate\Http\Response;
 class AnimeUsersController extends Controller
 {
     use getOrFail;
+    use rateHelper;
     public function manage_list(Request $request): Response
     {
         $request->validate([
@@ -85,39 +87,7 @@ class AnimeUsersController extends Controller
         $anime_user = AnimeUsers::where('anime_id', $request->anime_id)->where('user_id', $request->user_id)->first();
         $anime = $this->getOrFailAnime($request->anime_id);
 
-        $anime->cumulate_rating += intval($request->rating);
-        if ($anime_user) {
-            $anime->cumulate_rating -= intval($anime_user->rating);
-            if (intval($anime_user->rating) == 0 and intval($request->rating) != 0) {
-                $anime->rates++;
-            }
-            if (intval($request->rating) == 0 and intval($anime_user->rating) != 0) {
-                $anime->rates--;
-            }
-            if ($anime->rates!=0) {
-                $anime->rating = $anime->cumulate_rating/$anime->rates;
-            } else {
-                $anime->rating = 0;
-            }
-            $anime_user->rating = intval($request->rating);
-            $anime_user->save();
-            $anime->save();
-            return Response("$anime->rating, $anime->how_much_users_watched, $anime->rates, $anime->cumulate_rating");
-        }
-        if (intval($request->rating) != 0) {
-            $anime->rates++;
-            $anime->rating = $anime->cumulate_rating/$anime->rates;
-        }
-        $anime->how_much_users_watched++;
-        $anime->save();
-        AnimeUsers::create([
-            'user_id' => $request->user_id,
-            'anime_id' => $request->anime_id,
-            'rating' => $request->rating,
-            'watched' => true,
-            "watched_episodes" => $anime->episodes,
-        ]);
-        return Response("$anime->rating, $anime->how_much_users_watched, $anime->rates, $anime->cumulate_rating");
+        return $this->rateHelper($anime, $anime_user, $request);
     }
 
     public function watched_episodes(Request $request): Response

@@ -100,8 +100,7 @@
             <input id="user_id" name="user_id" type="hidden" value="{{Auth::id()}}">
             <input id="anime_id" name="anime_id" type="hidden" value="{{$anime->id}}">
             <p><label for="text">Add comment:</label></p>
-            <textarea id="text" name="text" rows="4" cols="50">
-            </textarea>
+            <textarea id="text" name="text" rows="4" cols="50"> </textarea>
             <br>
             <input type="submit" value="Add comment">
         </form>

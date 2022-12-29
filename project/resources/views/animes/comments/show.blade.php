@@ -41,7 +41,7 @@
                         <button style="background-color: lightgrey" id="{{$comment->id}}" name="liker-{{$comment->id}}" onclick="liker(this.id);">Like</button>
                         <button style="background-color: lightgrey" id="{{$comment->id}}" name="disliker-{{$comment->id}}" onclick="disliker(this.id);">Dislike</button>
                         <br>
-                        @if(Auth::user()->id == $comment->author_id)
+                        @if(Auth::user()->id == $comment->user_id)
 
                             <button id="{{$comment->id}}" onclick="edit(this.id);">Edit Comment</button>
                             <button id="{{$comment->id}}" onclick="deleter(this.id);">Delete Comment</button>

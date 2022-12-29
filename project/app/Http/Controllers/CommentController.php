@@ -45,7 +45,7 @@ class CommentController extends Controller
         $anime = $this->getOrFailAnime($id);
 
         $comments = DB::table('users')
-            ->join('comments', 'comments.author_id', '=', 'users.id')
+            ->join('comments', 'comments.user_id', '=', 'users.id')
             ->where('anime_id', $anime->id)
             ->get();
 
@@ -69,7 +69,7 @@ class CommentController extends Controller
         $text = $request->text;
 
         Comment::create([
-            'author_id' => $request->user_id,
+            'user_id' => $request->user_id,
             'text' =>  preg_replace('!\s+!', ' ', trim($text)),
             'anime_id' => $request->anime_id,
             ]);

@@ -64,7 +64,7 @@ trait filterHelper
     private function getComments(string $filter, string $filter_mode, string|int $anime_id): Collection
     {
         return DB::table('users')
-            ->join('comments', 'comments.author_id', '=', 'users.id')
+            ->join('comments', 'comments.user_id', '=', 'users.id')
             ->where('anime_id', $anime_id)
             ->orderBy("comments." . $filter, $filter_mode)
             ->get();

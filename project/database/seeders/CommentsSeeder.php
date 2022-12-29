@@ -20,7 +20,7 @@ class CommentsSeeder extends Seeder
 
         for ($i =0; $i<5; $i++) {
             DB::table('comments')->insert([
-                'author_id' => $faker->numberBetween(1, 2),
+                'user_id' => $faker->numberBetween(1, 2),
                 'anime_id' => $faker->numberBetween(1, 2),
                 'text' => $faker->text(),
                 'likes' => $faker->randomDigit(),
