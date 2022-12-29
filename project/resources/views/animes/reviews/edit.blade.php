@@ -9,9 +9,6 @@
         <form method="POST" action="{{ route('reviews.update') }}" enctype="multipart/form-data">
             @csrf
             @method("PATCH")
-
-            <input type="text" id="production_year" name="production_year" value="{{$anime->production_year}}" hidden>
-            <input type="text" id="anime_title" name="anime_title" value="{{$anime->title}}" hidden>
             <input type="text" id="user_id" name="user_id" value="{{Auth::id()}}" hidden>
             <input type="text" id="anime_id" name="anime_id" value="{{$anime->id}}" hidden>
             <input type="text" id="review_id" name="review_id" value="{{$review->id}}" hidden>
@@ -23,7 +20,7 @@
                 <x-input-error :messages="$errors->get('title')" class="mt-2" />
             </div>
 
-            <!-- description -->
+            <!-- text -->
             <div>
                 <x-input-label for="text" :value="__('Text')" />
                 <x-text-input id="text" class="block mt-1 w-full" type="text" name="text" value="{{$review->text}}" required/>

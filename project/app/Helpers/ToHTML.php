@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\URL;
 use stdClass;
 
-trait toHTML
+trait ToHTML
 {
     public function animeToHTML(Anime $anime): string
     {

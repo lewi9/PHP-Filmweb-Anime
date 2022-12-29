@@ -9,17 +9,19 @@ use App\Models\ReviewUsers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
-trait rateHelper
+trait RateHelper
 {
     public function rateHelper(Anime|Review $element, AnimeUsers|ReviewUsers|null $relation, Request $request): Response
     {
-        $element->cumulate_rating += $request->rating;
+        /** @var integer $rating */
+        $rating = $request->rating;
+        $element->cumulate_rating += $rating;
         if ($relation) {
             $element->cumulate_rating -= $relation->rating;
-            if ($relation->rating == 0 and $request->rating != 0) {
+            if ($relation->rating == 0 and $rating != 0) {
                 $element->rates++;
             }
-            if ($request->rating == 0 and $relation->rating != 0) {
+            if ($rating == 0 and $relation->rating != 0) {
                 $element->rates--;
             }
             if ($element->rates!=0) {
@@ -27,13 +29,13 @@ trait rateHelper
             } else {
                 $element->rating = 0;
             }
-            $relation->rating = $request->rating;
+            $relation->rating = $rating;
             $element->save();
             $relation->save();
 
             return $this->createResponse($element);
         }
-        if ($request->rating != 0) {
+        if ($rating != 0) {
             $element->rates++;
             $element->rating = $element->cumulate_rating/$element->rates;
         }

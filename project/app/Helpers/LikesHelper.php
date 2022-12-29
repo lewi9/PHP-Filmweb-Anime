@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use stdClass;
 
-trait likesHelper
+trait LikesHelper
 {
     /**
      * @param Collection $comments

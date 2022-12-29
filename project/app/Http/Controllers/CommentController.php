@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\filterHelper;
-use App\Helpers\getOrFail;
-use App\Helpers\likesHelper;
-use App\Helpers\toHTML;
+use App\Helpers\FilterHelper;
+use App\Helpers\GetOrFail;
+use App\Helpers\LikesHelper;
+use App\Helpers\ToHTML;
 use App\Models\Comment;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -16,10 +16,10 @@ use Illuminate\View\View;
 
 class CommentController extends Controller
 {
-    use getOrFail;
-    use toHTML;
-    use filterHelper;
-    use likesHelper;
+    use GetOrFail;
+    use ToHTML;
+    use FilterHelper;
+    use LikesHelper;
 
 
 
@@ -45,9 +45,9 @@ class CommentController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'user_id' => ['required', 'exists:App\Models\User,id'],
+            'user_id' => ['required', 'exists:App\Models\User,id', 'regex:/^[_a-z0-9 ]+$/i'],
             'text' => ['required', 'string'],
-            'anime_id'=> ['required', "exists:App\Models\Anime,id"]
+            'anime_id'=> ['required', "exists:App\Models\Anime,id", 'regex:/^[_a-z0-9 ]+$/i']
         ]);
 
         /** @var string $text */
@@ -65,8 +65,8 @@ class CommentController extends Controller
     public function update(Request $request): Response
     {
         $request->validate([
-            'id' => ['exists:comments', 'required'],
-            'text' => ['required', "string"]
+            'id' => ['exists:comments', 'required', 'regex:/^[_a-z0-9 ]+$/i'],
+            'text' => ['required', "string", 'regex:/^[_a-z0-9 ]+$/i']
         ]);
 
         /** @var string $text */
@@ -88,6 +88,9 @@ class CommentController extends Controller
 
     public function destroy(Request $request): void
     {
+        $request->validate([
+           'id' => ['exists:comments,id', 'required', 'regex:/^[_a-z0-9 ]+$/i']
+        ]);
         $comments = Comment::where('id', $request->id)->get();
         foreach ($comments as $comment) {
             $comment->forceDelete();
@@ -97,8 +100,8 @@ class CommentController extends Controller
     public function like(Request $request): Response
     {
         $request->validate([
-            'id' => ['required', 'exists:App\Models\Comment,id'],
-            'user_id'=> ['required', "exists:App\Models\User,id"],
+            'id' => ['required', 'exists:App\Models\Comment,id', 'regex:/^[_a-z0-9 ]+$/i'],
+            'user_id'=> ['required', "exists:App\Models\User,id", 'regex:/^[_a-z0-9 ]+$/i'],
             'status' => ['required'],
         ]);
 
@@ -150,7 +153,7 @@ class CommentController extends Controller
     public function filter(Request $request): Response
     {
         $request->validate([
-            'anime_id' => ['exists:animes,id', 'required']
+            'anime_id' => ['exists:animes,id', 'required',  'regex:/^[_a-z0-9 ]+$/i']
         ]);
 
         $type = 'comments';

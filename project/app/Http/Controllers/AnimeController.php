@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\filterHelper;
-use App\Helpers\getOrFail;
-use App\Helpers\likesHelper;
-use App\Helpers\toHTML;
+use App\Helpers\FilterHelper;
+use App\Helpers\GetOrFail;
+use App\Helpers\LikesHelper;
+use App\Helpers\ToHTML;
 use App\Models\Anime;
 use App\Models\AnimeUsers;
 use Illuminate\Http\RedirectResponse;
@@ -17,10 +17,10 @@ use Illuminate\View\View;
 
 class AnimeController extends Controller
 {
-    use getOrFail;
-    use toHTML;
-    use filterHelper;
-    use likesHelper;
+    use GetOrFail;
+    use ToHTML;
+    use FilterHelper;
+    use LikesHelper;
 
     public function index(): View
     {
@@ -169,7 +169,7 @@ class AnimeController extends Controller
     public function update(Request $request): RedirectResponse
     {
         $request->validate([
-            'id' => ['exists:animes', 'required', 'regex:/^[a-z0-9 ]+$/i'],
+            'id' => ['exists:animes', 'required', 'regex:/^[_a-z0-9 ]+$/i'],
             'title' => ['required', 'string'],
             'genre' => ['required', 'string'],
             'production_year' => ['required', 'integer', 'numeric', 'digits:4'],

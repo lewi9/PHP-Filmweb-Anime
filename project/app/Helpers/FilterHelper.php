@@ -8,7 +8,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
-trait filterHelper
+trait FilterHelper
 {
     public function filterProcedure(Request $request, string $type): Response
     {

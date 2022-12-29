@@ -5,7 +5,7 @@ namespace App\Helpers;
 use App\Models\Anime;
 use App\Models\Review;
 
-trait getOrFail
+trait GetOrFail
 {
     public function getOrFailAnime(string|int $anime_id): Anime
     {
