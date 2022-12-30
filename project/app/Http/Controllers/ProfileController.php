@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\GetForUsers;
+use App\Helpers\GetOrFail;
 use App\Helpers\HasEnsure;
 use App\Http\Requests\ProfileUpdateRequest;
 use App\Models\Anime;
@@ -17,6 +19,8 @@ use Illuminate\View\View;
 class ProfileController extends Controller
 {
     use HasEnsure;
+    use GetOrFail;
+    use GetForUsers;
 
     /**
      * Display the user's profile form.
@@ -73,59 +77,32 @@ class ProfileController extends Controller
     }
     public function show(string $username): View
     {
-        $user = User::where('username', $username)->first();
+        $user = $this->getOrFailUser($username);
         return view('profile.show', [
             'user' => $user,
         ]);
     }
     public function favorites(string $username): View
     {
-        $user = User::where('username', $username)->first();
-        if (!$user) {
-            abort(404);
-        }
-        $user_favorites = AnimeUsers::where('user_id', $user->id)->where('favorite', true)->get();
-        $anime_list = [];
-        foreach ($user_favorites as $favorite) {
-            $anime_id = $favorite->anime_id;
-            $anime_list[] = Anime::where('id', $anime_id)->first();
-        }
+        $user = $this->getOrFailUser($username);
+        $anime_list = $this->getListAnimes($user->id, 'favorite');
         return view('profile.animes', ['anime_list' => $anime_list, 'user' => $user, 'type' => 'favorites']);
     }
     public function ratings(string $username): View
     {
-        $user = User::where('username', $username)->first();
-        if (!$user) {
-            abort(404);
-        }
-        $user_favorites = AnimeUsers::where('user_id', $user->id)->where('rating', '!=', '0')->get();
-        $anime_list = [];
-        foreach ($user_favorites as $favorite) {
-            $anime_id = $favorite->anime_id;
-            $anime_list[] = array(Anime::where('id', $anime_id)->first(), $favorite->rating);
-        }
+        $user = $this->getOrFailUser($username);
+        $anime_list = $this->getForAnimes($user->id, 'ratings');
         return view('profile.animes', ['anime_list' => $anime_list, 'user' => $user, 'type' => 'ratings']);
     }
     public function to_watch(string $username): View
     {
-        $user = User::where('username', $username)->first();
-        if (!$user) {
-            abort(404);
-        }
-        $user_favorites = AnimeUsers::where('user_id', $user->id)->where('would_like_to_watch', true)->get();
-        $anime_list = [];
-        foreach ($user_favorites as $favorite) {
-            $anime_id = $favorite->anime_id;
-            $anime_list[] = Anime::where('id', $anime_id)->first();
-        }
+        $user = $this->getOrFailUser($username);
+        $anime_list = $this->getListAnimes($user->id, 'would_like_to_watch');
         return view('profile.animes', ['anime_list' => $anime_list, 'user' => $user, 'type' => 'to watch']);
     }
     public function friends(string $username): View
     {
-        $user = User::where('username', $username)->first();
-        if (!$user) {
-            abort(404);
-        }
+        $user = $this->getOrFailUser($username);
         $user_friends = UsersFriends::where('user1_id', $user->id)->orWhere('user2_id', $user->id)->get();
         $friends_list = [];
         foreach ($user_friends as $friends) {
@@ -155,10 +132,7 @@ class ProfileController extends Controller
     public function add_to_friends(Request $request, string $username): RedirectResponse
     {
         $inviting_user = $this->ensureIsNotNullUser($request->user()); //dodawacz
-        $invited_user = User::where('username', $username)->first(); //dodawany
-        if (!$invited_user) {
-            abort(404);
-        }
+        $invited_user = $this->getOrFailUser($username);
         $are_already_friends = UsersFriends::where('user1_id', $inviting_user->id)->where('user2_id', $invited_user->id)->get();
         $are_already_friends1 = UsersFriends::where('user1_id', $invited_user->id)->where('user2_id', $inviting_user->id)->get();
         if (count($are_already_friends) or count($are_already_friends1)) {
@@ -169,16 +143,8 @@ class ProfileController extends Controller
     }
     public function watched_episodes(string $username): View
     {
-        $user = User::where('username', $username)->first();
-        if (!$user) {
-            abort(404);
-        }
-        $user_watched = AnimeUsers::where('user_id', $user->id)->where('watched', true)->get();
-        $anime_list = [];
-        foreach ($user_watched as $watched) {
-            $anime_id = $watched->anime_id;
-            $anime_list[] = array(Anime::where('id', $anime_id)->first(), $watched->watched_episodes);
-        }
+        $user = $this->getOrFailUser($username);
+        $anime_list = $this->getForAnimes($user->id, 'watched_episodes');
         return view('profile.animes', ['anime_list' => $anime_list, 'user' => $user, 'type' => 'episodes']);
     }
 }

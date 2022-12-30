@@ -15,6 +15,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
+use mysql_xdevapi\Collection;
 
 class AnimeController extends Controller
 {
@@ -185,12 +186,30 @@ class AnimeController extends Controller
         $anime_id = $request->id;
         $anime = $this->getOrFailAnime($anime_id);
 
-        $anime->title = $request->title;
-        $anime->genre = $request->genre;
-        $anime->production_year = $request->production_year;
-        $anime->poster = $request->poster;
-        $anime->episodes = $request->episodes;
-        $anime->description = $request->description;
+        /** @var string $title */
+        $title = $request->title;
+        $anime->title = $title;
+
+        /** @var string $genre */
+        $genre = $request->genre;
+        $anime->genre = $genre;
+
+        /** @var integer $production_year */
+        $production_year = $request->production_year;
+        $anime->production_year = $production_year;
+
+        /** @var string $poster */
+        $poster = $request->poster;
+        $anime->poster = $poster;
+
+        /** @var integer $episodes */
+        $episodes = $request->episodes;
+        $anime->episodes = $episodes;
+
+        /** @var string $description */
+        $description = $request->description;
+        $anime->description = $description;
+
         $anime->save();
 
         return redirect($this->animeRedirect($anime));
@@ -209,8 +228,10 @@ class AnimeController extends Controller
 
     public function calculate_ratings(string $type, string $val): View
     {
-        if($type!='all'){
-//            $animes = Anime::where("$type", $val)->get();
+        if ($type!='all') {
+            //for php stan
+            $animes = new \Illuminate\Support\Collection();
+//           $animes = Anime::where("$type", $val)->get();
         } else {
             $animes = Anime::all();
         }

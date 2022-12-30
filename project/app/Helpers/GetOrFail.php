@@ -4,6 +4,7 @@ namespace App\Helpers;
 
 use App\Models\Anime;
 use App\Models\Review;
+use App\Models\User;
 
 trait GetOrFail
 {
@@ -27,5 +28,14 @@ trait GetOrFail
         }
 
         return $review;
+    }
+
+    public function getOrFailUser(string $username): User
+    {
+        $user = User::where('username', $username)->first();
+        if (!$user) {
+            abort(404);
+        }
+        return $user;
     }
 }
