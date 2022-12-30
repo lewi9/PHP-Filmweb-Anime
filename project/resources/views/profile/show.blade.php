@@ -7,6 +7,9 @@
             @else
                 <img src="{{URL::asset('/images/' . $user->profile_pic)}}" alt="profile Pic" height="200" width="200">
             @endif
+            @if($user->country)
+                {{ __($user->country) }}
+            @endif
         </h2>
     </x-slot>
 
