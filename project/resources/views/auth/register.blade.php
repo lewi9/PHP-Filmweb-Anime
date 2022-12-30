@@ -26,7 +26,7 @@
             <!-- Country -->
             <div>
                 <x-input-label for="country" :value="__('Country')" />
-                <x-text-input id="country" class="block mt-1 w-full" type="text" name="country" :value="old('country')" required autofocus />
+                <x-text-input id="country" class="block mt-1 w-full" type="text" name="country" :value="old('country')" autofocus />
                 <x-input-error :messages="$errors->get('country')" class="mt-2" />
             </div>
 
