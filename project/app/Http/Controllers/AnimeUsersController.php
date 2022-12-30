@@ -34,11 +34,11 @@ class AnimeUsersController extends Controller
         $anime_user = AnimeUsers::where('anime_id', $request->anime_id)->where('user_id', $request->user_id)->first();
 
         if ($favorite and $anime_user) {
-            return $this->favorite($anime_user, $request);
+            return $this->favorite($anime_user);
         }
 
         if ($to_watch and $anime_user) {
-            return $this->to_watch($anime_user, $request);
+            return $this->to_watch($anime_user);
         }
 
         AnimeUsers::create([
@@ -53,7 +53,7 @@ class AnimeUsersController extends Controller
 
     //To deal with copy detector
 
-    private function favorite(AnimeUsers $anime_user, Request $request): Response
+    private function favorite(AnimeUsers $anime_user): Response
     {
         if ($anime_user->favorite) {
             $anime_user->favorite = false;
@@ -65,7 +65,7 @@ class AnimeUsersController extends Controller
         return Response("added");
     }
 
-    private function to_watch(AnimeUsers $anime_user, Request $request): Response
+    private function to_watch(AnimeUsers $anime_user): Response
     {
         if ($anime_user->would_like_to_watch) {
             $anime_user->would_like_to_watch = false;

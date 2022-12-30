@@ -9,6 +9,11 @@ trait StringBuiler
 {
     public function reviewRedirect(Anime $anime, Review $review): string
     {
-        return "/anime/" . $anime->title ."-" . $anime->production_year . "-" . $anime->id . '/reviews/' . $review->id;
+        return $this->animeRedirect($anime) . '/reviews/' . $review->id;
+    }
+
+    public function animeRedirect(Anime $anime): string
+    {
+        return "/anime/$anime->title-$anime->production_year-$anime->id";
     }
 }

@@ -54,27 +54,27 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/commentslike', [CommentController::class, 'like'])->name('comments.like');
 
     //reviews
-    Route::get('/anime/{title}-{production_year}-{id}/reviews/create', [ReviewController::class, 'create' ])->name('reviews.create');
+    Route::get('/anime/{anime_title}-{anime_production_year}-{anime_id}/reviews/create', [ReviewController::class, 'create' ])->name('reviews.create');
     Route::post('/reviews', [ReviewController::class, 'store'])->name('reviews.store');
-    Route::get('/anime/{title}-{production_year}-{id}/reviews/{review_id}/edit', [ReviewController::class, 'edit' ])->name('reviews.edit');
+    Route::get('/anime/{anime_title}-{anime_production_year}-{anime_id}/reviews/{review_id}/edit', [ReviewController::class, 'edit' ])->name('reviews.edit');
     Route::patch('/reviews', [ReviewController::class, 'update'])->name('reviews.update');
-    Route::delete('/anime/{title}-{production_year}-{id}/reviews/{review_id}', [ReviewController::class, 'destroy'])->name('reviews.delete');
+    Route::delete('/anime/{anime_title}-{anime_production_year}-{anime_id}/reviews/{review_id}', [ReviewController::class, 'destroy'])->name('reviews.delete');
 
     //reviews users
     Route::get('/reviews/rate', [ReviewUsersController::class, 'rate'])->name('reviews_users.rate');
 });
 //animes
 Route::get('/anime', [AnimeController::class, 'index'])->name('animes.index');
-Route::get('/anime/{title}-{production_year}-{id}', [AnimeController::class, 'show'])->name('animes.show');
+Route::get('/anime/{anime_title}-{anime_production_year}-{anime_id}', [AnimeController::class, 'show'])->name('animes.show');
 Route::get('/anime/filter', [AnimeController::class, 'filter'])->name('animes.filter');
 
 //comments
-Route::get('/anime/{title}-{production_year}-{id}/comments', [CommentController::class, 'show'])->name('comments.show');
+Route::get('/anime/{anime_title}-{anime_production_year}-{anime_id}/comments', [CommentController::class, 'show'])->name('comments.show');
 Route::get('/commentsfilter', [CommentController::class, 'filter'])->name('comments.filter');
 
 //reviews
-Route::get('/anime/{title}-{production_year}-{id}/reviews', [ReviewController::class, 'index' ])->name('reviews.index');
-Route::get('/anime/{title}-{production_year}-{id}/reviews/{review_id}', [ReviewController::class, 'show' ])->name('reviews.show');
+Route::get('/anime/{anime_title}-{anime_production_year}-{anime_id}/reviews', [ReviewController::class, 'index' ])->name('reviews.index');
+Route::get('/anime/{anime_title}-{anime_production_year}-{anime_id}/reviews/{review_id}', [ReviewController::class, 'show' ])->name('reviews.show');
 Route::get('/reviewsfilter', [ReviewController::class, 'filter'])->name('reviews.filter');
 
 //admin

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Helpers\FilterHelper;
 use App\Helpers\GetOrFail;
 use App\Helpers\LikesHelper;
+use App\Helpers\StringBuiler;
 use App\Helpers\ToHTML;
 use App\Models\Anime;
 use App\Models\AnimeUsers;
@@ -21,6 +22,7 @@ class AnimeController extends Controller
     use ToHTML;
     use FilterHelper;
     use LikesHelper;
+    use StringBuiler;
 
     public function index(): View
     {
@@ -94,35 +96,32 @@ class AnimeController extends Controller
             "cumulate_rating" => 0
         ]);
 
-        return redirect("/anime/$anime->title-$anime->production_year-$anime->id");
+        return redirect($this->animeRedirect($anime));
     }
 
-    public function show(string $title, int $production_year, int $id): View
+    public function show(string $anime_title, int $anime_production_year, int $anime_id): View
     {
-        $anime = Anime::where('id', $id)->get();
-        if (isset($anime[0])) {
-            $anime = $anime[0];
-        }
+        $anime = $this->getOrFailAnime($anime_id);
 
         $anime_user = "";
 
         $likes = array();
 
         if (Auth::id()) {
-            $anime_user = AnimeUsers::where('user_id', Auth::id())->where('anime_id', $id)->first();
+            $anime_user = AnimeUsers::where('user_id', Auth::id())->where('anime_id', $anime_id)->first();
             $comments = DB::table('users')->join('comments', 'comments.user_id', '=', 'users.id')
                 ->where('user_id', Auth::id())
-                ->where('anime_id', $id)
+                ->where('anime_id', $anime_id)
                 ->orderBy('comments.id', 'desc');
             $reviews = DB::table('users')->join('reviews', 'reviews.user_id', '=', 'users.id')
                 ->where('user_id', Auth::id())
-                ->where('anime_id', $id)
+                ->where('anime_id', $anime_id)
                 ->orderBy('reviews.id', 'desc');
 
 
             if ($comments->count() < 5) {
                 $subcomments = DB::table('users')->join('comments', 'comments.user_id', '=', 'users.id')
-                                ->where('anime_id', $id)->whereNot(function ($query) {
+                                ->where('anime_id', $anime_id)->whereNot(function ($query) {
                                     $query->where('user_id', Auth::id());
                                 })->orderBy('comments.id', 'desc')
                                 ->limit(5 - $comments->count());
@@ -133,7 +132,7 @@ class AnimeController extends Controller
 
             if ($reviews->count() < 3) {
                 $subreviews = DB::table('users')->join('reviews', 'reviews.user_id', '=', 'users.id')
-                                ->where('anime_id', $id)->whereNot(function ($query) {
+                                ->where('anime_id', $anime_id)->whereNot(function ($query) {
                                     $query->where('user_id', Auth::id());
                                 })->orderBy('rating', 'desc')
                                 ->limit(3-$reviews->count());
@@ -145,12 +144,12 @@ class AnimeController extends Controller
             $likes = $this->likesHelper($comments);
         } else {
             $comments = DB::table('users')->join('comments', 'comments.user_id', '=', 'users.id')
-                ->where('anime_id', $id)
+                ->where('anime_id', $anime_id)
                 ->orderBy('comments.id', 'desc')
                 ->limit(5)
                 ->get();
             $reviews = DB::table('users')->join('reviews', 'reviews.user_id', '=', 'users.id')
-                ->where('anime_id', $id)
+                ->where('anime_id', $anime_id)
                 ->orderBy('rating', 'desc')
                 ->limit(3)
                 ->get();
@@ -181,17 +180,20 @@ class AnimeController extends Controller
         if (!  file_exists($_SERVER['DOCUMENT_ROOT'] . "/images/" . $request->poster)) {
             $request->poster = "missing.jpg";
         }
-        Anime::where('id', $request->id)
-            ->update([
-                'title' => $request->title,
-                'genre' => $request->genre,
-                'production_year' => $request->production_year,
-                'poster' => $request->poster,
-                'episodes' => $request->episodes,
-                'description' => $request->description,
-            ]);
 
-        return redirect("/anime/" . strval($request->title) ."-" . strval($request->production_year) . "-" . strval($request->id));
+        /** @var string $anime_id */
+        $anime_id = $request->id;
+        $anime = $this->getOrFailAnime($anime_id);
+
+        $anime->title = $request->title;
+        $anime->genre = $request->genre;
+        $anime->production_year = $request->production_year;
+        $anime->poster = $request->poster;
+        $anime->episodes = $request->episodes;
+        $anime->description = $request->description;
+        $anime->save();
+
+        return redirect($this->animeRedirect($anime));
     }
 
     public function destroy(anime $anime): RedirectResponse

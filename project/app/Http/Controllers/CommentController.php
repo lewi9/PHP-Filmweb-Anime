@@ -23,11 +23,11 @@ class CommentController extends Controller
 
 
 
-    public function show(string $title, int $production_year, int $id): View
+    public function show(string $anime_title, int $anime_production_year, int $anime_id): View
     {
         $likes = array();
 
-        $anime = $this->getOrFailAnime($id);
+        $anime = $this->getOrFailAnime($anime_id);
 
         $comments = DB::table('users')
             ->join('comments', 'comments.user_id', '=', 'users.id')

@@ -24,28 +24,28 @@ class ReviewController extends Controller
     use StringBuiler;
 
 
-    public function index(string $title, int $production_year, int $id): View
+    public function index(string $anime_title, int $anime_production_year, int $anime_id): View
     {
-        $anime = $this->getOrFailAnime($id);
+        $anime = $this->getOrFailAnime($anime_id);
 
         $reviews = $this->filter(new Request(['anime_id' => $anime->id]));
 
         return view('animes.reviews.index')->with('reviews', $reviews)->with('anime', $anime);
     }
 
-    public function show(string $title, int $production_year, int $id, int $review_id): View
+    public function show(string $anime_title, int $anime_production_year, int $anime_id, int $review_id): View
     {
         $review_user = ReviewUsers::where('user_id', Auth::id())->where('review_id', $review_id)->first();
-        $anime = $this->getOrFailAnime($id);
+        $anime = $this->getOrFailAnime($anime_id);
 
         $review = $this->getOrFailReview(strval($review_id));
 
         return view('animes.reviews.show')->with('review', $review)->with('anime', $anime)->with('review_user', $review_user);
     }
 
-    public function create(string $title, int $production_year, int $id): View
+    public function create(string $anime_title, int $anime_production_year, int $anime_id): View
     {
-        $anime = $this->getOrFailAnime($id);
+        $anime = $this->getOrFailAnime($anime_id);
 
         return view('animes.reviews.create')->with('anime', $anime);
     }
@@ -73,9 +73,9 @@ class ReviewController extends Controller
         return redirect($this->reviewRedirect($anime, $review));
     }
 
-    public function edit(string $title, int $production_year, int $id, int $review_id): View|RedirectResponse
+    public function edit(string $anime_title, int $anime_production_year, int $anime_id, int $review_id): View|RedirectResponse
     {
-        $anime = $this->getOrFailAnime($id);
+        $anime = $this->getOrFailAnime($anime_id);
 
         $review = $this->getOrFailReview($review_id);
 
@@ -115,12 +115,13 @@ class ReviewController extends Controller
         return redirect($this->reviewRedirect($anime, $review));
     }
 
-    public function destroy(string $title, string $production_year, string $id, int $review_id): RedirectResponse
+    public function destroy(string $anime_title, string $anime_production_year, string $anime_id, int $review_id): RedirectResponse
     {
         $review = $this->getOrFailReview($review_id);
+        $anime = $this->getOrFailAnime($anime_id);
 
         $review->forceDelete();
-        return redirect("/anime/" . $title ."-" . $production_year . "-" . $id);
+        return redirect($this->animeRedirect($anime));
     }
 
     public function filter(Request $request): Response
