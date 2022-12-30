@@ -33,6 +33,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/user/{username}/update', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/user/{username}/delete', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/user/{username}/friends', [ProfileController::class, 'friends'])->name('profile.friends');
+    Route::get('/user/{username}/watched-episodes', [ProfileController::class, 'watched_episodes'])->name('profile.watched');
     Route::get('/user/{username}/favorites', [ProfileController::class, 'favorites'])->name('profile.favorites');
     Route::get('/user/{username}/ratings', [ProfileController::class, 'ratings'])->name('profile.ratings');
     Route::get('/user/{username}/to-watch', [ProfileController::class, 'to_watch'])->name('profile.to-watch');
@@ -82,6 +83,8 @@ Route::post('/anime', [AnimeController::class, 'store'])->middleware(['auth', 'v
 Route::get('/anime/{anime}/edit/', [AnimeController::class, 'edit'])->middleware(['auth', 'verified'])->name('animes.edit');
 Route::get('/anime/{anime}/delete', [AnimeController::class, 'destroy'])->middleware(['auth', 'verified'])->name('animes.delete');
 Route::patch('/anime/update', [AnimeController::class, 'update'])->middleware(['auth', 'verified'])->name('animes.update');
+
+Route::get('/ratings/{type}/{val}', [AnimeController::class, 'calculate_ratings'])->name('ratings');
 
 require __DIR__.'/auth.php';
 

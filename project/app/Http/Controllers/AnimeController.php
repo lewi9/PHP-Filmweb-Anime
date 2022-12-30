@@ -204,4 +204,14 @@ class AnimeController extends Controller
         $anime->forceDelete();
         return redirect('/anime');
     }
+
+    public function calculate_ratings(string $type, string $val): View
+    {
+        if($type!='all'){
+//            $animes = Anime::where("$type", $val)->get();
+        } else {
+            $animes = Anime::all();
+        }
+        return view('animes.ratings')->with('animes', $animes->sortByDesc('rating'));
+    }
 }

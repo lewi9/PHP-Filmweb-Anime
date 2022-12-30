@@ -167,4 +167,18 @@ class ProfileController extends Controller
         UsersFriends::create(['user1_id' => $inviting_user->id, 'user2_id' => $invited_user->id]);
         return back()->with('success', 'You are now friends!');
     }
+    public function watched_episodes(string $username): View
+    {
+        $user = User::where('username', $username)->first();
+        if (!$user) {
+            abort(404);
+        }
+        $user_watched = AnimeUsers::where('user_id', $user->id)->where('watched', true)->get();
+        $anime_list = [];
+        foreach ($user_watched as $watched) {
+            $anime_id = $watched->anime_id;
+            $anime_list[] = array(Anime::where('id', $anime_id)->first(), $watched->watched_episodes);
+        }
+        return view('profile.animes', ['anime_list' => $anime_list, 'user' => $user, 'type' => 'episodes']);
+    }
 }

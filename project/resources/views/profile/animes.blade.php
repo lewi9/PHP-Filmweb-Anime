@@ -19,6 +19,11 @@
                             {{ __($anime[0]->title) }}
                         </x-nav-link>
                         {{ __($anime[1] . '/10') }}
+                    @elseif ($type == 'episodes')
+                        <x-nav-link :href="route('animes.show', [$anime[0]->title, $anime[0]->production_year, $anime[0]->id])">
+                            {{ __($anime[0]->title) }}
+                        </x-nav-link>
+                        {{ __($anime[1] . '/' . $anime[0]->episodes) }}
                     @else
                         <x-nav-link :href="route('animes.show', [$anime->title, $anime->production_year, $anime->id])">
                             {{ __($anime->title) }}

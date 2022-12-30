@@ -24,6 +24,13 @@
                     </x-nav-link>
                 </div>
             @endif
+
+            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+                <x-nav-link :href="route('profile.watched', $user->username)">
+                    {{ __('Watched animes') }}
+                </x-nav-link>
+            </div>
+
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
                 <x-nav-link :href="route('profile.ratings', $user->username)">
                     {{ __('Ratings') }}
