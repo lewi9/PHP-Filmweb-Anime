@@ -10,3 +10,12 @@ actor_suffix: Tester
 extensions:
     enabled:
         - Codeception\Extension\RunFailed
+coverage:
+  enabled: true
+  low_limit: 80
+  high_limit: 95
+  show_uncovered: true
+  include:
+    - app/*
+  exclude:
+    - app/cache/*
