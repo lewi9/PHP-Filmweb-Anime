@@ -48,6 +48,7 @@ class EmailVerificationTest extends TestCase
             ]);
         } else {
             $user = EmailVerificationTest_UserThatImplementsVerifyEmail::create([
+                'username' => 'username',
                 'name' => 'Name',
                 'email' => 'name@example.com',
                 'password' => bcrypt('secret'),
