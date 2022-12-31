@@ -1,6 +1,7 @@
 <script>
     document.getElementById("back_anime_1").style.display='none';
     document.getElementById("back_anime_2").style.display='none';
+    document.getElementById("filter_form").style.display='none';
 </script>
 
 <script>
