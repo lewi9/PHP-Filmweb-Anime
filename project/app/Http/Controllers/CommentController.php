@@ -66,7 +66,7 @@ class CommentController extends Controller
     {
         $request->validate([
             'id' => ['exists:comments', 'required', 'regex:/^[_a-z0-9 ]+$/i'],
-            'text' => ['required', "string", 'regex:/^[_a-z0-9 ]+$/i']
+            'text' => ['required', "string"]
         ]);
 
         /** @var string $text */
