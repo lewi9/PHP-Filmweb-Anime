@@ -3,6 +3,9 @@
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Http\Request;
 
+include '../c3.php';
+define('MY_APP_STARTED', true);
+
 define('LARAVEL_START', microtime(true));
 
 /*

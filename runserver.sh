@@ -1,5 +1,6 @@
 #!/bin/bash
 # this script should be run after executing 'source php.env' command in main project directory and running development container ('run dev' command)
+export XDEBUG_MODE=develop,debug,coverage
 cd project/
 docker run --name=mysql --net=host --rm --env MYSQL_ROOT_PASSWORD=root123 --env MYSQL_ROOT_HOST=% --env MYSQL_DATABASE=test --env MYSQL_USER=test --env MYSQL_PASSWORD=test123 -d mysql/mysql-server:8.0
  while ! timeout 1 bash -c "echo > /dev/tcp/localhost/3306" 2> /dev/null; do sleep 1; done; echo "Done.";
