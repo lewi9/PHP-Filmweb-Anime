@@ -21,6 +21,7 @@ return new class () extends Migration {
             $table->string('profile_pic')->default('-1');
             $table->string('country')->nullable();
             $table->string('username')->unique();
+            $table->boolean('is_admin')->default(false);
             $table->rememberToken();
             $table->timestamps();
         });

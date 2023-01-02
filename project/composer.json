@@ -6,6 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.0.2",
+        "backpack/crud": "^5.4",
         "doctrine/dbal": "^3.5",
         "graham-campbell/markdown": "^14.0",
         "guzzlehttp/guzzle": "^7.2",
@@ -14,6 +15,7 @@
         "laravel/tinker": "^2.7"
     },
     "require-dev": {
+        "backpack/generators": "^3.3",
         "codeception/codeception": "^5.0",
         "codeception/module-asserts": "^3.0",
         "codeception/module-db": "^3.0",
