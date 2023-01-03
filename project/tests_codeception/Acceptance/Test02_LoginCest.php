@@ -25,11 +25,11 @@ class Test02_LoginCest
         $I->see("You're logged in!");
     }
 
-    public function wrongLogin(AcceptanceTester $I) :void
+    public function wrongLogin(AcceptanceTester $I): void
     {
         $I->wantTo('login with non-existing login');
 
-        $I->dontSeeInDatabase("users",['email' => "dummy@gmail.com"]);
+        $I->dontSeeInDatabase("users", ['email' => "dummy@gmail.com"]);
 
         $I->amOnPage('/dashboard');
 
@@ -41,14 +41,13 @@ class Test02_LoginCest
         $I->click('Log in');
         $I->seeCurrentUrlEquals('/login');
         $I->see('These credentials do not match our records.');
-
     }
 
-    public function wrongPassword(AcceptanceTester $I) :void
+    public function wrongPassword(AcceptanceTester $I): void
     {
         $I->wantTo('Login with wrong password');
 
-        $I->seeInDatabase("users",['email' => "john.doe@gmail.com"]);
+        $I->seeInDatabase("users", ['email' => "john.doe@gmail.com"]);
 
         $I->amOnPage('/dashboard');
 
@@ -60,9 +59,8 @@ class Test02_LoginCest
         $I->click('Log in');
         $I->seeCurrentUrlEquals('/login');
         $I->see('These credentials do not match our records.');
-
     }
-    public function emptyLogin(AcceptanceTester $I) :void
+    public function emptyLogin(AcceptanceTester $I): void
     {
         $I->wantTo('Login without Login');
         $I->amOnPage('/dashboard');
@@ -74,14 +72,13 @@ class Test02_LoginCest
         $I->click('Log in');
         $I->seeCurrentUrlEquals('/login');
         $I->see("The email field is required.");
-
     }
 
-    public function emptyPassword(AcceptanceTester $I) :void
+    public function emptyPassword(AcceptanceTester $I): void
     {
         $I->wantTo('Login without password');
 
-        $I->seeInDatabase("users",['email' => "john.doe@gmail.com"]);
+        $I->seeInDatabase("users", ['email' => "john.doe@gmail.com"]);
 
         $I->amOnPage('/dashboard');
         $I->seeCurrentUrlEquals('/login');

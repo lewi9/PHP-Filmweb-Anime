@@ -10,3 +10,5 @@ parameters:
         - storage
         - config
         - tests_codeception
+        - c3.php
+        - app/Http/Requests

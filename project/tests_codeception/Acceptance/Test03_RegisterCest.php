@@ -1,6 +1,5 @@
 <?php
 
-
 namespace TestsCodeception\Acceptance;
 
 use App\Models\User;
@@ -22,7 +21,7 @@ class Test03_RegisterCest
         $I->amOnPage('/register');
 
         $I->fillField('Name', $user->name);
-        $I->fillField('Username', $user->username  );
+        $I->fillField('Username', $user->username);
         $I->fillField('Country', $user->country);
         $I->fillField('Email', $user->email);
         $I->fillField('Password', $user->password);
@@ -39,22 +38,19 @@ class Test03_RegisterCest
         $I->see("Log Out");
 
         $api_key = $I->grabValueFrom('input[name=_token]');
-        $I->sendAjaxPostRequest('/logout',['_token' => $api_key]);
+        $I->sendAjaxPostRequest('/logout', ['_token' => $api_key]);
         $I->amOnPage('/register');
         $I->seeCurrentUrlEquals("/register");
 
-        $I->fillField('Name', str_repeat($user->name,50));
-        $I->fillField('Username', str_repeat($user->username  ,50));
-        $I->fillField('Country', str_repeat($user->country,50));
-        $I->fillField('Email', str_repeat($user->email,50));
-        $I->fillField('Password', str_repeat($user->password,50));
-        $I->fillField('Confirm Password', str_repeat($user->password,50));
+        $I->fillField('Name', str_repeat($user->name, 50));
+        $I->fillField('Username', str_repeat($user->username, 50));
+        $I->fillField('Country', str_repeat($user->country, 50));
+        $I->fillField('Email', str_repeat($user->email, 50));
+        $I->fillField('Password', str_repeat($user->password, 50));
+        $I->fillField('Confirm Password', str_repeat($user->password, 50));
 
         $I->click('Register');
 
         $I->seeCurrentUrlEquals('/register');
-
-
-
     }
 }
