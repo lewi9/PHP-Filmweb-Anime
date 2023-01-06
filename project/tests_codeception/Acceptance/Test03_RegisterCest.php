@@ -37,7 +37,7 @@ class Test03_RegisterCest
 
         $I->fillField('Name', $user->name);
         $I->fillField('Username', $user->username);
-        $I->fillField('Country', str_repeat($user->country,70));
+        $I->fillField('Country', str_repeat($user->country, 70));
         $I->fillField('Email', $user->email);
         $I->fillField('Password', $user->password);
         $I->fillField('Confirm Password', $user->password);
@@ -181,6 +181,5 @@ class Test03_RegisterCest
 //        $I->amOnPage('/register');
 //        $I->seeCurrentUrlEquals("/register");
 //        #$I->see("Log Out");
-
     }
 }

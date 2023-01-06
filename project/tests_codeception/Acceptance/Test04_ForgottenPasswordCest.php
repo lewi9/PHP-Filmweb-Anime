@@ -1,6 +1,5 @@
 <?php
 
-
 namespace TestsCodeception\Acceptance;
 
 use TestsCodeception\Support\AcceptanceTester;
@@ -17,22 +16,20 @@ class Test04_ForgottenPasswordCest
         $I->seeCurrentUrlEquals("/forgot-password");
 
 
-        $I->fillField("Email","");
+        $I->fillField("Email", "");
         $I->click("Email Password Reset Link");
         //popupy ogarnac
 
-        $I->fillField("Email","dummy@mail.pl");
+        $I->fillField("Email", "dummy@mail.pl");
         $I->click("Email Password Reset Link");
         $I->see("We can't find a user with that email address.");
 
-        $I->fillField("Email","john.doe@gmail.com");
+        $I->fillField("Email", "john.doe@gmail.com");
         $I->click("Email Password Reset Link");
         $I->see("Email successfully sent");
 
-        $I->fillField("Email","john.doe@gmail.com");
+        $I->fillField("Email", "john.doe@gmail.com");
         $I->click("Email Password Reset Link");
         $I->see("Please wait before retrying.");
-
-
     }
 }

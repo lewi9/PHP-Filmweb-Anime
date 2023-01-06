@@ -12,3 +12,5 @@ parameters:
         - tests_codeception
         - c3.php
         - app/Http/Requests
+        - app/Http/Middleware/CheckIfAdmin
+        - app/Http/Controllers/Admin/Auth
