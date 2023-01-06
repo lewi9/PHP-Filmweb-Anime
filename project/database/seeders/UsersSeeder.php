@@ -26,5 +26,13 @@ class UsersSeeder extends Seeder
             'email' => 'jd@gmail.com',
             'password' => bcrypt('secret'),
         ]);
+        DB::table('users')->insert([
+            'username' => 'admin',
+            'is_admin' => true,
+            'country' => 'Polska',
+            'name' => 'Admin',
+            'email' => 'admin@anime.pl',
+            'password' => bcrypt('password'),
+        ]);
     }
 }
