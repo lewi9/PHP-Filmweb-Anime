@@ -19,6 +19,7 @@ return new class () extends Migration {
             $table->text('text');
             $table->integer('likes');
             $table->integer('dislikes');
+            $table->string('photo')->default('missing.jpg');
         });
     }
 
