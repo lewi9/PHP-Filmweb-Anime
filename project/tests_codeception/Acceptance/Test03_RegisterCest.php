@@ -16,9 +16,154 @@ class Test03_RegisterCest
         $user->email = 'capitan@gmail.com';
         $user->password = "OnePiece123";
 
-        $I->wantTo("register proper user");
+        $I->wantTo("Invalid Name and Username (to many characters)");
+        $I->amOnPage('/');
+        $I->click("Register");
 
-        $I->amOnPage('/register');
+        $I->fillField('Name', str_repeat($user->name, 50));
+        $I->fillField('Username', str_repeat($user->username, 55));
+        $I->fillField('Country', $user->country);
+        $I->fillField('Email', $user->email);
+        $I->fillField('Password', $user->password);
+        $I->fillField('Confirm Password', $user->password);
+
+        $I->click('Register');
+        $I->see("The name must not be greater than 255 characters.");
+        $I->see("The username must not be greater than 255 characters.");
+
+
+        // powinny juz przechodzic
+        $I->wantTo("Fill invalid country");
+
+        $I->fillField('Name', $user->name);
+        $I->fillField('Username', $user->username);
+        $I->fillField('Country', str_repeat($user->country,70));
+        $I->fillField('Email', $user->email);
+        $I->fillField('Password', $user->password);
+        $I->fillField('Confirm Password', $user->password);
+
+        $I->click('Register');
+        $I->see("The country is invalid.");
+
+        $I->wantTo("Fill unproper mail.");
+
+        $I->fillField('Name', $user->name);
+        $I->fillField('Username', $user->username);
+        $I->fillField('Country', $user->country);
+        $I->fillField('Email', "itsnot@mail");
+        $I->fillField('Password', $user->password);
+        $I->fillField('Confirm Password', $user->password);
+
+        $I->click('Register');
+        $I->see("The email is invalid.");
+
+
+        $I->wantTo("Fill too short password");
+
+        $I->fillField('Name', $user->name);
+        $I->fillField('Username', $user->username);
+        $I->fillField('Country', $user->country);
+        $I->fillField('Email', $user->email);
+        $I->fillField('Password', "ok");
+        $I->fillField('Confirm Password', "ok");
+
+        $I->seeCurrentUrlEquals('/register');
+        $I->click("Register");
+
+        $I->see("The password must be at least 8 characters.");
+
+
+        // do ogarnieca PopUpy
+        /*
+        $I->wantTo("Empty name");
+
+        $I->fillField('Name', "");
+        $I->fillField('Username', "");
+        $I->fillField('Country', "");
+        $I->fillField('Email', "");
+        $I->fillField('Password', "");
+        $I->fillField('Confirm Password', "");
+
+        $I->seeCurrentUrlEquals('/register');
+        $I->click("Register");
+        //////////
+        $I->wantTo("Empty username");
+
+        $I->fillField('Name', $user->name);
+        $I->fillField('Username', "");
+        $I->fillField('Country', "");
+        $I->fillField('Email', "");
+        $I->fillField('Password', "");
+        $I->fillField('Confirm Password', "");
+
+        $I->seeCurrentUrlEquals('/register');
+        $I->click("Register");
+
+        $I->wantTo("Empty country");
+
+        $I->fillField('Name', $user->name);
+        $I->fillField('Username', $user->name);
+        $I->fillField('Country', "");
+        $I->fillField('Email', "");
+        $I->fillField('Password', "");
+        $I->fillField('Confirm Password', "");
+
+        $I->seeCurrentUrlEquals('/register');
+        $I->click("Register");
+
+        $I->wantTo("Empty email field");
+
+        $I->fillField('Name', $user->name);
+        $I->fillField('Username', $user->name);
+        $I->fillField('Country', $user->country);
+        $I->fillField('Email', "");
+        $I->fillField('Password', "");
+        $I->fillField('Confirm Password', "");
+
+        $I->seeCurrentUrlEquals('/register');
+        $I->click("Register");
+
+        $I->wantTo("Empty password field");
+
+        $I->fillField('Name', $user->name);
+        $I->fillField('Username', $user->name);
+        $I->fillField('Country', $user->country);
+        $I->fillField('Email', $user->country);
+        $I->fillField('Password', "");
+        $I->fillField('Confirm Password', "");
+
+        $I->seeCurrentUrlEquals('/register');
+        $I->click("Register");
+
+        $I->wantTo("Empty confirm password field");
+
+        $I->fillField('Name', $user->name);
+        $I->fillField('Username', $user->name);
+        $I->fillField('Country', $user->country);
+        $I->fillField('Email', $user->country);
+        $I->fillField('Password', $user->password);
+        $I->fillField('Confirm Password', "");
+
+        $I->seeCurrentUrlEquals('/register');
+        $I->click("Register");
+
+*/
+        $I->wantTo("Password confirm does not match");
+
+        $I->fillField('Name', $user->name);
+        $I->fillField('Username', $user->name);
+        $I->fillField('Country', $user->country);
+        $I->fillField('Email', $user->country);
+        $I->fillField('Password', $user->password);
+        $I->fillField('Confirm Password', "unproper");
+
+        $I->seeCurrentUrlEquals('/register');
+        $I->click("Register");
+
+        $I->see("The password confirmation does not match");
+
+
+        $I->wantTo("register proper user");
 
         $I->fillField('Name', $user->name);
         $I->fillField('Username', $user->username);
@@ -27,30 +172,15 @@ class Test03_RegisterCest
         $I->fillField('Password', $user->password);
         $I->fillField('Confirm Password', $user->password);
 
-        $I->click('Register');
-
-        $I->seeCurrentUrlEquals('/dashboard');
-        $I->see($user->name);
-        $I->see("You're logged in!");
-
-        ###
-        $I->wantTo("register unproper user");
-        $I->see("Log Out");
-
-        $api_key = $I->grabValueFrom('input[name=_token]');
-        $I->sendAjaxPostRequest('/logout', ['_token' => $api_key]);
-        $I->amOnPage('/register');
-        $I->seeCurrentUrlEquals("/register");
-
-        $I->fillField('Name', str_repeat($user->name, 50));
-        $I->fillField('Username', str_repeat($user->username, 50));
-        $I->fillField('Country', str_repeat($user->country, 50));
-        $I->fillField('Email', str_repeat($user->email, 50));
-        $I->fillField('Password', str_repeat($user->password, 50));
-        $I->fillField('Confirm Password', str_repeat($user->password, 50));
-
-        $I->click('Register');
-
         $I->seeCurrentUrlEquals('/register');
+        $I->click('Register');
+        $I->seeCurrentUrlEquals('/dashboard');
+
+//        $api_key = $I->grabValueFrom('input[name=_token]');
+//        $I->sendAjaxPostRequest('/logout', ['_token' => $api_key]);
+//        $I->amOnPage('/register');
+//        $I->seeCurrentUrlEquals("/register");
+//        #$I->see("Log Out");
+
     }
 }

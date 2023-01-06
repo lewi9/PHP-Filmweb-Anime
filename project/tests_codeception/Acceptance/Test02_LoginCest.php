@@ -9,8 +9,8 @@ class Test02_LoginCest
     public function loginTest(AcceptanceTester $I): void
     {
         $I->wantTo('login with existing user');
-
-        $I->amOnPage('/dashboard');
+        $I->amOnPage('/');
+        $I->click('Log in');
 
         $I->seeCurrentUrlEquals('/login');
 
