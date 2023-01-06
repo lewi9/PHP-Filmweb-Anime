@@ -13,7 +13,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        /** @phpstan-ignore-next-line */
+        $this->app->bind(\Backpack\CRUD\Tests\Unit\Http\Controllers\UserCrudController::class, \App\Http\Controllers\Admin\UserCrudController::class);
     }
 
     /**
