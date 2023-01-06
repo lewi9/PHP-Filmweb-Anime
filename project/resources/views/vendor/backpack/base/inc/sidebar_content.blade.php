@@ -6,5 +6,5 @@
 <li class="nav-item"><a class="nav-link" href="{{ backpack_url('comment') }}"><i class="nav-icon la la-th-list"></i> Comments</a></li>
 <li class="nav-item"><a class="nav-link" href="{{ backpack_url('review') }}"><i class="nav-icon la la-th-list"></i> Reviews</a></li>
 <li class="nav-item"><a class="nav-link" href="{{ backpack_url('review-users') }}"><i class="nav-icon la la-th-list"></i> Review users</a></li>
-<li class="nav-item"><a class="nav-link" href="{{ backpack_url('user') }}"><i class="nav-icon la la-th-list"></i> Users</a></li>
-<li class="nav-item"><a class="nav-link" href="{{ backpack_url('users-friends') }}"><i class="nav-icon la la-th-list"></i> Users friends</a></li>
+{{--<li class="nav-item"><a class="nav-link" href="{{ backpack_url('user') }}"><i class="nav-icon la la-th-list"></i> Users</a></li>--}}
+{{--<li class="nav-item"><a class="nav-link" href="{{ backpack_url('users-friends') }}"><i class="nav-icon la la-th-list"></i> Users friends</a></li>--}}
