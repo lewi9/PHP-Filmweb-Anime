@@ -176,10 +176,6 @@ class Test03_RegisterCest
         $I->click('Register');
         $I->seeCurrentUrlEquals('/dashboard');
 
-//        $api_key = $I->grabValueFrom('input[name=_token]');
-//        $I->sendAjaxPostRequest('/logout', ['_token' => $api_key]);
-//        $I->amOnPage('/register');
-//        $I->seeCurrentUrlEquals("/register");
-//        #$I->see("Log Out");
+
     }
 }
