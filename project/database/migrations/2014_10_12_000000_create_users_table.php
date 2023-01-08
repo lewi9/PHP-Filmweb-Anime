@@ -18,7 +18,7 @@ return new class () extends Migration {
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->string('profile_pic')->default('-1');
+            $table->string('profile_pic')->default('missing.jpg');
             $table->string('country')->nullable();
             $table->string('username')->unique();
             $table->boolean('is_admin')->default(false);
