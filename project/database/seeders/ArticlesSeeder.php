@@ -14,24 +14,16 @@ class ArticlesSeeder extends Seeder
     public function run(): void
     {
         $faker = Factory::create();
-
-        DB::table('articles')->insert([
-            'title' => implode(' ', $faker->words(3)),
-            'text' => $faker->realTextBetween(500, 5000),
-            'likes' => 10,
-            'dislikes' => 3
-        ]);
-        DB::table('articles')->insert([
-            'title' => implode(' ', $faker->words(3)),
-            'text' => $faker->realTextBetween(500, 5000),
-            'likes' => 1,
-            'dislikes' => 5
-        ]);
-        DB::table('articles')->insert([
-            'title' => implode(' ', $faker->words(3)),
-            'text' => $faker->realTextBetween(500, 5000),
-            'likes' => 0,
-            'dislikes' => 0
-        ]);
+        for ($i=0; $i<3; $i++) {
+            $words = $faker->words(3);
+            if (is_array($words)) {
+                DB::table('articles')->insert([
+                    'title' => implode(' ', $words),
+                    'text' => $faker->realTextBetween(500, 5000),
+                    'likes' => 10,
+                    'dislikes' => 3
+                ]);
+            }
+        }
     }
 }
