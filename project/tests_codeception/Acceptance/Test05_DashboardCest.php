@@ -1,6 +1,5 @@
 <?php
 
-
 namespace TestsCodeception\Acceptance;
 
 use Codeception\Coverage\Subscriber\Local;
@@ -9,17 +8,13 @@ use TestsCodeception\Support\AcceptanceTester;
 
 class Test05_DashboardCest
 {
-
-
     // tests
     public function tryToTest(AcceptanceTester $I)
     {
-
-
-
         $I->amOnPage("/login");
-        $I->fillField("Email","john.doe@gmail.com");
-        $I->fillField("Password","secret");
+        $I->amOnPage("/login");
+        $I->fillField("Email", "john.doe@gmail.com");
+        $I->fillField("Password", "secret");
         $I->click("Log in");
         $I->seeCurrentUrlEquals("/dashboard");
         $I->seeElement(['id' => 'logo_link']);
@@ -33,7 +28,7 @@ class Test05_DashboardCest
 
 //        $I->seeCurrentUrlEquals("/ratings");
         $I->seeElement(['id' => 'logo_link']);
-        $I->seeElement(Locator::combine("ol","li"));
+        $I->seeElement(Locator::combine("ol", "li"));
         $I->see("John Doe");
 
 
@@ -95,7 +90,5 @@ class Test05_DashboardCest
 //        $api_key = $I->grabValueFrom('input[name=_token]');
 //        $I->sendAjaxPostRequest('/logout', ['_token' => $api_key]);
 //        $I->see("penis");
-
-
     }
 }

@@ -175,7 +175,5 @@ class Test03_RegisterCest
         $I->seeCurrentUrlEquals('/register');
         $I->click('Register');
         $I->seeCurrentUrlEquals('/dashboard');
-
-
     }
 }
