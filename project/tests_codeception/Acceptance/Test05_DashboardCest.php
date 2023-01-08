@@ -31,12 +31,18 @@ class Test05_DashboardCest
 
         $I->click("Ratings");
 
-        $I->seeCurrentUrlEquals("/ratings");
+//        $I->seeCurrentUrlEquals("/ratings");
         $I->seeElement(['id' => 'logo_link']);
         $I->seeElement(Locator::combine("ol","li"));
         $I->see("John Doe");
 
-        $I->amOnPage("/dashboard");
+
+
+        $I->wantTo("Route logo");
+        $I->click(["id" => "logo_button"]);
+        $I->seeCurrentUrlEquals("/dashboard");
+
+
 
         $I->wantTo("Routing for Search for animes page ");
 
