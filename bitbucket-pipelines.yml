@@ -11,7 +11,6 @@ pipelines:
           - mailhog
         script:
           - pushd project/
-          -   service start mailhog
           -   composer install
           -   vendor/bin/codecept build
           -   vendor/bin/php-cs-fixer fix --diff --dry-run .
