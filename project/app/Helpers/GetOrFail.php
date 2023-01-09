@@ -3,6 +3,7 @@
 namespace App\Helpers;
 
 use App\Models\Anime;
+use App\Models\Article;
 use App\Models\Review;
 use App\Models\User;
 
@@ -37,5 +38,16 @@ trait GetOrFail
             abort(404);
         }
         return $user;
+    }
+
+    public function getOrFailArticle(string|int $article_id): Article
+    {
+        $review = Article::where('id', $article_id)->first();
+
+        if (!$review) {
+            abort(404);
+        }
+
+        return $review;
     }
 }

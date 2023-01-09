@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AnimeController;
+use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\AnimeUsersController;
 use App\Http\Controllers\ProfileController;
@@ -86,6 +87,9 @@ Route::patch('/anime/update', [AnimeController::class, 'update'])->middleware(['
 
 Route::get('/ratings', [AnimeController::class, 'get_ratings'])->name('ratings');
 Route::post('/ratings/calculate', [AnimeController::class, 'calculate_ratings'])->name('ratings.calculate');
+
+Route::post('/articles/like', [ArticleController::class, 'like'])->name('articles.like');
+Route::post('/articles/dislike', [ArticleController::class, 'dislike'])->name('articles.dislike');
 
 require __DIR__.'/auth.php';
 

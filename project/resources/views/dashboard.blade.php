@@ -1,4 +1,41 @@
 <?php $articles = \App\Models\Article::all(); ?>
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script>
+    function liker(id) {
+        $.ajax({
+                type: 'post',
+                url: '{{URL::to('/articles/like/')}}',
+                headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                data: {
+                        'article_id': id,
+                        @if(Auth::user())
+                        'user_id':{{Auth::user()->id}},
+                        @endif
+                    },
+                    success: function (data) {
+                        $('#'+id+'likes').text('Likes: '+data);
+                    }
+                });
+        }
+
+    function disliker(id) {
+        $.ajax({
+                type: 'post',
+                url: '{{URL::to('/articles/dislike')}}',
+                headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                data:{
+                        'article_id': id,
+                        @if(Auth::user())
+                        'user_id':{{Auth::user()->id}},
+                        @endif
+                    },
+                    success: function (data) {
+                        $('#'+id+'dislikes').text('Dislikes: '+data);
+                    }
+                });
+        }
+</script>
+
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
@@ -21,15 +58,18 @@
                         <img src="{{URL::asset('/images/'. $article->photo)}}" alt="Anime Pic" height="200" width="200">
                         <div>
                             {{__($article->text)}}
-                            <div>Likes: {{__($article->likes)}}
-                                Dislikes: {{__($article->dislikes)}}</div>
+                            <div id={{$article->id . "likes"}}>Likes: {{__($article->likes)}}</div>
+                            <div id={{$article->id . "dislikes"}}>Dislikes: {{__($article->dislikes)}}</div>
                             @if (Auth::user())
-                            <x-primary-button class="ml-3">
-                                {{ __('Like') }}
+                                <div>
+                            <x-primary-button id="{{$article->id}}" onclick="liker(this.id)">
+                                Like
                             </x-primary-button>
-                            <x-primary-button class="ml-3">
-                                {{ __('Dislike') }}
+                            <x-primary-button id="{{$article->id}}" onclick="disliker(this.id)">
+                                Dislike
                             </x-primary-button>
+                                </div>
+                                </form>
                             @endif
                         </div>
                     </div>
