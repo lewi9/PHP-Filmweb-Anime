@@ -26,7 +26,7 @@ class Test04_ForgottenPasswordCest
 
         $I->fillField("Email", "john.doe@gmail.com");
         $I->click("Email Password Reset Link");
-        $I->see("Email successfully sent");
+        $I->see("We have emailed your password reset link!");
 
         $I->fillField("Email", "john.doe@gmail.com");
         $I->click("Email Password Reset Link");
