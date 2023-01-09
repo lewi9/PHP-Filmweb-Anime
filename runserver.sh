@@ -4,6 +4,7 @@ export XDEBUG_MODE=develop,debug,coverage
 cd project/
 docker run --name=mysql --net=host --rm --env MYSQL_ROOT_PASSWORD=root123 --env MYSQL_ROOT_HOST=% --env MYSQL_DATABASE=test --env MYSQL_USER=test --env MYSQL_PASSWORD=test123 -d mysql/mysql-server:8.0
  while ! timeout 1 bash -c "echo > /dev/tcp/localhost/3306" 2> /dev/null; do sleep 1; done; echo "Done.";
+docker run -d -p 1025:1025 -p 8025:8025 mailhog/mailhog
 composer install
 cp .env.example .env
 php artisan key:generate
