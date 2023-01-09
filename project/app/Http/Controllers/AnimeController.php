@@ -226,15 +226,13 @@ class AnimeController extends Controller
         return redirect('/anime');
     }
 
-    public function calculate_ratings(string $type, string $val): View
+    public function get_ratings(): View
     {
-        if ($type!='all') {
-            //for php stan
-            $animes = new \Illuminate\Support\Collection();
-//           $animes = Anime::where("$type", $val)->get();
-        } else {
-            $animes = Anime::all();
-        }
+        $animes = Anime::all();
         return view('animes.ratings')->with('animes', $animes->sortByDesc('rating'));
+    }
+    public function calculate_ratings(Request $request): Response
+    {
+        return $this->filterProcedure($request, 'rating');
     }
 }

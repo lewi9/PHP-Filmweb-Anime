@@ -84,7 +84,8 @@ Route::get('/anime/{anime}/edit/', [AnimeController::class, 'edit'])->middleware
 Route::get('/anime/{anime}/delete', [AnimeController::class, 'destroy'])->middleware(['auth', 'verified'])->name('animes.delete');
 Route::patch('/anime/update', [AnimeController::class, 'update'])->middleware(['auth', 'verified'])->name('animes.update');
 
-Route::get('/ratings/{type}/{val}', [AnimeController::class, 'calculate_ratings'])->name('ratings');
+Route::get('/ratings', [AnimeController::class, 'get_ratings'])->name('ratings');
+Route::post('/ratings/calculate', [AnimeController::class, 'calculate_ratings'])->name('ratings.calculate');
 
 require __DIR__.'/auth.php';
 

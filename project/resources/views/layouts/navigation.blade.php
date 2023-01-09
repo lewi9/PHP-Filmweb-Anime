@@ -18,7 +18,7 @@
                     <x-nav-link :href="route('animes.index')" :active="request()->routeIs('animes.index')">
                         {{ __('Search for animes') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('ratings', ['all', 'all'])" :active="request()->routeIs('ratings')">
+                    <x-nav-link :href="route('ratings')" :active="request()->routeIs('ratings')">
                         {{ __('Ratings') }}
                     </x-nav-link>
                 </div>
@@ -79,7 +79,7 @@
             <x-responsive-nav-link :href="route('animes.index')" :active="request()->routeIs('animes.index')">
                 {{ __('Animes') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('ratings', ['all', 'all'])" :active="request()->routeIs('ratings')">
+            <x-responsive-nav-link :href="route('ratings')" :active="request()->routeIs('ratings')">
                 {{ __('Ratings') }}
             </x-responsive-nav-link>
         </div>

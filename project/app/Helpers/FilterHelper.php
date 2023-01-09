@@ -13,7 +13,9 @@ trait FilterHelper
     public function filterProcedure(Request $request, string $type): Response
     {
         $anime = new Anime();
-        if ($type != 'anime') {
+        if ($type == 'rating') {
+            $collection = $this->ratingHelper($request);
+        } elseif ($type != 'anime') {
             /** @var int|string $anime_id */
             $anime_id = $request->anime_id;
             $anime = $this->getOrFailAnime($anime_id);
@@ -26,6 +28,7 @@ trait FilterHelper
             'anime' => Response($this->animeCollectionToHTML($collection)),
             'comments' => Response($this->commentsCollectionToHTML($collection, $anime)),
             'reviews' => Response($this->reviewsCollectionToHTML($collection, $anime)),
+            'rating' => Response($this->animeCollectionToRatingHTML($collection)),
             default => Response('<h2>Filter problem in filter procedure</h2>'),
         };
     }
@@ -94,5 +97,25 @@ trait FilterHelper
             ->where('genre', 'like', '%'.$filter_genre.'%')
             ->orderBy($filter, $filter_mode)
             ->get();
+    }
+
+    private function ratingHelper(Request $request): Collection
+    {
+        $request->validate([
+            'genre' => ['nullable', 'string'],
+            'year' => ['nullable', 'string'],
+        ]);
+        $genre = $request->genre ?? 'all';
+        $year = $request->year ?? 'all';
+        if ($genre=='all' and $year=='all') {
+            $animes = Anime::all();
+        } elseif ($genre=='all') {
+            $animes = Anime::where('production_year', $year)->get();
+        } elseif ($year == 'all') {
+            $animes = Anime::where('genre', $genre)->get();
+        } else {
+            $animes = Anime::where('production_year', $year)->where('genre', $genre)->get();
+        }
+        return $animes->sortByDesc('rating');
     }
 }

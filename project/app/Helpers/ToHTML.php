@@ -21,6 +21,18 @@ trait ToHTML
         return $output;
     }
 
+    public function animeToRatingHTML(Anime $anime, int $number): string
+    {
+        $output =
+            '<div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">' .
+                    '<li><a href="' . route('animes.show', [$anime->title, $anime->production_year, $anime->id]) . '">' .
+                     $number . ". " . $anime->title .
+                    '</a>' .
+                    '<img src="' . URL::asset('/images/'.$anime->poster) . '" alt="Anime Pic" height="200" width="200">' .
+                '</li></div><br>';
+        return $output;
+    }
+
     public function commentToHTML(\stdClass $comment): string
     {
         $output =
@@ -72,13 +84,28 @@ trait ToHTML
 
     public function animeCollectionToHTML(Collection $animes): string
     {
-        $output = '';
+        $output = '<ol>';
         if (count($animes) > 0) {
             foreach ($animes as $anime) {
                 /** @var Anime $anime */
                 $output .= $this->animeToHTML($anime);
             }
-            return $output;
+            return $output . '</ol>';
+        }
+        return "<h2> There is no matching anime. </h2>";
+    }
+
+    public function animeCollectionToRatingHTML(Collection $animes): string
+    {
+        $output = '<ol>';
+        if (count($animes) > 0) {
+            $counter = 1;
+            foreach ($animes as $anime) {
+                /** @var Anime $anime */
+                $output .= $this->animeToRatingHTML($anime, $counter);
+                $counter += 1;
+            }
+            return $output . '</ol>';
         }
         return "<h2> There is no matching anime. </h2>";
     }
