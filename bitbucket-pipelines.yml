@@ -8,7 +8,7 @@ pipelines:
           - node
         services:
           - mysql
-          - mailhog/mailhog
+          - mailhog
         script:
           - pushd project/
           -   service start mailhog
@@ -42,3 +42,5 @@ definitions:
         MYSQL_DATABASE: test
         MYSQL_USER: test
         MYSQL_PASSWORD: test123
+    mailhog:
+      image: mailhog/mailhog
