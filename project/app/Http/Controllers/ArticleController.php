@@ -25,18 +25,19 @@ class ArticleController extends Controller
     public function like_or_dislike(Request $request, bool $is_like = true): Response
     {
         $request->validate([
-            'article_id' => ['required', 'exists:App\Models\Article,id']
+            'article_id' => ['required', 'exists:App\Models\Article,id', 'regex:/^[_a-z0-9 ]+$/i']
         ]);
+        /** @var string $article_id */
         $article_id = $request->article_id;
         $article = $this->getOrFailArticle($article_id);
         if ($is_like) {
             $article->likes += 1;
             $article->save();
-            return Response($article->likes);
+            return Response((string)$article->likes);
         } else {
             $article->dislikes += 1;
             $article->save();
-            return Response($article->dislikes);
+            return Response((string)$article->dislikes);
         }
     }
 }
