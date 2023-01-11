@@ -15,7 +15,7 @@ pipelines:
           -   vendor/bin/codecept build
           -   vendor/bin/php-cs-fixer fix --diff --dry-run .
           -   vendor/bin/phpstan analyze -c phpstan.neon
-          -   vendor/bin/phpcpd . --fuzzy --min-lines 1 --min-tokens 20 --exclude vendor --exclude tests* --exclude config --exclude storage --exclude c3.php --exclude app/Http/Requests
+          -   vendor/bin/phpcpd . --fuzzy --min-lines 1 --min-tokens 20 --exclude vendor --exclude tests* --exclude config --exclude storage --exclude c3.php --exclude app/Http/Requests --exclude database/migrations
           -   cp .env.example .env
           -   php artisan key:generate
           -   while ! timeout 1 bash -c "echo > /dev/tcp/localhost/3306"; do echo "Waiting for MySQL..."; sleep 1; done

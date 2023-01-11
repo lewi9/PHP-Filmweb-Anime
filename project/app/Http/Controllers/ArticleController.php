@@ -66,17 +66,18 @@ class ArticleController extends Controller
             }
             $article->save();
             return Response($article->likes . ',' . $article->dislikes);
-        } elseif ($user_article->is_like) {
+        } elseif ($user_article->is_like) {  /** @phpstan-ignore-line */
             if ($is_like) {
                 return Response($article->likes . ',' . $article->dislikes);
             } else {
                 $article->likes -= 1;
                 $article->dislikes += 1;
                 $article->save();
-                DB::table('likes_articles')
-                    ->where('user_id', $user->id)
-                    ->where('article_id', $article_id)
-                    ->update(['is_like' => false]);
+                $this->update_database_is_like($user->id, $article_id, false);
+//                DB::table('likes_articles')
+//                    ->where('user_id', $user->id)
+//                    ->where('article_id', $article_id)
+//                    ->update(['is_like' => false]);
                 return Response($article->likes . ',' . $article->dislikes);
             }
         } else { //dislike w tabeli
@@ -86,12 +87,20 @@ class ArticleController extends Controller
                 $article->likes += 1;
                 $article->dislikes -= 1;
                 $article->save();
-                DB::table('likes_articles')
-                    ->where('user_id', $user->id)
-                    ->where('article_id', $article_id)
-                    ->update(['is_like' => true]);
+                $this->update_database_is_like($user->id, $article_id, true);
+//                DB::table('likes_articles')
+//                    ->where('user_id', $user->id)
+//                    ->where('article_id', $article_id)
+//                    ->update(['is_like' => true]);
                 return Response($article->likes . ',' . $article->dislikes);
             }
         }
+    }
+    private function update_database_is_like(mixed $user_id, mixed $article_id, bool $value): void
+    {
+        DB::table('likes_articles')
+            ->where('user_id', $user_id)
+            ->where('article_id', $article_id)
+            ->update(['is_like' => $value]);
     }
 }

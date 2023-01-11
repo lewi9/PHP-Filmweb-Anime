@@ -15,6 +15,8 @@
                     success: function (data) {
                         $('#'+id+'likes').text('Likes: '+ data.split(',')[0]);
                         $('#'+id+'dislikes').text('Dislikes: '+ data.split(',')[1]);
+                        document.getElementsByName('like_'+id)[0].style.backgroundColor = 'green';
+                        document.getElementsByName('dislike_'+id)[0].style.backgroundColor = 'black';
                     }
                 });
         }
@@ -33,6 +35,8 @@
                     success: function (data) {
                         $('#'+id+'likes').text('Likes: '+ data.split(',')[0]);
                         $('#'+id+'dislikes').text('Dislikes: '+ data.split(',')[1]);
+                        document.getElementsByName('like_'+id)[0].style.backgroundColor = 'black';
+                        document.getElementsByName('dislike_'+id)[0].style.backgroundColor = 'red';
                     }
                 });
         }
@@ -64,10 +68,10 @@
                             <div id={{$article->id . "dislikes"}}>Dislikes: {{__($article->dislikes)}}</div>
                             @if (Auth::user())
                                 <div>
-                            <x-primary-button id="{{$article->id}}" onclick="liker(this.id)">
+                            <x-primary-button id="{{$article->id}}" name="like_{{$article->id}}" onclick="liker(this.id)">
                                 Like
                             </x-primary-button>
-                            <x-primary-button id="{{$article->id}}" onclick="disliker(this.id)">
+                            <x-primary-button id="{{$article->id}}" name="dislike_{{$article->id}}" onclick="disliker(this.id)">
                                 Dislike
                             </x-primary-button>
                                 </div>
