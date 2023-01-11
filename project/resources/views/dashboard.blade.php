@@ -13,7 +13,8 @@
                         @endif
                     },
                     success: function (data) {
-                        $('#'+id+'likes').text('Likes: '+data);
+                        $('#'+id+'likes').text('Likes: '+ data.split(',')[0]);
+                        $('#'+id+'dislikes').text('Dislikes: '+ data.split(',')[1]);
                     }
                 });
         }
@@ -30,7 +31,8 @@
                         @endif
                     },
                     success: function (data) {
-                        $('#'+id+'dislikes').text('Dislikes: '+data);
+                        $('#'+id+'likes').text('Likes: '+ data.split(',')[0]);
+                        $('#'+id+'dislikes').text('Dislikes: '+ data.split(',')[1]);
                     }
                 });
         }

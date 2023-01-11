@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\GetOrFail;
+use App\Helpers\HasEnsure;
 use App\Models\Article;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -14,6 +15,7 @@ use Illuminate\View\View;
 class ArticleController extends Controller
 {
     use GetOrFail;
+    use HasEnsure;
     public function like(Request $request): Response
     {
         return $this->like_or_dislike($request);
@@ -30,14 +32,66 @@ class ArticleController extends Controller
         /** @var string $article_id */
         $article_id = $request->article_id;
         $article = $this->getOrFailArticle($article_id);
-        if ($is_like) {
-            $article->likes += 1;
+        $user = $this->ensureIsNotNullUser($request->user());
+        $user_article = DB::table('likes_articles')
+            ->where('user_id', $user->id)
+            ->where('article_id', $article_id)
+            ->first();
+//        if ($is_like) {
+//            $article->likes += 1;
+//            $article->save();
+//            return Response((string)$article->likes);
+//        } else {
+//            $article->dislikes += 1;
+//            $article->save();
+//            return Response((string)$article->dislikes);
+//        }
+        if (!$user_article) {
+            if ($is_like) {
+                DB::table('likes_articles')
+                    ->insert([
+                        'user_id' => $user->id,
+                        'article_id' => $article_id,
+                        'is_like' => true,
+                    ]);
+                $article->likes += 1;
+            } else {
+                DB::table('likes_articles')
+                    ->insert([
+                        'user_id' => $user->id,
+                        'article_id' => $article_id,
+                        'is_like' => false,
+                    ]);
+                $article->dislikes += 1;
+            }
             $article->save();
-            return Response((string)$article->likes);
-        } else {
-            $article->dislikes += 1;
-            $article->save();
-            return Response((string)$article->dislikes);
+            return Response($article->likes . ',' . $article->dislikes);
+        } elseif ($user_article->is_like) {
+            if ($is_like) {
+                return Response($article->likes . ',' . $article->dislikes);
+            } else {
+                $article->likes -= 1;
+                $article->dislikes += 1;
+                $article->save();
+                DB::table('likes_articles')
+                    ->where('user_id', $user->id)
+                    ->where('article_id', $article_id)
+                    ->update(['is_like' => false]);
+                return Response($article->likes . ',' . $article->dislikes);
+            }
+        } else { //dislike w tabeli
+            if (!$is_like) {
+                return Response($article->likes . ',' . $article->dislikes);
+            } else {
+                $article->likes += 1;
+                $article->dislikes -= 1;
+                $article->save();
+                DB::table('likes_articles')
+                    ->where('user_id', $user->id)
+                    ->where('article_id', $article_id)
+                    ->update(['is_like' => true]);
+                return Response($article->likes . ',' . $article->dislikes);
+            }
         }
     }
 }
