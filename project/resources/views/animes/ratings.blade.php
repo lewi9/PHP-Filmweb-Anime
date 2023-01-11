@@ -73,7 +73,7 @@ $g = 'all';
                     @foreach($animes as $anime)
                     <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
                         <li>
-                    <a href="route('animes.show', [$anime->title, $anime->production_year, $anime->id])">
+                    <a href=<?php echo route('animes.show', [$anime->title, $anime->production_year, $anime->id])?>>
                         {{ __($counter . ". " . $anime->title) }}
                     </a>
                             <img src="{{URL::asset('/images/'.$anime->poster)}}" alt="Anime Pic" height="200" width="200">
