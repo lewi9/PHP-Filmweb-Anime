@@ -180,8 +180,10 @@ class ProfileController extends Controller
         if (!$invitation) {
             $invitation = UsersFriends::where('user1_id', $accepted_user->id)->where('user2_id', $accepting_user->id)->first();
         }
-        $invitation->is_pending = false;
-        $invitation->save();
+        if ($invitation) {
+            $invitation->is_pending = false;
+            $invitation->save();
+        }
         return back()->with('success', 'You\'ve accepted an invitation!');
     }
 
@@ -193,7 +195,9 @@ class ProfileController extends Controller
         if (!$invitation) {
             $invitation = UsersFriends::where('user1_id', $deleted_user->id)->where('user2_id', $deleting_user->id)->first();
         }
-        $invitation->delete();
+        if ($invitation) {
+            $invitation->delete();
+        }
         return back()->with('success', 'You\'ve deleted an invitation!');
     }
 
@@ -205,7 +209,9 @@ class ProfileController extends Controller
         if (!$friendship) {
             $friendship = UsersFriends::where('user2_id', $deleting_user->id)->where('user1_id', $deleted_user->id)->first();
         }
-        $friendship->delete();
+        if ($friendship) {
+            $friendship->delete();
+        }
         return back()->with('success', 'You\'ve deleted a friend!');
     }
 }

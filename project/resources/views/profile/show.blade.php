@@ -1,16 +1,15 @@
 <?php
-    if(isset($user))
-    {
+    if (isset($user)) {
         $friendship_status1 = \App\Models\UsersFriends::where('user1_id', Auth::user()->id)->where('user2_id', $user->id)->first();
         $friendship_status2 = \App\Models\UsersFriends::where('user1_id', $user->id)->where('user2_id', Auth::user()->id)->first();
-        if($friendship_status1) {
+        if ($friendship_status1) {
             $friendship_status = $friendship_status1;
         }
-        if($friendship_status2) {
+        if ($friendship_status2) {
             $friendship_status = $friendship_status2;
         }
     }
-?>
+    ?>
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
