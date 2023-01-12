@@ -17,6 +17,8 @@ return new class () extends Migration {
             $table->timestamps();
             $table->foreignId('user1_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('user2_id')->constrained('users')->onDelete('cascade');
+            $table->boolean('is_pending');
+            $table->foreignId('who_invited')->nullable()->constrained('users')->onDelete('cascade');
         });
     }
 

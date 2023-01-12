@@ -40,6 +40,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/user/{username}/to-watch', [ProfileController::class, 'to_watch'])->name('profile.to-watch');
     Route::post('/user/{username}/upload-image', [ProfileController::class, 'store_image'])->name('image.store');
     Route::get('/user/{username}/add-to-friends', [ProfileController::class, 'add_to_friends'])->name('user.invite');
+    Route::get('/user/{username}/invitations', [ProfileController::class, 'get_invitations'])->name('profile.invitations');
+    Route::get('/user/{username}/invitations/accept/{inviting_user}', [ProfileController::class, 'accept_invitation'])->name('profile.invitations.accept');
+    Route::get('/user/{username}/invitations/delete/{inviting_user}', [ProfileController::class, 'delete_invitation'])->name('profile.invitations.delete');
+    Route::get('/user/{username}/delete-friendship', [ProfileController::class, 'delete_friendship'])->name('profile.friendship.delete');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
