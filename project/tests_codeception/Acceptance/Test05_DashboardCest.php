@@ -12,7 +12,6 @@ class Test05_DashboardCest
     public function tryToTest(AcceptanceTester $I)
     {
         $I->amOnPage("/login");
-        $I->amOnPage("/login");
         $I->fillField("Email", "john.doe@gmail.com");
         $I->fillField("Password", "secret");
         $I->click("Log in");
