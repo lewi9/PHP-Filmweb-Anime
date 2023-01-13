@@ -10,6 +10,7 @@ use App\Models\Anime;
 use App\Models\AnimeUsers;
 use App\Models\User;
 use App\Models\UsersFriends;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -109,12 +110,13 @@ class ProfileController extends Controller
     {
         $user = $this->getOrFailUser($username);
         $user_friends = UsersFriends::where('user1_id', $user->id)->where('is_pending', false)->orWhere('user2_id', $user->id)->where('is_pending', false)->get();
-        $friends_list = [];
-        foreach ($user_friends as $friends) {
-            $friend_id = $friends->user1_id == $user->id ? $friends->user2_id : $friends->user1_id;
-            $friend = User::where('id', $friend_id)->first();
-            $friends_list[] = $friend;
-        }
+//        $friends_list = [];
+//        foreach ($user_friends as $friends) {
+//            $friend_id = $friends->user1_id == $user->id ? $friends->user2_id : $friends->user1_id;
+//            $friend = User::where('id', $friend_id)->first();
+//            $friends_list[] = $friend;
+//        }
+        $friends_list = $this->collection_to_list($user_friends, $user);
         return view('profile.friends', ['friends_list' => $friends_list, 'user' => $user]);
     }
 
@@ -140,9 +142,9 @@ class ProfileController extends Controller
     {
         $inviting_user = $this->ensureIsNotNullUser($request->user()); //dodawacz
         $invited_user = $this->getOrFailUser($username);
-        $are_already_friends = UsersFriends::where('user1_id', $inviting_user->id)->where('user2_id', $invited_user->id)->where('is_pending', false)->get();
-        $are_already_friends1 = UsersFriends::where('user1_id', $invited_user->id)->where('user2_id', $inviting_user->id)->where('is_pending', false)->get();
-        if (count($are_already_friends) or count($are_already_friends1)) {
+        $are_already_friends = UsersFriends::where('user1_id', $inviting_user->id)->where('user2_id', $invited_user->id)->where('is_pending', false)->
+        orWhere('user1_id', $invited_user->id)->where('user2_id', $inviting_user->id)->where('is_pending', false)->get();
+        if (count($are_already_friends)) {
             return back();
         }
         UsersFriends::create(['user1_id' => $inviting_user->id, 'user2_id' => $invited_user->id, 'is_pending' => true, 'who_invited' => $inviting_user->id]);
@@ -163,41 +165,46 @@ class ProfileController extends Controller
             ->where('who_invited', '!=', $user->id)
             ->where('user1_id', $user->id)
             ->orWhere('user2_id', $user->id)->where('is_pending', true)->get();
-        $invitations_list = [];
-        foreach ($user_invitations as $invitation) {
-            $inviting_user_id = $invitation->user1_id == $user->id ? $invitation->user2_id : $invitation->user1_id;
-            $inviting_user = User::where('id', $inviting_user_id)->first();
-            $invitations_list[] = $inviting_user;
-        }
+        $invitations_list = $this->collection_to_list($user_invitations, $user);
+//        $invitations_list = [];
+//        foreach ($user_invitations as $invitation) {
+//            $inviting_user_id = $invitation->user1_id == $user->id ? $invitation->user2_id : $invitation->user1_id;
+//            $inviting_user = User::where('id', $inviting_user_id)->first();
+//            $invitations_list[] = $inviting_user;
+//        }
         return view('profile.invitations', ['invitations_list' => $invitations_list, 'user' => $user]);
     }
 
     public function accept_invitation(string $username, string $inviting_user_username): RedirectResponse
     {
-        $accepting_user =  $this->getOrFailUser($username);
-        $accepted_user = $this->getOrFailUser($inviting_user_username);
-        $invitation = UsersFriends::where('user1_id', $accepting_user->id)->where('user2_id', $accepted_user->id)->first();
-        if (!$invitation) {
-            $invitation = UsersFriends::where('user1_id', $accepted_user->id)->where('user2_id', $accepting_user->id)->first();
-        }
-        if ($invitation) {
-            $invitation->is_pending = false;
-            $invitation->save();
-        }
+//        $accepting_user =  $this->getOrFailUser($username);
+//        $accepted_user = $this->getOrFailUser($inviting_user_username);
+//        $invitation = UsersFriends::where('user1_id', $accepting_user->id)->where('user2_id', $accepted_user->id)->first();
+//        if (!$invitation) {
+//            $invitation = UsersFriends::where('user1_id', $accepted_user->id)->where('user2_id', $accepting_user->id)->first();
+//        }
+//        if ($invitation) {
+//            $invitation->is_pending = false;
+//            $invitation->save();
+//        }
+//        $this->delete_or_accept_invitation_or_friend_helper($accepting_user, $accepted_user, true);
+        $this->delete_or_accept_invitation_helper($username, $inviting_user_username, true);
         return back()->with('success', 'You\'ve accepted an invitation!');
     }
 
     public function delete_invitation(string $username, string $inviting_user_username): RedirectResponse
     {
-        $deleting_user =  $this->getOrFailUser($username);
-        $deleted_user = $this->getOrFailUser($inviting_user_username);
-        $invitation = UsersFriends::where('user1_id', $deleting_user->id)->where('user2_id', $deleted_user->id)->first();
-        if (!$invitation) {
-            $invitation = UsersFriends::where('user1_id', $deleted_user->id)->where('user2_id', $deleting_user->id)->first();
-        }
-        if ($invitation) {
-            $invitation->delete();
-        }
+//        $deleting_user =  $this->getOrFailUser($username);
+//        $deleted_user = $this->getOrFailUser($inviting_user_username);
+//        $invitation = UsersFriends::where('user1_id', $deleting_user->id)->where('user2_id', $deleted_user->id)->first();
+//        if (!$invitation) {
+//            $invitation = UsersFriends::where('user1_id', $deleted_user->id)->where('user2_id', $deleting_user->id)->first();
+//        }
+//        if ($invitation) {
+//            $invitation->delete();
+//        }
+//        $this->delete_or_accept_invitation_or_friend_helper($deleting_user, $deleted_user);
+        $this->delete_or_accept_invitation_helper($username, $inviting_user_username);
         return back()->with('success', 'You\'ve deleted an invitation!');
     }
 
@@ -205,13 +212,51 @@ class ProfileController extends Controller
     {
         $deleting_user =  $this->ensureIsNotNullUser($request->user());
         $deleted_user = $this->getOrFailUser($username);
-        $friendship = UsersFriends::where('user1_id', $deleting_user->id)->where('user2_id', $deleted_user->id)->first();
-        if (!$friendship) {
-            $friendship = UsersFriends::where('user2_id', $deleting_user->id)->where('user1_id', $deleted_user->id)->first();
-        }
-        if ($friendship) {
-            $friendship->delete();
-        }
+//        $friendship = UsersFriends::where('user1_id', $deleting_user->id)->where('user2_id', $deleted_user->id)->first();
+//        if (!$friendship) {
+//            $friendship = UsersFriends::where('user2_id', $deleting_user->id)->where('user1_id', $deleted_user->id)->first();
+//        }
+//        if ($friendship) {
+//            $friendship->delete();
+//        }
+        $this->delete_or_accept_invitation_or_friend_helper($deleting_user, $deleted_user);
         return back()->with('success', 'You\'ve deleted a friend!');
+    }
+    public function delete_or_accept_invitation_or_friend_helper(User $deleting_user, User $deleted_user, bool $accept = false): void
+    {
+        $relationship = UsersFriends::where('user1_id', $deleting_user->id)->where('user2_id', $deleted_user->id)->first();
+        if (!$relationship) {
+            $relationship = UsersFriends::where('user2_id', $deleting_user->id)->where('user1_id', $deleted_user->id)->first();
+        }
+        if ($relationship and !$accept) {
+            $relationship->delete();
+        } elseif ($relationship) {
+            $relationship->is_pending = false;
+            $relationship->save();
+        }
+    }
+    public function delete_or_accept_invitation_helper(string $username, string $inviting_user_username, bool $accept = false): void
+    {
+        $user1 =  $this->getOrFailUser($username);
+        $user2 = $this->getOrFailUser($inviting_user_username);
+        $this->delete_or_accept_invitation_or_friend_helper($user1, $user2, $accept);
+    }
+
+    /**
+     * @param Collection $relationships_collection
+     * @param User $user
+     * @return array<int, object|null>
+     */
+    public function collection_to_list(Collection $relationships_collection, User $user): array
+    {
+        $list = [];
+        foreach ($relationships_collection as $relationship) {
+            if ($relationship instanceof UsersFriends) {
+                $related_user_id = $relationship->user1_id == $user->id ? $relationship->user2_id : $relationship->user1_id;
+                $related_user = User::where('id', $related_user_id)->first();
+                $list[] = $related_user;
+            }
+        }
+        return $list;
     }
 }
