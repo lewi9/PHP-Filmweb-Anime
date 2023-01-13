@@ -13,5 +13,7 @@ class UsersFriends extends Model
     protected $fillable = [
         'user1_id',
         'user2_id',
+        'is_pending',
+        'who_invited',
     ];
 }

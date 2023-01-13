@@ -1,3 +1,15 @@
+<?php
+    if (isset($user)) {
+        $friendship_status1 = \App\Models\UsersFriends::where('user1_id', Auth::user()->id)->where('user2_id', $user->id)->first();
+        $friendship_status2 = \App\Models\UsersFriends::where('user1_id', $user->id)->where('user2_id', Auth::user()->id)->first();
+        if ($friendship_status1) {
+            $friendship_status = $friendship_status1;
+        }
+        if ($friendship_status2) {
+            $friendship_status = $friendship_status2;
+        }
+    }
+    ?>
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
@@ -18,9 +30,17 @@
                             <p>{{$message}}</p>
                         </div>
                     @endif
-                    <x-nav-link :href="route('user.invite', $user->username)">
-                        {{__('Add to friends')}}
-                    </x-nav-link>
+                    @if(!isset($friendship_status))
+                        <x-nav-link :href="route('user.invite', $user->username)">
+                            {{__('Add to friends')}}
+                        </x-nav-link>
+                    @elseif($friendship_status->is_pending)
+                            {{__('Invitation is pending')}}
+                    @else
+                            <x-nav-link :href="route('profile.friendship.delete', $user->username)">
+                                {{__('Delete from friends')}}
+                            </x-nav-link>
+                    @endif
                 </div>
             @endif
 
@@ -53,6 +73,11 @@
                 </x-nav-link>
             </div>
             @if (Auth::user()->id == $user->id)
+            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+                <x-nav-link :href="route('profile.invitations', $user->username)">
+                    {{__('Friends invitations')}}
+                </x-nav-link>
+            </div>
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
                 <x-nav-link :href="route('profile.edit', $user->username)">
                     {{__('Edit profile')}}

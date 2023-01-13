@@ -15,6 +15,7 @@ class UsersFriendsSeeder extends Seeder
         DB::table('users_friends')->insert([
             'user1_id' => '1',
             'user2_id' => '2',
+            'is_pending' => false
         ]);
     }
 }
