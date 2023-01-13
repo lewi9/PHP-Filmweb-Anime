@@ -1,3 +1,4 @@
+<x-app-layout>
 <h2>List of Animes</h2>
 <div id="filter_form">
     <form>
@@ -43,6 +44,8 @@
 </div>
 
 <br><br>
+    @if(Auth::user() and Auth::user()->is_admin)
 <a href="{{route('animes.create')}}">Create new...</a>;
-
+@endif
 @include('animes.indexjs')
+</x-app-layout>

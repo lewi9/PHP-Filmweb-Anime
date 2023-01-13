@@ -46,10 +46,10 @@
     function color() {
         @foreach($articles as $article)
             <?php
-            $user_article = DB::table('likes_articles')
-            ->where('user_id', Auth::user()->id)
-            ->where('article_id', $article->id)
-            ->first();
+                    $user_article = DB::table('likes_articles')
+                        ->where('user_id', Auth::user()->id)
+                        ->where('article_id', $article->id)
+                        ->first();
 if ($user_article) {
     $is_like = $user_article->is_like;
 }
@@ -68,11 +68,13 @@ if ($user_article) {
 </script>
 
 <x-app-layout>
+    @if (Auth::user())
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __("You're logged in!") }}
         </h2>
     </x-slot>
+    @endif
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
