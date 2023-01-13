@@ -1,6 +1,9 @@
 <?php $articles = \App\Models\Article::all(); ?>
 <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
 <script>
+    window.addEventListener("load", (event) => {
+        color();
+    });
     function liker(id) {
         $.ajax({
                 type: 'post',
@@ -40,6 +43,28 @@
                     }
                 });
         }
+    function color() {
+        @foreach($articles as $article)
+            <?php
+            $user_article = DB::table('likes_articles')
+            ->where('user_id', Auth::user()->id)
+            ->where('article_id', $article->id)
+            ->first();
+if ($user_article) {
+    $is_like = $user_article->is_like;
+}
+?>
+        @if(isset($is_like))
+
+        if({{$is_like}}) {
+            document.getElementsByName('like_'+<?php echo $article->id; ?>)[0].style.backgroundColor = 'green';
+        }
+        else {
+            document.getElementsByName('dislike_'+<?php echo $article->id; ?>)[0].style.backgroundColor = 'red';
+        }
+        @endif
+        @endforeach
+    }
 </script>
 
 <x-app-layout>
