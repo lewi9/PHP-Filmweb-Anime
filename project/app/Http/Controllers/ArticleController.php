@@ -37,15 +37,6 @@ class ArticleController extends Controller
             ->where('user_id', $user->id)
             ->where('article_id', $article_id)
             ->first();
-//        if ($is_like) {
-//            $article->likes += 1;
-//            $article->save();
-//            return Response((string)$article->likes);
-//        } else {
-//            $article->dislikes += 1;
-//            $article->save();
-//            return Response((string)$article->dislikes);
-//        }
         if (!$user_article) {
             if ($is_like) {
                 DB::table('likes_articles')
@@ -74,13 +65,9 @@ class ArticleController extends Controller
                 $article->dislikes += 1;
                 $article->save();
                 $this->update_database_is_like($user->id, $article_id, false);
-//                DB::table('likes_articles')
-//                    ->where('user_id', $user->id)
-//                    ->where('article_id', $article_id)
-//                    ->update(['is_like' => false]);
                 return Response($article->likes . ',' . $article->dislikes);
             }
-        } else { //dislike w tabeli
+        } else {
             if (!$is_like) {
                 return Response($article->likes . ',' . $article->dislikes);
             } else {
@@ -88,10 +75,6 @@ class ArticleController extends Controller
                 $article->dislikes -= 1;
                 $article->save();
                 $this->update_database_is_like($user->id, $article_id, true);
-//                DB::table('likes_articles')
-//                    ->where('user_id', $user->id)
-//                    ->where('article_id', $article_id)
-//                    ->update(['is_like' => true]);
                 return Response($article->likes . ',' . $article->dislikes);
             }
         }
