@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace TestsCodeception\Support;
 
+use Codeception\Util\Locator;
+
 /**
  * Inherited Methods
  * @method void wantToTest($text)
@@ -26,4 +28,8 @@ class AcceptanceTester extends \Codeception\Actor
     /**
      * Define custom actions here
      */
+    public function getCSRF()
+    {
+        return $this->grabAttributeFrom(Locator::find("meta", ["name" => "csrf-token"]), "content");
+    }
 }

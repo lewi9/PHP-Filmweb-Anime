@@ -66,7 +66,7 @@ class Test05_DashboardCest
         $I->amOnPage("/dashboard");
 
 
-        //NAPRRAWIC ZAPYTAC NA KONSULTACJACH
+        //NAPRRAWIC
 
         /*
         $I->wantTo("Routing My profile");
@@ -84,10 +84,6 @@ class Test05_DashboardCest
         $I->seeCurrentUrlEquals("/ratings/all/all");
 */
 
-        $I->wantTo("Log Out");
-//        $I->click("Log Out");
-//        $api_key = $I->grabValueFrom('input[name=_token]');
-//        $I->sendAjaxPostRequest('/logout', ['_token' => $api_key]);
-//        $I->see("penis");
+
     }
 }

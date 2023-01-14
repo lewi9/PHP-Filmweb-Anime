@@ -31,13 +31,13 @@
                         </div>
                     @endif
                     @if(!isset($friendship_status))
-                        <x-nav-link :href="route('user.invite', $user->username)">
+                        <x-nav-link id="add_to_friends" :href="route('user.invite', $user->username)">
                             {{__('Add to friends')}}
                         </x-nav-link>
                     @elseif($friendship_status->is_pending)
                             {{__('Invitation is pending')}}
                     @else
-                            <x-nav-link :href="route('profile.friendship.delete', $user->username)">
+                            <x-nav-link id="delete_from_friends" :href="route('profile.friendship.delete', $user->username)">
                                 {{__('Delete from friends')}}
                             </x-nav-link>
                     @endif
@@ -45,41 +45,41 @@
             @endif
 
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <x-nav-link :href="route('profile.watched', $user->username)">
+                <x-nav-link id="watched_animes" :href="route('profile.watched', $user->username)">
                     {{ __('Watched animes') }}
                 </x-nav-link>
             </div>
 
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <x-nav-link :href="route('profile.ratings', $user->username)">
+                <x-nav-link id='ratings' :href="route('profile.ratings', $user->username)">
                     {{ __('Ratings') }}
                 </x-nav-link>
             </div>
 
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <x-nav-link :href="route('profile.favorites', $user->username)">
+                <x-nav-link id='favorites' :href="route('profile.favorites', $user->username)">
                     {{ __('Favorites') }}
                 </x-nav-link>
             </div>
 
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <x-nav-link :href="route('profile.to-watch', $user->username)">
+                <x-nav-link id="wants_to_see" :href="route('profile.to-watch', $user->username)">
                     {{__('Wants to see')}}
                 </x-nav-link>
             </div>
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <x-nav-link :href="route('profile.friends', $user->username)">
+                <x-nav-link id="friends" :href="route('profile.friends', $user->username)">
                     {{__('Friends')}}
                 </x-nav-link>
             </div>
             @if (Auth::user()->id == $user->id)
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <x-nav-link :href="route('profile.invitations', $user->username)">
+                <x-nav-link id="friends_invitations" :href="route('profile.invitations', $user->username)">
                     {{__('Friends invitations')}}
                 </x-nav-link>
             </div>
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <x-nav-link :href="route('profile.edit', $user->username)">
+                <x-nav-link id="edit_profile" :href="route('profile.edit', $user->username)">
                     {{__('Edit profile')}}
                 </x-nav-link>
             </div>

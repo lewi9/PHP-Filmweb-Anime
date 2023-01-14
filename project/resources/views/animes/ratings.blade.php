@@ -12,7 +12,7 @@
                 headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
                 data: {
                     'genre' : genre,
-                    'year' : year,
+                    'production_year' : year,
                 },
                 success: function (data) {
                     $('#anime').html(data);
