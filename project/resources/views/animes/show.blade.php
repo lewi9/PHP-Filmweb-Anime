@@ -72,11 +72,12 @@
 
 
 @endif
+@if(Auth::user() and Auth::user()->is_admin)
 <div>
     <a href="{{ route('animes.edit', $anime)}}">Edit</a>
     <a href="{{ route('animes.delete', $anime)}}">Delete</a>
 </div>
-
+@endif
 <div>
     <a href="{{ route('animes.index') }}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline mt-8">All animes</a>
 </div>

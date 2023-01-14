@@ -46,10 +46,10 @@
     function color() {
         @foreach($articles as $article)
             <?php
-            $user_article = DB::table('likes_articles')
-            ->where('user_id', Auth::user()->id)
-            ->where('article_id', $article->id)
-            ->first();
+                    $user_article = DB::table('likes_articles')
+                        ->where('user_id', Auth::user()->id)
+                        ->where('article_id', $article->id)
+                        ->first();
 if ($user_article) {
     $is_like = $user_article->is_like;
 }
@@ -68,11 +68,13 @@ if ($user_article) {
 </script>
 
 <x-app-layout>
+    @if (Auth::user())
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __("You're logged in!") }}
         </h2>
     </x-slot>
+    @endif
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -85,22 +87,21 @@ if ($user_article) {
                     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
                 @foreach($articles as $article)
                     <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                        <b>{{ __($article->title) }}</b>
+                        <b class="News Title">{{ __($article->title) }}</b>
                         <img src="{{URL::asset('/images/'. $article->photo)}}" alt="Anime Pic" height="200" width="200">
                         <div>
                             {{__($article->text)}}
                             <div id={{$article->id . "likes"}}>Likes: {{__($article->likes)}}</div>
                             <div id={{$article->id . "dislikes"}}>Dislikes: {{__($article->dislikes)}}</div>
                             @if (Auth::user())
-                                <div>
+                                <div><a>
                             <x-primary-button id="{{$article->id}}" name="like_{{$article->id}}" onclick="liker(this.id)">
                                 Like
                             </x-primary-button>
                             <x-primary-button id="{{$article->id}}" name="dislike_{{$article->id}}" onclick="disliker(this.id)">
                                 Dislike
-                            </x-primary-button>
+                            </x-primary-button></a>
                                 </div>
-                                </form>
                             @endif
                         </div>
                     </div>

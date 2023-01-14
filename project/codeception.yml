@@ -19,3 +19,7 @@ coverage:
     - app/*
   exclude:
     - app/cache/*
+modules:
+  enabled:
+    - REST:
+        depends: PhpBrowser
