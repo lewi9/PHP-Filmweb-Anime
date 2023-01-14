@@ -1,4 +1,5 @@
-<h2>List of Animes</h2>
+<x-app-layout>
+<h2 class="h-font">♡ List of Animes ♡</h2>
 <div id="filter_form">
     <form>
         @csrf
@@ -46,3 +47,4 @@
 <a href="{{route('animes.create')}}">Create new...</a>;
 
 @include('animes.indexjs')
+</x-app-layout>

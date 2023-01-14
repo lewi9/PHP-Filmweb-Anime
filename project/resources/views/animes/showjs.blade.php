@@ -1,3 +1,4 @@
+<x-app-layout>
 <script>
     document.getElementById("back_anime_1").style.display='none';
     document.getElementById("back_anime_2").style.display='none';
@@ -108,3 +109,4 @@
         });
     }
 </script>
+</x-app-layout>

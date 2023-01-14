@@ -1,3 +1,46 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.bg-pink{
+    background-color: #ffecf9;
+}
+
+.h-font {
+    font-family: 'House Easter Outline', sans-serif;
+    font-family: 'House Easter', sans-serif;
+    font-family: 'House Easter Shadow', sans-serif;
+    font-size: 50px;
+    color: #fa47c8;
+    text-align: center;
+}
+.anime{
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+}
+.button {
+    border: none;
+    outline: 0;
+    display: inline-block;
+    padding: 8px;
+    color: white;
+    background-color: #000;
+    text-align: center;
+    cursor: pointer;
+    width: 100%;
+}
+
+.button:hover {
+    background-color: #555;
+}
+.font1{
+    font-family: 'Huglove', sans-serif;
+    font-size:25px;
+    font-weight: 300;
+    /*font-family: 'Too Freakin Cute Demo', sans-serif;*/
+}
+
+

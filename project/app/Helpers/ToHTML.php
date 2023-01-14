@@ -13,7 +13,7 @@ trait ToHTML
     public function animeToHTML(Anime $anime): string
     {
         $output =
-            '<div>
+            '<div class="anime">
                 <img src="' . URL::asset('/images/'.$anime->poster) . '" alt="Anime Pic" height="200" width="200"><br>' .
                 $anime->title .
                 '<br><a href="' . route('animes.show', [$anime->title, $anime->production_year, $anime->id]) . '">Details</a>

@@ -1,3 +1,4 @@
+<x-app-layout>
 <h2>Viewing an anime</h2>
 
 <div>
@@ -113,3 +114,4 @@
 
 
 
+</x-app-layout>
