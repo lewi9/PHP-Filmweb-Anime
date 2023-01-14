@@ -27,7 +27,7 @@
     display: inline-block;
     padding: 8px;
     color: white;
-    background-color: #000;
+    background-color: #fc34c5;
     text-align: center;
     cursor: pointer;
     width: 100%;
@@ -37,7 +37,9 @@
     background-color: #555;
 }
 .font1{
-    font-family: 'Huglove', sans-serif;
+    /*font-family: 'Huglove', sans-serif;*/
+    font-family: 'Too Freakin Cute Demo', sans-serif;
+
     font-size:25px;
     font-weight: 300;
     /*font-family: 'Too Freakin Cute Demo', sans-serif;*/

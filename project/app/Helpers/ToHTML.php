@@ -13,11 +13,12 @@ trait ToHTML
     public function animeToHTML(Anime $anime): string
     {
         $output =
-            '<div class="anime">
+            '<div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+            <div>
                 <img src="' . URL::asset('/images/'.$anime->poster) . '" alt="Anime Pic" height="200" width="200"><br>' .
                 $anime->title .
-                '<br><a href="' . route('animes.show', [$anime->title, $anime->production_year, $anime->id]) . '">Details</a>
-            </div>';
+                '<br><a class="button" href="' . route('animes.show', [$anime->title, $anime->production_year, $anime->id]) . '">Details</a>
+           </div></div><br>';
         return $output;
     }
 

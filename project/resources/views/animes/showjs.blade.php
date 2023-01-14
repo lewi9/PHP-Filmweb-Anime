@@ -1,8 +1,13 @@
-<x-app-layout>
+
 <script>
     document.getElementById("back_anime_1").style.display='none';
     document.getElementById("back_anime_2").style.display='none';
-    document.getElementById("filter_form").style.display='none';
+    window.addEventListener("load", (event) => {
+        document.getElementById('hide_1').style.display="none";
+        document.getElementsByName('menu')[1].style.display="none";
+        document.getElementsByName('menu')[2].style.display="none";
+    });
+
 </script>
 
 <script>
@@ -109,4 +114,3 @@
         });
     }
 </script>
-</x-app-layout>

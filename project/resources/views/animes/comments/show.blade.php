@@ -1,23 +1,27 @@
-<h1>
-    <a id="back_anime_1" href="{{ route('animes.show', [$anime->title, $anime->production_year, $anime->id]) }}">Back to anime</a>
-</h1>
 
-<div id="filter_form">
-    <form>
-        @csrf
-        <label for="filter">Choose a filter type:</label>
-        <select name="filter" id="filter" onchange="filter_select(this.value);">
-            <option value="id" @if (session('comments_filter') == "id") selected @endif>time</option>
-            <option value="likes" @if (session('comments_filter') == "likes") selected @endif>like</option>
-            <option value="dislikes" @if (session('comments_filter') == "dislikes") selected @endif>dislikes</option>
-        </select>
-        <label for="filter_mode">Choose a ascend or descend filter mode:</label>
-        <select name="filter_mode" id="filter_mode" onchange="filter_mode_select(this.value);">
-            <option value="asc" @if (session('comments_filter_mode') == "asc") selected @endif>ascending</option>
-            <option value="desc" @if (session('comments_filter_mode') == "desc") selected @endif>descending</option>
-        </select>
-    </form>
-    <button onclick="reset();">Clear filters</button>
+<x-app-layout>
+<div id="hide_1">
+    <h1>
+        <a id="back_anime_1" href="{{ route('animes.show', [$anime->title, $anime->production_year, $anime->id]) }}">Back to anime</a>
+    </h1>
+
+    <div id="filter_form">
+        <form>
+            @csrf
+            <label for="filter">Choose a filter type:</label>
+            <select name="filter" id="filter" onchange="filter_select(this.value);">
+                <option value="id" @if (session('comments_filter') == "id") selected @endif>time</option>
+                <option value="likes" @if (session('comments_filter') == "likes") selected @endif>like</option>
+                <option value="dislikes" @if (session('comments_filter') == "dislikes") selected @endif>dislikes</option>
+            </select>
+            <label for="filter_mode">Choose a ascend or descend filter mode:</label>
+            <select name="filter_mode" id="filter_mode" onchange="filter_mode_select(this.value);">
+                <option value="asc" @if (session('comments_filter_mode') == "asc") selected @endif>ascending</option>
+                <option value="desc" @if (session('comments_filter_mode') == "desc") selected @endif>descending</option>
+            </select>
+        </form>
+        <button onclick="reset();">Clear filters</button>
+    </div>
 </div>
 
 <div id="comments">
@@ -53,3 +57,4 @@
     @endif
 </div>
 @include('animes.comments.showjs')
+</x-app-layout>

@@ -1,3 +1,5 @@
+<x-app-layout>
+<div id="hide_1">
 <h1>
     <a id="back_anime_2" href="{{ route('animes.show', [$anime->title, $anime->production_year, $anime->id]) }}">Back to anime</a>
 </h1>
@@ -17,6 +19,7 @@
         </select>
     </form>
     <button onclick="reset();">Clear filters</button>
+</div>
 </div>
 
 <div id="reviews">
@@ -48,7 +51,9 @@
         @endif
     @endif
 </div>
+
 <br><br>
 <a href="{{route('reviews.create', [$anime->title, $anime->production_year, $anime->id])}}">Create review</a>
 
 @include('animes.reviews.indexjs')
+</x-app-layout>

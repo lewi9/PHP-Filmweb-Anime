@@ -27,15 +27,16 @@
             @endforeach
             @endif
         </select>
-        <br>
+        <br><br>
         <label for="filter_search">Type text to search anime by title:</label>
         <input type="text" class="form-controller" id="filter_search" name="filter_search"
                value="{{  (session('anime_filter_search') ?? "") == '%' ? '' :  (session('anime_filter_search') ?? "") }}">
-    </form>
-    <button onclick="reset();">Clear filters</button>
+    </form><br><br>
+    <button class="button" onclick="reset();">Clear filters</button>
 </div>
-<div id="anime">
-
+    <br>
+    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+    <div id="anime">
     <?php
         if (isset($animes)) {
             echo $animes->content();
@@ -48,4 +49,5 @@
 <a href="{{route('animes.create')}}">Create new...</a>;
 @endif
 @include('animes.indexjs')
+</div>
 </x-app-layout>

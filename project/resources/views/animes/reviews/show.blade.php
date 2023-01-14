@@ -1,3 +1,4 @@
+<x-app-layout>
 <h1>
     <a id="back_anime_2" href="{{ route('animes.show', [$anime->title, $anime->production_year, $anime->id]) }}">Back to anime</a>
 </h1>
@@ -51,3 +52,4 @@
 </h1>
 
 @include('animes.reviews.showjs')
+</x-app-layout>

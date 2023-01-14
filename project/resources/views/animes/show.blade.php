@@ -1,6 +1,6 @@
 <x-app-layout>
-<h2>Viewing an anime</h2>
-
+{{--<h2>Viewing an anime</h2>--}}
+    <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
 <div>
     <img src="{{URL::asset('/images/'.$anime->poster)}}" alt="Anime Pic" height="200" width="200">
     <br>
@@ -93,7 +93,7 @@
     <a href="{{route('reviews.index', [$anime->title, $anime->production_year, $anime->id])}}">All reviews</a>
 
 </div>
-
+    </div>
 @if(Auth::id())
     <div id="add_comment">
         <form method="post" action={{route("comments.store")}}>
