@@ -99,9 +99,8 @@ class Test08_SearchForAnimesCest
         $I->sendGet('anime/filter', ['filter_genre' => 'all']);
         $I->sendGet('/anime/filter', ['filter_search' => 'One Pie']);
 
-        $I->see("One Piece",);
+        $I->see("One Piece", );
         $I->dontSee('Neon Genesis Evangelion');
         $I->dontSee('Sailor moon');
-
     }
 }

@@ -83,7 +83,5 @@ class Test05_DashboardCest
         $I->see("My profile");
         $I->seeCurrentUrlEquals("/ratings/all/all");
 */
-
-
     }
 }

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace TestsCodeception\Acceptance;
 
 use Codeception\Util\Locator;
@@ -18,7 +17,6 @@ class Test09_ProfileFunctionalitiesCest
         $I->seeCurrentUrlEquals("/dashboard");
         $I->seeElement(['id' => 'logo_link']);
         $I->see("John Doe");
-
     }
     public function RemoveAddFriend(AcceptanceTester $I)
     {
@@ -35,7 +33,7 @@ class Test09_ProfileFunctionalitiesCest
 
         $I->click("Friends");
 
-        $I->dontSee("John Doe","a");
+        $I->dontSee("John Doe", "a");
 
         $I->wantTo(" Swipe user to accept invitation");
 
@@ -58,7 +56,6 @@ class Test09_ProfileFunctionalitiesCest
 
         $I->amOnPage("/user/janedoe/friends");
         $I->see("John Doe");
-
     }
     public function Animes(AcceptanceTester $I)
     {
@@ -106,8 +103,5 @@ class Test09_ProfileFunctionalitiesCest
         $I->sendGet('/anime/manage_list', [ "list"=>'to_watch',"user_id" => "1","anime_id"=>"1"]);
         $I->amOnPage("/user/johndoe1/to-watch");
         $I->dontSee("Sailor moon");
-
-
     }
-
 }
