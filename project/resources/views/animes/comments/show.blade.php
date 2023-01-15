@@ -33,18 +33,21 @@
                     <label style="display:block" for="{{$comment->id . "_"}}">{{$comment->name}}</label>
                     <textarea style="display:block" id="{{$comment->id . "_"}}" name="text" rows="4" cols="50" disabled>{{$comment->text}}</textarea>
                     <br>
-                    Likes: <mark id="{{$comment->id . 'likes'}}">{{$comment->likes}}</mark>
-                    Dislikes: <mark id="{{$comment->id . 'dislikes'}}">{{$comment->dislikes}}</mark>
+                    Likes: <mark class="L1" id="{{$comment->id . 'likes'}}" class="com_like">{{$comment->likes}}</mark>
+                    Dislikes: <mark class="D1" id="{{$comment->id . 'dislikes'}}" class="com_dislike">{{$comment->dislikes}}</mark>
                     <button id="{{$comment->id . "__"}}" style="visibility: hidden" onclick="updater(this.id);">Update!</button>
                     @if(Auth::user())
                         <br>
-                        <button style="background-color: lightgrey" id="{{$comment->id}}" name="liker-{{$comment->id}}" onclick="liker(this.id);">Like</button>
-                        <button style="background-color: lightgrey" id="{{$comment->id}}" name="disliker-{{$comment->id}}" onclick="disliker(this.id);">Dislike</button>
+                        <a>
+                            <button style="background-color: lightgrey" id="{{$comment->id}}" name="liker-{{$comment->id}}" onclick="liker(this.id);">Like</button>
+                            <button style="background-color: lightgrey" id="{{$comment->id}}" name="disliker-{{$comment->id}}" onclick="disliker(this.id);">Dislike</button>
+                        </a>
                         <br>
                         @if(Auth::user()->id == $comment->user_id)
-
-                            <button id="{{$comment->id}}" onclick="edit(this.id);">Edit Comment</button>
-                            <button id="{{$comment->id}}" onclick="deleter(this.id);">Delete Comment</button>
+                            <a>
+                                <button id="{{$comment->id}}" onclick="edit(this.id);">Edit Comment</button>
+                                <button id="{{$comment->id}}" onclick="deleter(this.id);">Delete Comment</button>
+                            </a>
                         @endif
                     @endif
                 </div>

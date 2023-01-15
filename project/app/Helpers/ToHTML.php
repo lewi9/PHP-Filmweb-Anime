@@ -44,8 +44,8 @@ trait ToHTML
                     $comment->text . '
                 .</textarea>
                 <br>
-                Likes: <mark id="' . $comment->id . 'likes' . '">' . $comment->likes . '</mark>
-                Dislikes: <mark id="' . $comment->id . 'dislikes' . '">' . $comment->dislikes . '</mark>
+                Likes: <mark class="L1" id="' . $comment->id . 'likes' . '">' . $comment->likes . '</mark>
+                Dislikes: <mark class="D1" id="' . $comment->id . 'dislikes' . '">' . $comment->dislikes . '</mark>
                 <button id="' . $comment->id . "__" . '" style="visibility: hidden" onclick="updater(this.id);">Update!</button>';
         if (Auth::user()) {
             $output .=

@@ -87,7 +87,6 @@ class Test08_SearchForAnimesCest
             $I->sendGet('/anime/filter/', [ 'filter_genre' => $genre]);
             $I->amOnPage("/anime");
 
-//            $I->selectOption("//select[@id = 'filter_genre']", $genre);
             $I->seeOptionIsSelected("//select[@id = 'filter_genre']", $genre);
             $numberOfElements = count($I->grabMultiple(Locator::find('img', ['alt' => 'Anime Pic'])));
             $I->seeNumRecords($numberOfElements, 'animes', ['genre like' => "%$genre%"]);
