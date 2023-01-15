@@ -41,6 +41,7 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
+        $request->validate(['email' => ['nullable', 'email:rfc,dns', 'max:255']]);
         $user = $this->ensureIsNotNullUser($request->user());
 
         $data = $this->ensureIsArray($request->validated());
