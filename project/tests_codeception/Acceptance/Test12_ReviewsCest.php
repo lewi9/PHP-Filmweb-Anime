@@ -1,12 +1,11 @@
 <?php
 
-
 namespace TestsCodeception\Acceptance;
 
 use Codeception\Util\Locator;
 use TestsCodeception\Support\AcceptanceTester;
-use function PHPUnit\Framework\assertEquals;
 
+use function PHPUnit\Framework\assertEquals;
 
 class Test12_ReviewsCest
 {
@@ -25,25 +24,25 @@ class Test12_ReviewsCest
 
         $I->click("Edit review");
         $I->seeCurrentUrlEquals("/anime/Sailor%20moon-1992-1/reviews/1/edit");
-        $I->fillField("Title","Great review");
-        $I->fillField("Text","short review");
+        $I->fillField("Title", "Great review");
+        $I->fillField("Text", "short review");
         $I->click("Update");
 
         $I->see("The text must be at least 500 characters.");
 
-        $I->fillField("Text",str_repeat("long review",300));
+        $I->fillField("Text", str_repeat("long review", 300));
         $I->click("Update");
         $I->seeCurrentUrlEquals("/anime/Sailor%20moon-1992-1/reviews/1");
-        $I->see(str_repeat("long review",300));
+        $I->see(str_repeat("long review", 300));
 
 
         $I->click("All reviews");
         $I->click("Create review");
-        $I->fillField("Title","Good review");
-        $I->fillField("Text",str_repeat("Great review",300));
-        $I->dontSeeInDatabase('reviews',['title'=>"Good review"]);
+        $I->fillField("Title", "Good review");
+        $I->fillField("Text", str_repeat("Great review", 300));
+        $I->dontSeeInDatabase('reviews', ['title'=>"Good review"]);
         $I->click("Create");
-        $I->seeInDatabase('reviews',['title'=>"Good review"]);
+        $I->seeInDatabase('reviews', ['title'=>"Good review"]);
 
 
         $I->wantTo("Sort reviews desc");
@@ -54,10 +53,10 @@ class Test12_ReviewsCest
         $temp = $I->grabMultiple(Locator::find("p", ["id"=>"rr_score"]));
         $reviews=[];
 
-        foreach ($temp as $item){
-        $item= explode(":",$item);
-        $item = (int)$item[1];
-        $reviews[] = $item;
+        foreach ($temp as $item) {
+            $item= explode(":", $item);
+            $item = (int)$item[1];
+            $reviews[] = $item;
         }
         $backup_reviews =$reviews ;
         sort($backup_reviews);
