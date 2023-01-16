@@ -12,9 +12,9 @@
     ?>
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight h-font" style="text-align: center;">
             {{ __($user->name) }}
-                <img src="{{URL::asset('/images/' . $user->profile_pic)}}" alt="profile Pic" height="200" width="200">
+                <img class="center" style="width: 200px; height: 200px;" src="{{URL::asset('/images/' . $user->profile_pic)}}" alt="profile Pic" height="200" width="200">
             @if($user->country)
                 {{ __($user->country) }}
             @endif

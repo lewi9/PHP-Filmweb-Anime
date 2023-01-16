@@ -1,9 +1,9 @@
 <section>
     <header>
-        <h2 class="text-lg font-medium text-gray-900">
+        <h2 class="text-lg font-medium text-gray-900" style="font-size: 30px; color: #fa47c8;">
             {{ __('Image Upload') }}
         </h2>
-        <p class="mt-1 text-sm text-gray-600">
+        <p class="mt-1 text-sm text-gray-600 ">
             {{ __("Update your account's profile picture.") }}
         </p>
     </header>

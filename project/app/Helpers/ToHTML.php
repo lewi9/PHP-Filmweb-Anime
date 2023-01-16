@@ -68,16 +68,17 @@ trait ToHTML
     {
         $output =
             '<div id="' . $review->id . 'div' . '">
+ <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg pink-shadow">
                     <p><strong>' . $review->name . '</strong></p>
                     <p>' . $review->title . '</p>
-                    <p id="rr_score">Review rating:' . $review->rating . '</p>
+                    <p id="rr_score">Review rating: ' . $review->rating . '</p>
                     <a class="mini-button" href="' . route('reviews.show', [$anime->title, $anime->production_year, $anime->id, $review->id]) . '">Read review</a>';
         if (Auth::id() == $review->user_id) {
-            $output .= '<a class="mini-button" href="' . route('reviews.edit', [$anime->title, $anime->production_year, $anime->id, $review->id]) . '">Edit review</a>
+            $output .= '<a class="mini-button" style="float:right" href="' . route('reviews.edit', [$anime->title, $anime->production_year, $anime->id, $review->id]) . '">Edit review</a>
                         <form id="delete_review" action="' . route('reviews.delete', [$anime->title, $anime->production_year, $anime->id, $review->id]) .
                         '" method="post">' . csrf_field() . method_field('DELETE') .
-                            '<a class="mini-button" href="javascript:{}" onclick="document.getElementById(\'delete_review\').submit(); return false;">Delete review</a>
-                        </form>';
+                            '<a class="mini-button" style="float:right; margin-top: 5px" href="javascript:{}" onclick="document.getElementById(\'delete_review\').submit(); return false;">Delete review</a>
+                        </form><br></div>';
         }
         $output .= '<br> </div><br>';
         return $output;
