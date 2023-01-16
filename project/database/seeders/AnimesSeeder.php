@@ -16,12 +16,14 @@ class AnimesSeeder extends Seeder
             'title' => 'Sailor moon',
             'genre' => 'Magical girl, adventure',
             'production_year' => '1992',
-            'poster' => 'missing.jpg',
+            'poster' => 'sailor.jpg',
             'rating' => 7.4,
             'how_much_users_watched' => 20,
             'rates' => 20,
             'cumulate_rating' => 148,
             'episodes' => 200,
+            'description' => "Lnuhel dagel, idzia bidzia min, hendo hendo mei, sianem tunku punko, yohen kohen kohe dua si chi le sai kunku, sian sian o sian hua tanem tunku
+            punku, johen kohen kohen dua si chi lesai kunku"
         ]);
         DB::table('animes')->insert([
             'title' => 'Neon Genesis Evangelion',
