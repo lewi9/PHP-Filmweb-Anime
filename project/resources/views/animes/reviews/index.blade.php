@@ -38,7 +38,7 @@
                 <div id="{{$review->id . 'div'}}">
                     <p><strong>{{$review->name}}</strong></p>
                     <p>{{$review->title}}</p>
-                    <p>Review rating: {{$review->rating}}</p>
+                    <p id="rr_score">Review rating: {{$review->rating}}</p>
                     <a class="mini-button" href="{{route('reviews.show', [$anime->title, $anime->production_year, $anime->id, $review->id])}}">Read review</a>
                     @if(Auth::id() == $review->user_id)
                         <a class="mini-button" style="float:right" href="{{route('reviews.edit', [$anime->title, $anime->production_year, $anime->id, $review->id])}}">Edit review</a>

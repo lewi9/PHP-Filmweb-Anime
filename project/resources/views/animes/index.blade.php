@@ -7,18 +7,17 @@
         @csrf
         <label class="select" for="filter">Choose a filter type:</label>
         <select name="filter" id="filter" onchange="filter_select(this.value);">
-            <option value="id" @if (session('anime_filter') == "id") selected @endif>id</option>
+            <option value="id" @if (session('anime_filter') == "id") selected @endif>default</option>
             <option value="title" @if (session('anime_filter') == "title") selected @endif>title</option>
             <option value="production_year" @if (session('anime_filter') == "production_year") selected @endif>production year</option>
             <option value="rating" @if (session('anime_filter') == "rating") selected @endif>rating</option>
-            <option value="how_much_users_watched" @if (session('anime_filter') == "how_much_users_watched") selected @endif>watchs</option>
+            <option value="how_much_users_watched" @if (session('anime_filter') == "how_much_users_watched") selected @endif>watches</option>
         </select>
         <label for="filter_mode"> </label>
         <select name="filter_mode" id="filter_mode" onchange="filter_mode_select(this.value);">
             <option value="asc" @if (session('anime_filter_mode') == "asc") selected @endif>ascending</option>
             <option value="desc" @if (session('anime_filter_mode') == "desc") selected @endif>descending</option>
         </select>
-    </form>
         <br>
         <label for="filter_genre">Choose a genre to filter</label>
         <select name="filter_genre" id="filter_genre" onchange="filter_genre_select(this.value);">

@@ -55,7 +55,7 @@ class Test03_RegisterCest
         $I->fillField('Confirm Password', $user->password);
 
         $I->click('Register');
-        $I->see("The email must be a valid email address. ");
+        $I->see("The email must be a valid email address.");
 
 
         $I->wantTo("Fill too short password");

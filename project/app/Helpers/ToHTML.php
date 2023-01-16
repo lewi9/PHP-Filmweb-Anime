@@ -45,8 +45,8 @@ trait ToHTML
                     $comment->text . '
                 .</textarea>
                 <br>
-                Likes: <mark id="' . $comment->id . 'likes' . '">' . $comment->likes . '</mark>
-                Dislikes: <mark id="' . $comment->id . 'dislikes' . '">' . $comment->dislikes . '</mark>
+                Likes: <mark class="L1" id="' . $comment->id . 'likes' . '">' . $comment->likes . '</mark>
+                Dislikes: <mark class="D1" id="' . $comment->id . 'dislikes' . '">' . $comment->dislikes . '</mark>
                 <button id="' . $comment->id . "__" . '" style="visibility: hidden" onclick="updater(this.id);">Update!</button>';
         if (Auth::user()) {
             $output .=
@@ -70,7 +70,7 @@ trait ToHTML
             '<div id="' . $review->id . 'div' . '">
                     <p><strong>' . $review->name . '</strong></p>
                     <p>' . $review->title . '</p>
-                    <p>Review rating:' . $review->rating . '</p>
+                    <p id="rr_score">Review rating:' . $review->rating . '</p>
                     <a class="mini-button" href="' . route('reviews.show', [$anime->title, $anime->production_year, $anime->id, $review->id]) . '">Read review</a>';
         if (Auth::id() == $review->user_id) {
             $output .= '<a class="mini-button" href="' . route('reviews.edit', [$anime->title, $anime->production_year, $anime->id, $review->id]) . '">Edit review</a>

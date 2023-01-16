@@ -103,10 +103,10 @@ trait FilterHelper
     {
         $request->validate([
             'genre' => ['nullable', 'string'],
-            'year' => ['nullable', 'string'],
+            'production_year' => ['nullable', 'string'],
         ]);
         $genre = $request->genre ?? 'all';
-        $year = $request->year ?? 'all';
+        $year = $request->production_year ?? 'all';
         if ($genre=='all' and $year=='all') {
             $animes = Anime::all();
         } elseif ($genre=='all') {

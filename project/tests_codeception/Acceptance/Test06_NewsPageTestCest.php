@@ -44,7 +44,7 @@ class Test06_NewsPageTestCest
         $I->wantTo("Like post many times");
 
         $I->click(['name' => 'like_' . $dummyID]);
-        $api_key = $I->grabAttributeFrom(Locator::find("meta", ["name" => "csrf-token"]), "content");
+        $api_key = $I->getCSRF();
         $I->sendAjaxPostRequest('/articles/like/', ['_token' => $api_key, 'article_id' => $dummyID, 'user_id' => 1]);
         $I->sendAjaxPostRequest('/articles/like/', ['_token' => $api_key, 'article_id' => $dummyID, 'user_id' => 1]);
 
