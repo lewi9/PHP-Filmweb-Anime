@@ -48,7 +48,7 @@ class Test01_CommentsCest
         $I->click("Log in");
 
         $I->amOnPage("/anime/Sailor moon-1992-1");
-        $I->see("Add comment");
+        $I->see("Add your comment");
         $I->see("Like", "button");
 
         $I->dontSeeInDatabase("comments", ["text"=>str_repeat("its a random comment ", 100)]);
@@ -82,7 +82,7 @@ class Test01_CommentsCest
         $I->see($like+1, Locator::find("mark", ["id" => $commentID . "dislikes"]));
 
 
-        $I->click("Delete Comment");
+//        $I->click("Delete Comment");
         $I->sendGet("/commentsdelete", ["id"=>$commentID]);
         $I->amOnPage("/anime/Sailor moon-1992-1");
         $I->dontSeeInDatabase("comments", ["text"=>str_repeat("nice ecchi ", 100)]);

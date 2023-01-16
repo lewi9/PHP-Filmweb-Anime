@@ -44,7 +44,6 @@
 
                 <div id="{{$comment->id . 'div'}}">
                     <label style="display:block" for="{{$comment->id . "_"}}">{{$comment->name}}</label>
-<<<<<<< HEAD
                     <textarea id="{{$comment->id . "_"}}" name="text" rows="5" cols="60" disabled>{{$comment->text}}</textarea>
 
                     Likes: <mark class="L1" style="background-color: pink" id="{{$comment->id . 'likes'}}">{{$comment->likes}}</mark>
