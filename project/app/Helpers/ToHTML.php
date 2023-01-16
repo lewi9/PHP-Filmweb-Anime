@@ -15,7 +15,7 @@ trait ToHTML
         $output =
             '<div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
             <div>
-                <img src="' . URL::asset('/images/'.$anime->poster) . '" alt="Anime Pic" height="200" width="200"><br>' .
+                <img class="center" src="' . URL::asset('/images/'.$anime->poster) . '" alt="Anime Pic" height="400" width="400"><br>' .
                 $anime->title .
                 '<br><a class="button" href="' . route('animes.show', [$anime->title, $anime->production_year, $anime->id]) . '">Details</a>
            </div></div><br>';
@@ -29,7 +29,7 @@ trait ToHTML
                     '<li><a href="' . route('animes.show', [$anime->title, $anime->production_year, $anime->id]) . '">' .
                      $number . ". " . $anime->title .
                     '</a>' .
-                    '<img src="' . URL::asset('/images/'.$anime->poster) . '" alt="Anime Pic" height="200" width="200">' .
+                    '<img class="img" src="' . URL::asset('/images/'.$anime->poster) . '" alt="Anime Pic" height="400" width="400">' .
                 '</li></div><br>';
         return $output;
     }
@@ -41,7 +41,7 @@ trait ToHTML
                 <label style="display:block" for="' . $comment->id . "_" . '">' .
                     $comment->name .
                 '</label>
-                <textarea style="display:block" id="' . $comment->id . "_" . '" name="text" rows="5" cols="60" disabled>' .
+                <textarea id="' . $comment->id . "_" . '" name="text" rows="5" cols="60" disabled>' .
                     $comment->text . '
                 .</textarea>
                 <br>
@@ -60,7 +60,7 @@ trait ToHTML
                     <button id = "' . $comment->id . '" onclick = "deleter(this.id);" > Delete Comment </button >';
             }
         }
-        $output .= '</div>';
+        $output .= '</div><br>';
         return $output;
     }
 
@@ -71,15 +71,15 @@ trait ToHTML
                     <p><strong>' . $review->name . '</strong></p>
                     <p>' . $review->title . '</p>
                     <p>Review rating:' . $review->rating . '</p>
-                    <a href="' . route('reviews.show', [$anime->title, $anime->production_year, $anime->id, $review->id]) . '">Read review</a>';
+                    <a class="mini-button" href="' . route('reviews.show', [$anime->title, $anime->production_year, $anime->id, $review->id]) . '">Read review</a>';
         if (Auth::id() == $review->user_id) {
-            $output .= '<a href="' . route('reviews.edit', [$anime->title, $anime->production_year, $anime->id, $review->id]) . '">Edit review</a>
+            $output .= '<a class="mini-button" href="' . route('reviews.edit', [$anime->title, $anime->production_year, $anime->id, $review->id]) . '">Edit review</a>
                         <form id="delete_review" action="' . route('reviews.delete', [$anime->title, $anime->production_year, $anime->id, $review->id]) .
                         '" method="post">' . csrf_field() . method_field('DELETE') .
-                            '<a href="javascript:{}" onclick="document.getElementById(\'delete_review\').submit(); return false;">Delete review</a>
+                            '<a class="mini-button" href="javascript:{}" onclick="document.getElementById(\'delete_review\').submit(); return false;">Delete review</a>
                         </form>';
         }
-        $output .= '<br> </div>';
+        $output .= '<br> </div><br>';
         return $output;
     }
 

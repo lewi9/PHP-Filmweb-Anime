@@ -16,7 +16,7 @@
                 'rating': value,
             },
             success: function (data) {
-                document.getElementById("rate"+value).checked = true;
+                document.getElementById("heart_"+value).checked = true;
                 document.getElementById("review_rating").textContent = data.split(',')[0];
                 document.getElementById("review_rates").textContent = data.split(',')[1];
             }

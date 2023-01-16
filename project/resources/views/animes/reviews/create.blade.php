@@ -2,10 +2,10 @@
     <x-auth-card>
         <x-slot name="logo">
             <a href="/">
-                <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
+               <h2 style="font-family: 'Too Freakin Cute Demo', sans-serif; font-size: 30px; ">Back to main page ^•ﻌ•^ฅ♡ </h2>
             </a>
         </x-slot>
-        <h2>Creating an Review</h2>
+        <h2 class="h-font">Creating an Review</h2>
         <form method="POST" action="{{ route('reviews.store') }}" enctype="multipart/form-data">
             @csrf
             @method("POST")
@@ -22,7 +22,7 @@
             <!-- text -->
             <div>
                 <x-input-label for="text" :value="__('Text')" />
-                <x-text-input id="text" class="block mt-1 w-full" type="text" name="text" :value="old('text')" required/>
+                <textarea id="text" class="block mt-1 w-full" type="text" name="text" :value="old('text')" required></textarea>
                 <x-input-error :messages="$errors->get('text')" class="mt-2" />
             </div>
 

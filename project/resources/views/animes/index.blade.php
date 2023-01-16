@@ -1,9 +1,11 @@
 <x-app-layout>
-<h2 class="h-font">♡ List of Animes ♡</h2>
-<div id="filter_form">
+<h2 class="h-font">♡ List of Animes ♡</h2><br>
+    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+    <div class="bg-pink-200 overflow-hidden shadow-sm sm:rounded-lg selection-div">
+    <div id="filter_form">
     <form>
         @csrf
-        <label for="filter">Choose a filter type:</label>
+        <label class="select" for="filter">Choose a filter type:</label>
         <select name="filter" id="filter" onchange="filter_select(this.value);">
             <option value="id" @if (session('anime_filter') == "id") selected @endif>id</option>
             <option value="title" @if (session('anime_filter') == "title") selected @endif>title</option>
@@ -11,7 +13,7 @@
             <option value="rating" @if (session('anime_filter') == "rating") selected @endif>rating</option>
             <option value="how_much_users_watched" @if (session('anime_filter') == "how_much_users_watched") selected @endif>watchs</option>
         </select>
-        <label for="filter_mode">Choose a ascend or descend filter mode:</label>
+        <label for="filter_mode"> </label>
         <select name="filter_mode" id="filter_mode" onchange="filter_mode_select(this.value);">
             <option value="asc" @if (session('anime_filter_mode') == "asc") selected @endif>ascending</option>
             <option value="desc" @if (session('anime_filter_mode') == "desc") selected @endif>descending</option>
@@ -34,8 +36,9 @@
     </form><br><br>
     <button class="button" onclick="reset();">Clear filters</button>
 </div>
+    </div></div>
     <br>
-    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+    <div class="max-w-7xl mx-auto sm:px-3 lg:px-8 space-y-6 anime-width">
     <div id="anime">
     <?php
         if (isset($animes)) {

@@ -1,9 +1,11 @@
 
 <x-app-layout>
+    <br>
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-pink-200 overflow-hidden shadow-sm sm:rounded-lg selection-div">
 <div id="hide_1">
-    <h1>
-        <a id="back_anime_1" href="{{ route('animes.show', [$anime->title, $anime->production_year, $anime->id]) }}">Back to anime</a>
-    </h1>
+
+    <br>
 
     <div id="filter_form">
         <form>
@@ -20,11 +22,18 @@
                 <option value="desc" @if (session('comments_filter_mode') == "desc") selected @endif>descending</option>
             </select>
         </form>
-        <button onclick="reset();">Clear filters</button>
+        <br>
+        <button class="mini-button" onclick="reset();">Clear filters</button>
+        <a class="mini-button" id="back_anime_1" href="{{ route('animes.show', [$anime->title, $anime->production_year, $anime->id]) }}">↞ Back to anime ↞</a>
     </div>
-</div>
+</div></div></div><br>
+
+
 
 <div id="comments">
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6 com-width">
+            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
     @if($comments instanceof Illuminate\Http\Response)
         <?php echo $comments->content() ?>
     @else
@@ -35,26 +44,27 @@
 
                 <div id="{{$comment->id . 'div'}}">
                     <label style="display:block" for="{{$comment->id . "_"}}">{{$comment->name}}</label>
-                    <textarea style="display:block" id="{{$comment->id . "_"}}" name="text" rows="4" cols="50" disabled>{{$comment->text}}</textarea>
-                    <br>
-                    Likes: <mark id="{{$comment->id . 'likes'}}">{{$comment->likes}}</mark>
-                    Dislikes: <mark id="{{$comment->id . 'dislikes'}}">{{$comment->dislikes}}</mark>
+                    <textarea id="{{$comment->id . "_"}}" name="text" rows="5" cols="60" disabled>{{$comment->text}}</textarea>
+
+                    Likes: <mark style="background-color: pink" id="{{$comment->id . 'likes'}}">{{$comment->likes}}</mark>
+                    Dislikes: <mark style="background-color: pink" id="{{$comment->id . 'dislikes'}}">{{$comment->dislikes}}</mark>
                     <button id="{{$comment->id . "__"}}" style="visibility: hidden" onclick="updater(this.id);">Update!</button>
                     @if(Auth::user())
                         <br>
                         <button style="background-color: lightgrey" id="{{$comment->id}}" name="liker-{{$comment->id}}" onclick="liker(this.id);">Like</button>
                         <button style="background-color: lightgrey" id="{{$comment->id}}" name="disliker-{{$comment->id}}" onclick="disliker(this.id);">Dislike</button>
-                        <br>
                         @if(Auth::user()->id == $comment->user_id)
-
-                            <button id="{{$comment->id}}" onclick="edit(this.id);">Edit Comment</button>
-                            <button id="{{$comment->id}}" onclick="deleter(this.id);">Delete Comment</button>
+                            <br>
+                            <button style="background-color: hotpink; color:white; padding: 3px; border-radius: 12px; margin-top: 3px; "  id="{{$comment->id}}" onclick="edit(this.id);">Edit Comment</button>
+                            <button style="background-color: hotpink; color:white; padding: 3px; border-radius: 12px; margin-top: 3px;" id="{{$comment->id}}" onclick="deleter(this.id);">Delete Comment</button>
+                            <br>
                         @endif
                     @endif
-                </div>
+                </div><br>
             @endforeach
         @endif
     @endif
-</div>
-@include('animes.comments.showjs')
+</div></div></div></div>
+
+    @include('animes.comments.showjs')
 </x-app-layout>

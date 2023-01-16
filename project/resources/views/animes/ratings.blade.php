@@ -30,14 +30,23 @@ $y = 'all';
 $g = 'all';
 ?>
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Ratings') }}
-        </h2>
-    </x-slot>
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+{{--    <x-slot name="header">--}}
+    <br>
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="bg-pink overflow-hidden sm:rounded-lg">
+        <div class="p-6 text-gray-900 h-news">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight h-news">
+            {{ __('Ratings') }}</h2>
+        </div></div></div><br>
+
+{{--    </x-slot>--}}
+{{--    <div class="py-12">--}}
+{{--        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6 ">--}}
+{{--            <div class="p-4 sm:p-8 shadow sm:rounded-lg bg-selection">--}}
+    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="bg-pink-200 overflow-hidden shadow-sm sm:rounded-lg selection-div">
+            <div id="filter_form">
+                <br>
             <form method="POST" action="{{ route("ratings.calculate") }}" enctype="multipart/form-data">
                 @csrf
                 <label for="production_year">Choose production year:</label>
@@ -66,7 +75,7 @@ $g = 'all';
             </form>
         </div>
             <br>
-        </div>
+        </div><br>
             <div id="anime" class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
                 @if(isset($animes))
                     <ol>
@@ -77,7 +86,7 @@ $g = 'all';
                     <a href=<?php echo route('animes.show', [$anime->title, $anime->production_year, $anime->id])?>>
                         {{ __($counter . ". " . $anime->title) }}
                     </a>
-                            <img src="{{URL::asset('/images/'.$anime->poster)}}" alt="Anime Pic" height="200" width="200">
+                            <img class="img" src="{{URL::asset('/images/'.$anime->poster)}}" alt="Anime Pic"height="200" width="200">
                         </li>
                     </div><br>
                      <?php $counter += 1; ?>

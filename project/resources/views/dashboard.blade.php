@@ -79,7 +79,7 @@ if ($user_article) {
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
+                <div class="p-6 text-gray-900 h-news">
                     <b>{{ __("News") }}</b>
                 </div>
             </div>
@@ -88,7 +88,7 @@ if ($user_article) {
                 @foreach($articles as $article)
                     <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
                         <b class="News Title">{{ __($article->title) }}</b>
-                        <img src="{{URL::asset('/images/'. $article->photo)}}" alt="Anime Pic" height="200" width="200">
+                        <img class="img" src="{{URL::asset('/images/'. $article->photo)}}" alt="Anime Pic" height="400" width="400">
                         <div>
                             {{__($article->text)}}
                             <div id={{$article->id . "likes"}}>Likes: {{__($article->likes)}}</div>

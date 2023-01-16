@@ -23,11 +23,11 @@
     </head>
     <body class="antialiased">
     <x-app-layout>
-        <div class="relative flex items-top justify-center min-h-screen bg-gray-100 dark:bg-gray-900 sm:items-center py-4 sm:pt-0">
+        <div class="relative flex items-top justify-center min-h-screen bg-gray-100 bg-pink dark:bg-gray-900 sm:items-center py-4 sm:pt-0">
                 <div class="py-12">
                     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                            <div class="p-6 text-gray-900">
+                            <div class="p-6 text-gray-900 h-news">
                                 <b>{{ __("News") }}</b>
                             </div>
                         </div>
@@ -36,7 +36,7 @@
                                 @foreach($articles as $article)
                                     <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
                                         <b class="News Title">{{ __($article->title) }}</b>
-                                        <img src="{{URL::asset('/images/'. $article->photo)}}" alt="Anime Pic" height="200" width="200">
+                                        <img class="img" src="{{URL::asset('/images/'. $article->photo)}}" alt="Anime Pic" height="200" width="200">
                                         <div>
                                             {{__($article->text)}}
                                             <div id={{$article->id . "likes"}}>Likes: {{__($article->likes)}}</div>
